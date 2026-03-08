@@ -1,0 +1,6 @@
+/* app/assets/css/main.css */
+@import "tailwindcss";
+
+/* La app usa estilos scoped en cada componente Vue,
+   este archivo solo activa Tailwind para las utilidades
+   que se usen en plantillas */
