@@ -1,2 +1,2 @@
 // app/types/index.ts
-export type { CategoriaInfo, ToastMessage, FormTransaccion, FiltrosMes } from './ui'
+export type { CategoriaInfo, ToastMessage } from './ui'

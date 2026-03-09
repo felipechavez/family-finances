@@ -4,6 +4,7 @@
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "paths": {
       "#shared/types": ["./shared/types/finanzas"],
       "~/*": ["./app/*"],

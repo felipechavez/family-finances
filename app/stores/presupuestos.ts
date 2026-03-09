@@ -1,9 +1,13 @@
-// app/composables/presupuestos/use-presupuestos.ts
-// Exports functions ONLY — no types (per imports-composable-exports rule)
-
+// app/stores/presupuestos.ts
+import { defineStore, storeToRefs } from 'pinia'
 import type { Presupuesto } from '#shared/types'
+import { useTransaccionesStore } from './transacciones'
 
-export function usePresupuestos(mes: Ref<string>) {
+export const usePresupuestosStore = defineStore('presupuestos', () => {
+  const { $api } = useNuxtApp()
+  const txStore = useTransaccionesStore()
+  const { mes } = storeToRefs(txStore)
+
   const {
     data: response,
     status,
@@ -12,7 +16,7 @@ export function usePresupuestos(mes: Ref<string>) {
   } = useFetch('/api/presupuestos', {
     key: () => `presupuestos-${mes.value}`,
     query: { mes },
-    // Transform at fetch time (data-transform rule)
+    $fetch: $api as typeof $fetch,
     transform: (res: { data: Presupuesto[] }) => res.data,
     default: (): Presupuesto[] => [],
   })
@@ -26,7 +30,7 @@ export function usePresupuestos(mes: Ref<string>) {
   })
 
   async function guardarLimite(categoria: string, limite: number): Promise<void> {
-    await $fetch('/api/presupuestos', {
+    await ($api as typeof $fetch)('/api/presupuestos', {
       method: 'PUT',
       body: { categoria, limite, mes: mes.value },
     })
@@ -41,4 +45,4 @@ export function usePresupuestos(mes: Ref<string>) {
     refresh,
     guardarLimite,
   }
-}
+})

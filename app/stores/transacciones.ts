@@ -1,11 +1,10 @@
-// app/composables/transacciones/use-transacciones.ts
-// Exports functions ONLY — no types (per imports-composable-exports rule)
+// app/stores/transacciones.ts
+import { defineStore } from 'pinia'
+import type { Transaccion, TransaccionCreateInput } from '#shared/types'
+export const useTransaccionesStore = defineStore('transacciones', () => {
+  const { $api } = useNuxtApp()
+  const mes = ref(new Date().toISOString().slice(0, 7))
 
-import type { Transaccion } from '#shared/types'
-import type { FormTransaccion } from '~/types/ui'
-
-export function useTransacciones(mes: Ref<string>) {
-  // useFetch with unique key that reacts to mes changes (data-key-unique rule)
   const {
     data: response,
     status,
@@ -14,7 +13,7 @@ export function useTransacciones(mes: Ref<string>) {
   } = useFetch('/api/transacciones', {
     key: () => `transacciones-${mes.value}`,
     query: { mes },
-    // Transform at fetch time, not in template (data-transform rule)
+    $fetch: $api as typeof $fetch,
     transform: (res: { data: Transaccion[] }) =>
       [...res.data].sort((a, b) => b.fecha.localeCompare(a.fecha)),
     default: (): Transaccion[] => [],
@@ -44,31 +43,26 @@ export function useTransacciones(mes: Ref<string>) {
     return map
   })
 
-  async function crearTransaccion(form: FormTransaccion): Promise<Transaccion> {
-    const body = {
-      tipo: form.tipo,
-      categoria: form.categoria,
-      monto: Number(form.monto),
-      descripcion: form.descripcion.trim(),
-      fecha: form.fecha,
-      miembro: form.miembro,
-    }
-
-    const res = await $fetch<{ data: Transaccion }>('/api/transacciones', {
+  async function crear(input: TransaccionCreateInput): Promise<Transaccion> {
+    const res = await ($api as typeof $fetch)<{ data: Transaccion }>('/api/transacciones', {
       method: 'POST',
-      body,
+      body: input,
     })
-
     await refresh()
     return res.data
   }
 
-  async function eliminarTransaccion(id: string): Promise<void> {
-    await $fetch(`/api/transacciones/${id}`, { method: 'DELETE' })
+  async function eliminar(id: string): Promise<void> {
+    await ($api as typeof $fetch)(`/api/transacciones/${id}`, { method: 'DELETE' })
     await refresh()
   }
 
+  function setMes(nuevoMes: string) {
+    mes.value = nuevoMes
+  }
+
   return {
+    mes,
     transacciones,
     status,
     error,
@@ -77,7 +71,8 @@ export function useTransacciones(mes: Ref<string>) {
     totalGastos,
     balance,
     gastosPorCategoria,
-    crearTransaccion,
-    eliminarTransaccion,
+    crear,
+    eliminar,
+    setMes,
   }
-}
+})

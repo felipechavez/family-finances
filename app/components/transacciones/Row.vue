@@ -34,8 +34,7 @@ function handleEliminar(id: string): void {
     <div class="info">
       <p class="descripcion">{{ transaccion.descripcion }}</p>
       <p class="meta">
-        {{ getCategoriaInfo(transaccion.categoria).label }} ·
-        {{ transaccion.miembro }} · {{ transaccion.fecha }}
+        {{ getCategoriaInfo(transaccion.categoria).label }} · {{ transaccion.fecha }}
       </p>
     </div>
 

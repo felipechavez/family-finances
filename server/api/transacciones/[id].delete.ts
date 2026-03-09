@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
 
   if (!id) badRequest('ID de transacción requerido')
 
-  const existente = getTransaccionById(id)
-  if (!existente) notFound('Transacción', id)
+  const existente = getTransaccionById(id!)
+  if (!existente) notFound('Transacción', id!)
 
-  deleteTransaccion(id)
+  deleteTransaccion(id!)
   return { data: { id }, ok: true }
 })

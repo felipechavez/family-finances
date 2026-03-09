@@ -15,16 +15,3 @@ export interface ToastMessage {
   texto: string
   tipo: 'ok' | 'error' | 'info'
 }
-
-export interface FormTransaccion {
-  tipo: 'gasto' | 'ingreso'
-  categoria: string
-  monto: string
-  descripcion: string
-  fecha: string
-  miembro: string
-}
-
-export interface FiltrosMes {
-  mes: string // YYYY-MM
-}

@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
   const nueva: Transaccion = {
     ...body,
     id: crypto.randomUUID(),
+    familyId: 'f1',
+    userId: 'u1',
+    currency: 'CLP',
     creadoEn: new Date().toISOString(),
   }
 
