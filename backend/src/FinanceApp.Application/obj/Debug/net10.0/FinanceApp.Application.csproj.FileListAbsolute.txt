@@ -1,0 +1,16 @@
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.csproj.AssemblyReference.cache
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.AssemblyInfoInputs.cache
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.AssemblyInfo.cs
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.csproj.CoreCompileInputs.cache
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.sourcelink.json
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/bin/Debug/net10.0/FinanceApp.Application.deps.json
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/bin/Debug/net10.0/FinanceApp.Application.dll
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/bin/Debug/net10.0/FinanceApp.Application.pdb
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/bin/Debug/net10.0/FinanceApp.Domain.dll
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/bin/Debug/net10.0/FinanceApp.Domain.pdb
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceA.A82E5256.Up2Date
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.dll
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/refint/FinanceApp.Application.dll
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/FinanceApp.Application.pdb
+/home/felipe/Desarrollos/family-finances/backend/src/FinanceApp.Application/obj/Debug/net10.0/ref/FinanceApp.Application.dll
