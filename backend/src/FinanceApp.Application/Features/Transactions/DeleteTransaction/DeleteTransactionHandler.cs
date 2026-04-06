@@ -2,9 +2,16 @@ namespace FinanceApp.Application.Features.Transactions.DeleteTransaction;
 using FinanceApp.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class DeleteTransactionHandler(IAppDbContext db) : IRequestHandler<DeleteTransactionCommand>
+/// <summary>
+/// Handles <see cref="DeleteTransactionCommand"/>: removes a transaction from the database.
+/// Enforces family ownership to prevent cross-family deletion.
+/// </summary>
+public class DeleteTransactionHandler(IAppDbContext db, ILogger<DeleteTransactionHandler> logger)
+    : IRequestHandler<DeleteTransactionCommand>
 {
+    /// <inheritdoc/>
     public async Task Handle(DeleteTransactionCommand request, CancellationToken cancellationToken)
     {
         var tx = await db.Transactions
@@ -14,5 +21,8 @@ public class DeleteTransactionHandler(IAppDbContext db) : IRequestHandler<Delete
 
         db.Transactions.Remove(tx);
         await db.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Transaction {TransactionId} deleted from family {FamilyId}",
+            request.TransactionId, request.FamilyId);
     }
 }

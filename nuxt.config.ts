@@ -1,4 +1,5 @@
 // nuxt.config.ts
+declare const process: { env: { API_BASE_URL?: string } }
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
@@ -6,8 +7,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
+      apiBase: process.env.API_BASE_URL ?? 'http://localhost:58196',
     },
   },
 
@@ -26,7 +26,6 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { ssr: true },
-    '/api/**': { cors: false },
   },
 
   alias: {

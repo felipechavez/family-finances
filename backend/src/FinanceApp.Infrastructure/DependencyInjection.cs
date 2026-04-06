@@ -1,26 +1,34 @@
 namespace FinanceApp.Infrastructure;
 using System.Text;
 using FinanceApp.Application.Common.Interfaces;
-using FinanceApp.Infrastructure.Persistence;
 using FinanceApp.Infrastructure.Services;
+using FinanceApp.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
+/// <summary>
+/// Extension methods for registering Infrastructure services into the DI container.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Registers all Infrastructure-layer services: persistence, caching, authentication, and domain services.
+    /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <param name="config">The application configuration used for connection strings and JWT settings.</param>
+    /// <returns>The configured <see cref="IServiceCollection"/> for chaining.</returns>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration config)
     {
-        // PostgreSQL
-        services.AddDbContext<AppDbContext>(opts =>
-            opts.UseNpgsql(config.GetConnectionString("Postgres"),
-                b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
-
-        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+        // Strongly-typed JWT settings with validation
+        services.AddOptions<JwtSettings>()
+            .Bind(config.GetSection("Jwt"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
         // Redis
         services.AddStackExchangeRedisCache(opts =>
@@ -31,7 +39,9 @@ public static class DependencyInjection
         services.AddSingleton<IJwtService, JwtService>();
 
         // JWT Authentication
-        var jwtSecret = config["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+        var jwtSettings = config.GetSection("Jwt").Get<JwtSettings>()
+            ?? throw new InvalidOperationException("JWT settings are not configured.");
+
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opts =>
@@ -39,11 +49,11 @@ public static class DependencyInjection
                 opts.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
                     ValidateIssuer = true,
-                    ValidIssuer = config["Jwt:Issuer"],
+                    ValidIssuer = jwtSettings.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = config["Jwt:Audience"],
+                    ValidAudience = jwtSettings.Audience,
                     ValidateLifetime = true,
                 };
             });

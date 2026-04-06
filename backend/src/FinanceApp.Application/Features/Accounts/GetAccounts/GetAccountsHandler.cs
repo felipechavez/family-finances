@@ -3,8 +3,12 @@ using FinanceApp.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Handles <see cref="GetAccountsQuery"/>: retrieves all accounts belonging to a family.
+/// </summary>
 public class GetAccountsHandler(IAppDbContext db) : IRequestHandler<GetAccountsQuery, IReadOnlyList<AccountDto>>
 {
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<AccountDto>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         => await db.Accounts
             .AsNoTracking()

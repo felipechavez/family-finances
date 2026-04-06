@@ -2,6 +2,7 @@ namespace FinanceApp.UnitTests.Domain;
 using FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Enums;
 using FluentAssertions;
+using Xunit;
 
 public class TransactionTests
 {

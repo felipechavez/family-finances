@@ -4,17 +4,27 @@ using FinanceApp.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache)
+/// <summary>
+/// Handles <see cref="GetMonthlySummaryQuery"/>: computes income/expense totals grouped by category
+/// for a given month. Results are cached in Redis for 5 minutes to reduce database load.
+/// </summary>
+public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache, ILogger<GetMonthlySummaryHandler> logger)
     : IRequestHandler<GetMonthlySummaryQuery, MonthlySummaryDto>
 {
+    /// <inheritdoc/>
     public async Task<MonthlySummaryDto> Handle(GetMonthlySummaryQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = $"report:monthly:{request.FamilyId}:{request.Year}:{request.Month}";
         var cached = await cache.GetStringAsync(cacheKey, cancellationToken);
         if (cached is not null)
+        {
+            logger.LogDebug("Monthly summary for family {FamilyId} {Year}/{Month} served from cache",
+                request.FamilyId, request.Year, request.Month);
             return JsonSerializer.Deserialize<MonthlySummaryDto>(cached)!;
+        }
 
         var transactions = await db.Transactions
             .AsNoTracking()
@@ -60,6 +70,9 @@ public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache)
         await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(result),
             new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) },
             cancellationToken);
+
+        logger.LogInformation("Monthly summary computed for family {FamilyId} {Year}/{Month}: income={Income}, expense={Expense}",
+            request.FamilyId, request.Year, request.Month, totalIncome, totalExpense);
 
         return result;
     }

@@ -2,10 +2,17 @@ namespace FinanceApp.Application.Common.Behaviors;
 using FluentValidation;
 using MediatR;
 
+/// <summary>
+/// MediatR pipeline behavior that runs all registered <see cref="IValidator{T}"/> instances
+/// for a request before the handler executes. Throws <see cref="ValidationException"/> on failure.
+/// </summary>
+/// <typeparam name="TRequest">The MediatR request type.</typeparam>
+/// <typeparam name="TResponse">The handler's response type.</typeparam>
 public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
+    /// <inheritdoc/>
     public async Task<TResponse> Handle(
         TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

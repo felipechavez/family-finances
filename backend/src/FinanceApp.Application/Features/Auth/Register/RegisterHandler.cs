@@ -3,9 +3,15 @@ using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class RegisterHandler(IAppDbContext db, IPasswordHasher hasher) : IRequestHandler<RegisterCommand, RegisterResult>
+/// <summary>
+/// Handles <see cref="RegisterCommand"/>: creates a new user account with a hashed password.
+/// </summary>
+public class RegisterHandler(IAppDbContext db, IPasswordHasher hasher, ILogger<RegisterHandler> logger)
+    : IRequestHandler<RegisterCommand, RegisterResult>
 {
+    /// <inheritdoc/>
     public async Task<RegisterResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var exists = await db.Users.AnyAsync(u => u.Email == request.Email, cancellationToken);
@@ -16,6 +22,8 @@ public class RegisterHandler(IAppDbContext db, IPasswordHasher hasher) : IReques
 
         db.Users.Add(user);
         await db.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("New user registered: {UserId} ({Email})", user.Id, user.Email);
 
         return new RegisterResult(user.Id, user.Email);
     }

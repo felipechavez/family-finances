@@ -4,15 +4,38 @@ using System.Security.Claims;
 using System.Text;
 using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Domain.Entities;
-using Microsoft.Extensions.Configuration;
+using FinanceApp.Infrastructure.Settings;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-public class JwtService(IConfiguration config) : IJwtService
+/// <summary>
+/// Generates signed JWT tokens using the configured <see cref="JwtSettings"/>.
+/// </summary>
+public sealed class JwtService : IJwtService
 {
+    private readonly JwtSettings _settings;
+    private readonly ILogger<JwtService> _logger;
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="JwtService"/>.
+    /// </summary>
+    /// <param name="options">The JWT settings bound from configuration.</param>
+    /// <param name="logger">The structured logger.</param>
+    public JwtService(IOptions<JwtSettings> options, ILogger<JwtService> logger)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(logger);
+        _settings = options.Value;
+        _logger = logger;
+    }
+
+    /// <inheritdoc/>
     public string GenerateToken(User user, Guid? familyId = null, string? role = null)
     {
-        var secret = config["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+        ArgumentNullException.ThrowIfNull(user);
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -29,11 +52,13 @@ public class JwtService(IConfiguration config) : IJwtService
             claims.Add(new Claim(ClaimTypes.Role, role));
 
         var token = new JwtSecurityToken(
-            issuer: config["Jwt:Issuer"],
-            audience: config["Jwt:Audience"],
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(7),
+            expires: DateTime.UtcNow.AddDays(_settings.ExpirationDays),
             signingCredentials: creds);
+
+        _logger.LogDebug("Generated JWT for user {UserId} with family {FamilyId}", user.Id, familyId);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

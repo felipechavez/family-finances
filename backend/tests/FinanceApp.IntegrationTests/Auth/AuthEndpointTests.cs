@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
 
 public class AuthEndpointTests(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>

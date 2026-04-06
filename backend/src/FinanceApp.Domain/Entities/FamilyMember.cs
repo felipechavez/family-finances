@@ -1,14 +1,20 @@
+using Supabase.Postgrest.Attributes;
+
 namespace FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 
+[Table("family_members")]
 public class FamilyMember : Entity
 {
-    public Guid FamilyId { get; private set; }
-    public Guid UserId { get; private set; }
-    public FamilyRole Role { get; private set; }
+    [Column("family_id")]
+    public Guid FamilyId { get; set; }
 
-    private FamilyMember() { }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("role")]
+    public FamilyRole Role { get; set; }
 
     public static FamilyMember Create(Guid familyId, Guid userId, FamilyRole role)
         => new() { FamilyId = familyId, UserId = userId, Role = role };

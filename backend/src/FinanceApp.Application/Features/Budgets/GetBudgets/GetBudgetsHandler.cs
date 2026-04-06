@@ -3,8 +3,12 @@ using FinanceApp.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Handles <see cref="GetBudgetsQuery"/>: retrieves all budget limits defined for a family.
+/// </summary>
 public class GetBudgetsHandler(IAppDbContext db) : IRequestHandler<GetBudgetsQuery, IReadOnlyList<BudgetDto>>
 {
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<BudgetDto>> Handle(GetBudgetsQuery request, CancellationToken cancellationToken)
         => await db.Budgets
             .AsNoTracking()

@@ -25,8 +25,8 @@ const tiposCuenta: { value: AccountType; label: string; emoji: string }[] = [
   { value: 'credit_card', label: 'Tarjeta de Crédito', emoji: '💳' },
 ]
 
-function tipoInfo(type: AccountType) {
-  return tiposCuenta.find(t => t.value === type) ?? tiposCuenta[0]
+function tipoInfo(type: AccountType): { value: AccountType; label: string; emoji: string } {
+  return tiposCuenta.find(t => t.value === type) ?? tiposCuenta[0]!
 }
 
 async function handleCrear() {

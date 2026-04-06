@@ -1,6 +1,7 @@
 namespace FinanceApp.UnitTests.Domain;
 using FinanceApp.Domain.Entities;
 using FluentAssertions;
+using Xunit;
 
 public class BudgetTests
 {

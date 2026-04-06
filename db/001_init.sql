@@ -118,7 +118,13 @@ CREATE TABLE transactions (
 CREATE INDEX idx_transactions_family       ON transactions (family_id);
 CREATE INDEX idx_transactions_account      ON transactions (account_id);
 CREATE INDEX idx_transactions_date         ON transactions (transaction_date DESC);
-CREATE INDEX idx_transactions_family_month ON transactions (family_id, DATE_TRUNC('month', transaction_date));
+CREATE INDEX idx_transactions_family_month
+ON transactions (
+  family_id,
+  ( (EXTRACT(YEAR FROM transaction_date)::int * 12)
+    + (EXTRACT(MONTH FROM transaction_date)::int - 1)
+  )
+);
 
 -- =============================================================================
 -- BUDGETS

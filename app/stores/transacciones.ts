@@ -1,25 +1,63 @@
 // app/stores/transacciones.ts
 import { defineStore } from 'pinia'
-import type { Transaccion, TransaccionCreateInput } from '#shared/types'
+import type { Transaccion, TransaccionCreateInput, CategoriaId, TipoMovimiento } from '#shared/types'
+
+interface TransactionDto {
+  id: string
+  familyId: string
+  accountId: string
+  userId: string
+  categoryId: string
+  categoryName: string
+  type: 'Income' | 'Expense'
+  amount: number
+  currency: string
+  description: string
+  transactionDate: string
+  createdAt: string
+}
+
 export const useTransaccionesStore = defineStore('transacciones', () => {
   const { $api } = useNuxtApp()
   const mes = ref(new Date().toISOString().slice(0, 7))
+
+  const query = computed(() => {
+    const [year, month] = mes.value.split('-').map(Number)
+    return {
+      year,
+      month,
+    }
+  })
 
   const {
     data: response,
     status,
     error,
     refresh,
-  } = useFetch('/api/transacciones', {
+  } = useFetch<TransactionDto[]>('/transactions', {
     key: () => `transacciones-${mes.value}`,
-    query: { mes },
+    query: query.value,
     $fetch: $api as typeof $fetch,
-    transform: (res: { data: Transaccion[] }) =>
-      [...res.data].sort((a, b) => b.fecha.localeCompare(a.fecha)),
-    default: (): Transaccion[] => [],
+    default: (): TransactionDto[] => [],
   })
 
-  const transacciones = computed(() => response.value ?? [])
+  const transacciones = computed<Transaccion[]>(() =>
+    (response.value ?? [])
+      .map(tx => ({
+        id: tx.id,
+        familyId: tx.familyId,
+        accountId: tx.accountId,
+        userId: tx.userId,
+        tipo: tx.type === 'Expense' ? 'gasto' : 'ingreso' as TipoMovimiento,
+        categoria: tx.categoryName as CategoriaId,
+        monto: tx.amount,
+        currency: tx.currency,
+        descripcion: tx.description,
+        fecha: tx.transactionDate,
+        creadoEn: tx.createdAt,
+      }))
+      .sort((a, b) => b.fecha.localeCompare(a.fecha)),
+  )
 
   const totalIngresos = computed(() =>
     transacciones.value
@@ -44,16 +82,16 @@ export const useTransaccionesStore = defineStore('transacciones', () => {
   })
 
   async function crear(input: TransaccionCreateInput): Promise<Transaccion> {
-    const res = await ($api as typeof $fetch)<{ data: Transaccion }>('/api/transacciones', {
+    const res = await ($api as typeof $fetch)<Transaccion>('/transactions', {
       method: 'POST',
       body: input,
     })
     await refresh()
-    return res.data
+    return res
   }
 
   async function eliminar(id: string): Promise<void> {
-    await ($api as typeof $fetch)(`/api/transacciones/${id}`, { method: 'DELETE' })
+    await ($api as typeof $fetch)(`/transactions/${id}`, { method: 'DELETE' })
     await refresh()
   }
 

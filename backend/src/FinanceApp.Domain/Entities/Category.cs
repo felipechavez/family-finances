@@ -1,14 +1,25 @@
+using Supabase.Postgrest.Attributes;
+
 namespace FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 
+[Table("categories")]
 public class Category : Entity
 {
-    public Guid? FamilyId { get; private set; }  // null = global
-    public string Name { get; private set; } = default!;
-    public TransactionType Type { get; private set; }
+    /// <summary>
+    /// Gets the identifier of the owning family, or <c>null</c> if this is a global category.
+    /// </summary>
+    [Column("family_id")]
+    public Guid? FamilyId { get; set; }
 
-    private Category() { }
+    /// <summary>Gets the display name of the category.</summary>
+    [Column("name")]
+    public string Name { get; set; } = default!;
+
+    /// <summary>Gets the transaction type this category applies to (Income or Expense).</summary>
+    [Column("type")]
+    public TransactionType Type { get; set; }
 
     public static Category Create(string name, TransactionType type, Guid? familyId = null)
     {

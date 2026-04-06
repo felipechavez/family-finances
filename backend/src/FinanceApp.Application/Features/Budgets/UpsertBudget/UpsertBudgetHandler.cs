@@ -3,9 +3,15 @@ using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class UpsertBudgetHandler(IAppDbContext db) : IRequestHandler<UpsertBudgetCommand, Guid>
+/// <summary>
+/// Handles <see cref="UpsertBudgetCommand"/>: creates a new budget or updates the limit of an existing one.
+/// </summary>
+public class UpsertBudgetHandler(IAppDbContext db, ILogger<UpsertBudgetHandler> logger)
+    : IRequestHandler<UpsertBudgetCommand, Guid>
 {
+    /// <inheritdoc/>
     public async Task<Guid> Handle(UpsertBudgetCommand request, CancellationToken cancellationToken)
     {
         var existing = await db.Budgets
@@ -15,11 +21,15 @@ public class UpsertBudgetHandler(IAppDbContext db) : IRequestHandler<UpsertBudge
         if (existing is not null)
         {
             existing.UpdateLimit(request.MonthlyLimit);
+            logger.LogInformation("Budget {BudgetId} updated for family {FamilyId}, category {CategoryId}",
+                existing.Id, request.FamilyId, request.CategoryId);
         }
         else
         {
             existing = Budget.Create(request.FamilyId, request.CategoryId, request.MonthlyLimit);
             db.Budgets.Add(existing);
+            logger.LogInformation("Budget {BudgetId} created for family {FamilyId}, category {CategoryId}",
+                existing.Id, request.FamilyId, request.CategoryId);
         }
 
         await db.SaveChangesAsync(cancellationToken);

@@ -10,10 +10,10 @@ export const useCuentasStore = defineStore('cuentas', () => {
     status,
     error,
     refresh,
-  } = useFetch('/api/cuentas', {
+  } = useFetch('/accounts', {
     key: 'cuentas',
     $fetch: $api as typeof $fetch,
-    transform: (res: { data: Account[] }) => res.data,
+    transform: (res: Account[]) => res,
     default: (): Account[] => [],
   })
 
@@ -24,16 +24,16 @@ export const useCuentasStore = defineStore('cuentas', () => {
   )
 
   async function crear(input: AccountCreateInput): Promise<Account> {
-    const res = await ($api as typeof $fetch)<{ data: Account }>('/api/cuentas', {
+    const res = await ($api as typeof $fetch)<Account>('/accounts', {
       method: 'POST',
       body: input,
     })
     await refresh()
-    return res.data
+    return res
   }
 
   async function eliminar(id: string): Promise<void> {
-    await ($api as typeof $fetch)(`/api/cuentas/${id}`, { method: 'DELETE' })
+    await ($api as typeof $fetch)(`/accounts/${id}`, { method: 'DELETE' })
     await refresh()
   }
 

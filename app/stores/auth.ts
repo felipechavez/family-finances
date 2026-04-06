@@ -1,19 +1,31 @@
 // app/stores/auth.ts
 import { defineStore } from 'pinia'
-import type { User, Family, LoginInput, RegisterInput, AuthResponse } from '#shared/types'
+import type { User, LoginInput, RegisterInput } from '#shared/types'
+
+interface LoginResult {
+  token: string
+  userId: string
+  name: string
+  email: string
+  familyId: string | null
+}
 
 export const useAuthStore = defineStore('auth', () => {
+  const { $api } = useNuxtApp()
   const user = ref<User | null>(null)
-  const family = ref<Family | null>(null)
   const token = ref<string | null>(null)
 
   const isAuthenticated = computed(() => !!token.value)
   const userName = computed(() => user.value?.name ?? '')
 
-  function setAuth(response: AuthResponse) {
+  function setAuth(response: LoginResult) {
     token.value = response.token
-    user.value = response.user
-    family.value = response.family
+    user.value = {
+      id: response.userId,
+      name: response.name,
+      email: response.email,
+      createdAt: '',
+    }
     if (import.meta.client) {
       localStorage.setItem('auth_token', response.token)
     }
@@ -22,22 +34,21 @@ export const useAuthStore = defineStore('auth', () => {
   function clearAuth() {
     token.value = null
     user.value = null
-    family.value = null
     if (import.meta.client) {
       localStorage.removeItem('auth_token')
     }
   }
 
   async function login(input: LoginInput): Promise<void> {
-    const res = await $fetch<{ data: AuthResponse }>('/api/auth/login', {
+    const res = await ($api as typeof $fetch)('/auth/login', {
       method: 'POST',
       body: input,
     })
-    setAuth(res.data)
+    setAuth(res as LoginResult)
   }
 
   async function register(input: RegisterInput): Promise<void> {
-    await $fetch('/api/auth/register', {
+    await ($api as typeof $fetch)('/auth/register', {
       method: 'POST',
       body: input,
     })
@@ -59,7 +70,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     user,
-    family,
     token,
     isAuthenticated,
     userName,
@@ -67,6 +77,5 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     initFromStorage,
-    setAuth,
   }
 })

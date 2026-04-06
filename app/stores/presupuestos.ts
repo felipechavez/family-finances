@@ -1,7 +1,15 @@
 // app/stores/presupuestos.ts
 import { defineStore, storeToRefs } from 'pinia'
-import type { Presupuesto } from '#shared/types'
+import type { Presupuesto, CategoriaGastoId } from '#shared/types'
 import { useTransaccionesStore } from './transacciones'
+
+interface BudgetDto {
+  id: string
+  familyId: string
+  categoryId: string
+  categoryName: string
+  monthlyLimit: number
+}
 
 export const usePresupuestosStore = defineStore('presupuestos', () => {
   const { $api } = useNuxtApp()
@@ -13,15 +21,21 @@ export const usePresupuestosStore = defineStore('presupuestos', () => {
     status,
     error,
     refresh,
-  } = useFetch('/api/presupuestos', {
+  } = useFetch<BudgetDto[]>('/budgets', {
     key: () => `presupuestos-${mes.value}`,
-    query: { mes },
     $fetch: $api as typeof $fetch,
-    transform: (res: { data: Presupuesto[] }) => res.data,
-    default: (): Presupuesto[] => [],
+    default: (): BudgetDto[] => [],
   })
 
-  const presupuestos = computed(() => response.value ?? [])
+  const presupuestos = computed<Presupuesto[]>(() =>
+    (response.value ?? []).map(b => ({
+      id: b.id,
+      familyId: b.familyId,
+      categoria: b.categoryName as CategoriaGastoId,
+      limite: Number(b.monthlyLimit),
+      mes: mes.value,
+    })),
+  )
 
   const presupuestoPorCategoria = computed(() => {
     const map: Record<string, number> = {}
@@ -30,9 +44,9 @@ export const usePresupuestosStore = defineStore('presupuestos', () => {
   })
 
   async function guardarLimite(categoria: string, limite: number): Promise<void> {
-    await ($api as typeof $fetch)('/api/presupuestos', {
-      method: 'PUT',
-      body: { categoria, limite, mes: mes.value },
+    await ($api as typeof $fetch)('/budgets', {
+      method: 'POST',
+      body: { categoria, limite },
     })
     await refresh()
   }

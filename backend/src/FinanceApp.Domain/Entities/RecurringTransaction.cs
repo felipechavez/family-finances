@@ -1,19 +1,35 @@
+using Supabase.Postgrest.Attributes;
+
 namespace FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 
+[Table("recurring_transactions")]
 public class RecurringTransaction : Entity
 {
-    public Guid FamilyId { get; private set; }
-    public Guid TemplateAccountId { get; private set; }
-    public Guid TemplateCategoryId { get; private set; }
-    public TransactionType Type { get; private set; }
-    public decimal Amount { get; private set; }
-    public string Description { get; private set; } = default!;
-    public RecurrenceType RecurrenceType { get; private set; }
-    public DateOnly NextExecutionDate { get; private set; }
+    [Column("family_id")]
+    public Guid FamilyId { get; set; }
 
-    private RecurringTransaction() { }
+    [Column("template_account_id")]
+    public Guid TemplateAccountId { get; set; }
+
+    [Column("template_category_id")]
+    public Guid TemplateCategoryId { get; set; }
+
+    [Column("type")]
+    public TransactionType Type { get; set; }
+
+    [Column("amount")]
+    public decimal Amount { get; set; }
+
+    [Column("description")]
+    public string Description { get; set; } = default!;
+
+    [Column("recurrence_type")]
+    public RecurrenceType RecurrenceType { get; set; }
+
+    [Column("next_execution_date")]
+    public DateOnly NextExecutionDate { get; set; }
 
     public static RecurringTransaction Create(
         Guid familyId, Guid accountId, Guid categoryId,
