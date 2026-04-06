@@ -1,5 +1,6 @@
 namespace FinanceApp.API.Endpoints;
 using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 /// <summary>
@@ -15,15 +16,13 @@ internal static class CategoryHelper
     /// <param name="familyId">The family scope for family-specific categories.</param>
     /// <returns>The category's unique identifier.</returns>
     /// <exception cref="KeyNotFoundException">Thrown when no matching category is found.</exception>
-    internal static async Task<Guid> FindByNameAsync(IAppDbContext db, string categoryName, Guid familyId)
+    internal static async Task<Guid> FindByNameAsync(Supabase.Client db, string categoryName, Guid familyId)
     {
-        var category = await db.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Name == categoryName && (c.FamilyId == null || c.FamilyId == familyId));
+        var category = await db.From<Category>().Where(c => c.Name == categoryName && (c.FamilyId == null || c.FamilyId == familyId)).Get();
 
-        if (category is null)
+        if (category is null || category.Model == null)
             throw new KeyNotFoundException($"Category '{categoryName}' not found.");
 
-        return category.Id;
+        return category.Model!.Id;
     }
 }

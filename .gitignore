@@ -41,3 +41,4 @@ dist
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Vue,Nuxt,Vuejs,Nuxtjs,ts,js
 /.output
+/backend/.vs
