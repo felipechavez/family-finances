@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "bms:git-log-summary": {
+      "source": "benmatselby/dotfiles",
+      "sourceType": "github",
+      "computedHash": "70a0c87ab56fbf27cc85f2bb7be8859469100073f58bd65d28257811096b03c0"
+    },
+    "csharp-tunit": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "634bf822bdbd01c5d5a8c7c9f473f3818dfca8acca309a0af97cd90a7e39b738"
+    },
+    "docker-expert": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "e5556c606d3a64877877728f7b945bc189b694ead92ee4b76b475d4633f14d37"
+    },
+    "dotnet-localization": {
+      "source": "wshaddix/dotnet-skills",
+      "sourceType": "github",
+      "computedHash": "44dce954fc0e884174f3e8646d05e19cbba9920825a7f5d9437f04afd8e932f3"
+    },
+    "vue-best-practices": {
+      "source": "hyf0/vue-skills",
+      "sourceType": "github",
+      "computedHash": "21132f6c11c765bd11d0d6ad081122dd858630073e2123b651e58f17b399b131"
+    }
+  }
+}

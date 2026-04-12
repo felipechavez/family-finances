@@ -1,13 +1,19 @@
 namespace FinanceApp.API.Endpoints;
+
+using System.Net;
 using System.Security.Claims;
+using FinanceApp.API.Resources;
+using FinanceApp.Application.Common;
 using FinanceApp.Application.Features.Accounts.CreateAccount;
 using FinanceApp.Application.Features.Accounts.GetAccounts;
+using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 
 /// <summary>
 /// Maps financial account endpoints.
@@ -19,9 +25,15 @@ internal static class AccountsEndpoints
     {
         var group = app.MapGroup("/accounts").WithTags("Accounts").RequireAuthorization();
 
-        group.MapGet("/", async (ClaimsPrincipal user, IMediator mediator) =>
+        group.MapGet("/", async (
+            ClaimsPrincipal user,
+            IStringLocalizer<SharedResource> localizer,
+            IMediator mediator) =>
         {
-            var result = await mediator.Send(new GetAccountsQuery(user.GetFamilyId()));
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+
+            var result = await mediator.Send(new GetAccountsQuery(familyId));
             return Results.Ok(result);
         })
         .WithName("GetAccounts")
@@ -32,8 +44,10 @@ internal static class AccountsEndpoints
             ClaimsPrincipal user,
             IMediator mediator) =>
         {
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
             var id = await mediator.Send(new CreateAccountCommand(
-                user.GetFamilyId(),
+                familyId,
                 req.Name,
                 Enum.Parse<AccountType>(req.Type, ignoreCase: true),
                 req.InitialBalance));

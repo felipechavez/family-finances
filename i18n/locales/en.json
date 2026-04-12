@@ -1,0 +1,142 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "historial": "History",
+    "cuentas": "Accounts",
+    "limites": "Limits",
+    "reportes": "Reports",
+    "cerrarSesion": "Log out"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Sign in to continue",
+      "email": "EMAIL",
+      "password": "PASSWORD",
+      "emailPlaceholder": "you{'@'}email.com",
+      "submitting": "Signing in...",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up",
+      "fillFields": "Please fill in all fields",
+      "invalidCredentials": "Incorrect credentials"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Join your family finances",
+      "name": "NAME",
+      "email": "EMAIL",
+      "password": "PASSWORD",
+      "confirmPassword": "CONFIRM PASSWORD",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "you{'@'}email.com",
+      "passwordPlaceholder": "At least 6 characters",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "fillFields": "Please fill in all fields",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "submitting": "Creating account...",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "error": "Could not create account. Please try again."
+    }
+  },
+  "dashboard": {
+    "family": "Family",
+    "title": "Dashboard",
+    "recentMovements": "Recent movements",
+    "seeAll": "See all",
+    "loadError": "Error loading transactions"
+  },
+  "transacciones": {
+    "title": "Transactions",
+    "nuevo": "+ New",
+    "cancelar": "Cancel",
+    "gasto": "Expense",
+    "ingreso": "Income",
+    "monto": "AMOUNT ($)",
+    "descripcion": "DESCRIPTION",
+    "categoria": "CATEGORY",
+    "cuenta": "ACCOUNT",
+    "fecha": "DATE",
+    "descripcionPlaceholder": "What was it for?",
+    "registrarGasto": "Record expense",
+    "registrarIngreso": "Record income",
+    "loadError": "Error loading",
+    "empty": "No transactions this month",
+    "montoInvalido": "Enter a valid amount",
+    "descripcionRequerida": "Description is required",
+    "gastoRegistrado": "Expense recorded",
+    "ingresoRegistrado": "Income recorded",
+    "noSePudoGuardar": "Could not save",
+    "eliminado": "Deleted",
+    "noSePudoEliminar": "Could not delete"
+  },
+  "cuentas": {
+    "title": "Accounts",
+    "nueva": "+ New",
+    "cancelar": "Cancel",
+    "balanceTotal": "Total balance",
+    "nombre": "NAME",
+    "tipo": "TYPE",
+    "crearCuenta": "Create account",
+    "namePlaceholder": "E.g. Main checking account",
+    "loadError": "Error loading accounts",
+    "empty": "No accounts registered",
+    "creada": "Account created",
+    "eliminada": "Account deleted",
+    "ingresaNombre": "Enter a name",
+    "noSePudoCrear": "Could not create account",
+    "noSePudoEliminar": "Could not delete",
+    "tipos": {
+      "cash": "Cash",
+      "bank": "Bank Account",
+      "savings": "Savings",
+      "credit_card": "Credit Card"
+    }
+  },
+  "presupuestos": {
+    "title": "Budgets",
+    "subtitle": "Set how much you want to spend per category each month",
+    "loadError": "Error loading budgets",
+    "limiteSaved": "Limit saved",
+    "noSePudoGuardar": "Could not save limit",
+    "excedido": "⚠ Exceeded",
+    "gastado": "Spent",
+    "limite": "Limit",
+    "sinLimite": "No limit",
+    "guardar": "Save"
+  },
+  "reportes": {
+    "title": "Reports",
+    "loadError": "Error loading data",
+    "resumenMensual": "Monthly summary",
+    "ingresos": "Income",
+    "gastos": "Expenses",
+    "balance": "Balance",
+    "distribucion": "Expense breakdown",
+    "sinGastos": "No expenses to show",
+    "estadisticas": "Statistics",
+    "totalTransacciones": "Total transactions",
+    "promedioPorGasto": "Average per expense",
+    "categoriaMasAlta": "Top category"
+  },
+  "categorias": {
+    "alimentacion": "Food & Groceries",
+    "transporte": "Transport",
+    "salud": "Health",
+    "educacion": "Education",
+    "hogar": "Home",
+    "entretenimiento": "Entertainment",
+    "ropa": "Clothing",
+    "otros": "Other",
+    "sueldo": "Salary",
+    "freelance": "Freelance",
+    "arriendo": "Rent",
+    "otros_ingreso": "Other"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error"
+  }
+}

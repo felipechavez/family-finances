@@ -3,7 +3,9 @@ import { defineStore } from 'pinia'
 import type { Account, AccountCreateInput } from '#shared/types'
 
 export const useCuentasStore = defineStore('cuentas', () => {
-  const { $api } = useNuxtApp()
+  function getApi() {
+    return useNuxtApp().$api as typeof $fetch
+  }
 
   const {
     data: response,
@@ -12,7 +14,8 @@ export const useCuentasStore = defineStore('cuentas', () => {
     refresh,
   } = useFetch('/accounts', {
     key: 'cuentas',
-    $fetch: $api as typeof $fetch,
+    server: false,
+    $fetch: getApi(),
     transform: (res: Account[]) => res,
     default: (): Account[] => [],
   })
@@ -24,7 +27,8 @@ export const useCuentasStore = defineStore('cuentas', () => {
   )
 
   async function crear(input: AccountCreateInput): Promise<Account> {
-    const res = await ($api as typeof $fetch)<Account>('/accounts', {
+    const $api = getApi()
+    const res = await $api<Account>('/accounts', {
       method: 'POST',
       body: input,
     })
@@ -33,7 +37,8 @@ export const useCuentasStore = defineStore('cuentas', () => {
   }
 
   async function eliminar(id: string): Promise<void> {
-    await ($api as typeof $fetch)(`/accounts/${id}`, { method: 'DELETE' })
+    const $api = getApi()
+    await $api(`/accounts/${id}`, { method: 'DELETE' })
     await refresh()
   }
 

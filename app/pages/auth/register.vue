@@ -4,25 +4,26 @@ import { useAuthStore } from '~/stores/auth'
 
 definePageMeta({ layout: 'auth' })
 
+const { t } = useI18n()
 const auth = useAuthStore()
 
 const form = ref({ name: '', email: '', password: '', confirmPassword: '' })
-const errorMsg = ref('')
-const loading = ref(false)
+const errorMsg = shallowRef('')
+const loading = shallowRef(false)
 
 async function handleRegister() {
   errorMsg.value = ''
 
   if (!form.value.name || !form.value.email || !form.value.password) {
-    errorMsg.value = 'Completa todos los campos'
+    errorMsg.value = t('auth.register.fillFields')
     return
   }
   if (form.value.password !== form.value.confirmPassword) {
-    errorMsg.value = 'Las contraseñas no coinciden'
+    errorMsg.value = t('auth.register.passwordMismatch')
     return
   }
   if (form.value.password.length < 6) {
-    errorMsg.value = 'La contraseña debe tener al menos 6 caracteres'
+    errorMsg.value = t('auth.register.passwordTooShort')
     return
   }
 
@@ -33,9 +34,14 @@ async function handleRegister() {
       email: form.value.email,
       password: form.value.password,
     })
-    await navigateTo('/auth/login')
-  } catch {
-    errorMsg.value = 'No se pudo crear la cuenta. Intenta de nuevo.'
+    await auth.login({
+      email: form.value.email,
+      password: form.value.password,
+    })
+    await navigateTo('/')
+  } catch(e) {
+    console.error('Error al registrar:', e)
+    errorMsg.value = t('auth.register.error')
   } finally {
     loading.value = false
   }
@@ -46,51 +52,51 @@ async function handleRegister() {
   <div class="auth-card">
     <div class="auth-header">
       <span class="auth-icon">💜</span>
-      <h1 class="auth-title">Crear cuenta</h1>
-      <p class="auth-subtitle">Únete a tu familia financiera</p>
+      <h1 class="auth-title">{{ $t('auth.register.title') }}</h1>
+      <p class="auth-subtitle">{{ $t('auth.register.subtitle') }}</p>
     </div>
 
     <form class="auth-form" @submit.prevent="handleRegister">
       <div class="field">
-        <label class="field-label">NOMBRE</label>
+        <label class="field-label">{{ $t('auth.register.name') }}</label>
         <input
           v-model="form.name"
           type="text"
           class="input"
-          placeholder="Tu nombre"
+          :placeholder="$t('auth.register.namePlaceholder')"
           autocomplete="name"
         />
       </div>
 
       <div class="field">
-        <label class="field-label">EMAIL</label>
+        <label class="field-label">{{ $t('auth.register.email') }}</label>
         <input
           v-model="form.email"
           type="email"
           class="input"
-          placeholder="tu@email.com"
+          :placeholder="$t('auth.register.emailPlaceholder')"
           autocomplete="email"
         />
       </div>
 
       <div class="field">
-        <label class="field-label">CONTRASEÑA</label>
+        <label class="field-label">{{ $t('auth.register.password') }}</label>
         <input
           v-model="form.password"
           type="password"
           class="input"
-          placeholder="Mínimo 6 caracteres"
+          :placeholder="$t('auth.register.passwordPlaceholder')"
           autocomplete="new-password"
         />
       </div>
 
       <div class="field">
-        <label class="field-label">CONFIRMAR CONTRASEÑA</label>
+        <label class="field-label">{{ $t('auth.register.confirmPassword') }}</label>
         <input
           v-model="form.confirmPassword"
           type="password"
           class="input"
-          placeholder="Repite la contraseña"
+          :placeholder="$t('auth.register.confirmPasswordPlaceholder')"
           autocomplete="new-password"
         />
       </div>
@@ -98,14 +104,18 @@ async function handleRegister() {
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
 
       <button type="submit" class="btn-primary" :disabled="loading">
-        {{ loading ? 'Creando cuenta...' : 'Registrarse' }}
+        {{ loading ? $t('auth.register.submitting') : $t('auth.register.submit') }}
       </button>
     </form>
 
     <p class="auth-footer">
-      ¿Ya tienes cuenta?
-      <NuxtLink to="/auth/login" class="auth-link">Inicia sesión</NuxtLink>
+      {{ $t('auth.register.hasAccount') }}
+      <NuxtLink to="/auth/login" class="auth-link">{{ $t('auth.register.loginLink') }}</NuxtLink>
     </p>
+
+    <div class="locale-row">
+      <UiLocaleSwitcher />
+    </div>
   </div>
 </template>
 
@@ -161,4 +171,6 @@ async function handleRegister() {
 .auth-footer { text-align: center; font-size: 14px; color: #6b6b8a; margin: 20px 0 0; }
 .auth-link { color: #a78bfa; text-decoration: none; font-weight: 600; }
 .auth-link:hover { text-decoration: underline; }
+
+.locale-row { display: flex; justify-content: center; margin-top: 16px; }
 </style>

@@ -1,9 +1,9 @@
+using FinanceApp.Domain.Common;
+using FinanceApp.Domain.Enums;
+using System.Text.Json.Serialization;
 using Supabase.Postgrest.Attributes;
 
 namespace FinanceApp.Domain.Entities;
-using FinanceApp.Domain.Common;
-using FinanceApp.Domain.Enums;
-
 /// <summary>
 /// Represents a family group that shares financial accounts, budgets, and transactions.
 /// </summary>
@@ -14,6 +14,8 @@ public class Family : Entity
     public string Name { get; set; } = default!;
 
     [Column("owner_user_id")]
+    [JsonInclude]
+    [JsonPropertyName("owner_user_id")]
     public Guid OwnerUserId { get; set; }
 
     private readonly List<FamilyMember> _members = [];

@@ -1,0 +1,25 @@
+# Dependencias y builds
+node_modules
+.nuxt
+.output
+
+# Git
+.git
+.gitignore
+
+# Variables de entorno (nunca al build context)
+.env
+.env.*
+
+# Backend (tiene su propio contexto)
+backend/
+
+# DB / docs
+db/
+*.md
+README*
+
+# Logs y temporales
+*.log
+.DS_Store
+Thumbs.db

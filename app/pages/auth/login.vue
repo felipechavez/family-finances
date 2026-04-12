@@ -4,16 +4,17 @@ import { useAuthStore } from '~/stores/auth'
 
 definePageMeta({ layout: 'auth' })
 
+const { t } = useI18n()
 const auth = useAuthStore()
 
 const form = ref({ email: '', password: '' })
-const errorMsg = ref('')
-const loading = ref(false)
+const errorMsg = shallowRef('')
+const loading = shallowRef(false)
 
 async function handleLogin() {
   errorMsg.value = ''
   if (!form.value.email || !form.value.password) {
-    errorMsg.value = 'Completa todos los campos'
+    errorMsg.value = t('auth.login.fillFields')
     return
   }
   loading.value = true
@@ -21,7 +22,7 @@ async function handleLogin() {
     await auth.login(form.value)
     await navigateTo('/')
   } catch {
-    errorMsg.value = 'Credenciales incorrectas'
+    errorMsg.value = t('auth.login.invalidCredentials')
   } finally {
     loading.value = false
   }
@@ -33,23 +34,23 @@ async function handleLogin() {
     <div class="auth-header">
       <span class="auth-icon">💜</span>
       <h1 class="auth-title">FinanzasApp</h1>
-      <p class="auth-subtitle">Inicia sesión para continuar</p>
+      <p class="auth-subtitle">{{ $t('auth.login.subtitle') }}</p>
     </div>
 
     <form class="auth-form" @submit.prevent="handleLogin">
       <div class="field">
-        <label class="field-label">EMAIL</label>
+        <label class="field-label">{{ $t('auth.login.email') }}</label>
         <input
           v-model="form.email"
           type="email"
           class="input"
-          placeholder="tu@email.com"
+          :placeholder="$t('auth.login.emailPlaceholder')"
           autocomplete="email"
         />
       </div>
 
       <div class="field">
-        <label class="field-label">CONTRASEÑA</label>
+        <label class="field-label">{{ $t('auth.login.password') }}</label>
         <input
           v-model="form.password"
           type="password"
@@ -62,14 +63,18 @@ async function handleLogin() {
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
 
       <button type="submit" class="btn-primary" :disabled="loading">
-        {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
+        {{ loading ? $t('auth.login.submitting') : $t('auth.login.submit') }}
       </button>
     </form>
 
     <p class="auth-footer">
-      ¿No tienes cuenta?
-      <NuxtLink to="/auth/register" class="auth-link">Regístrate</NuxtLink>
+      {{ $t('auth.login.noAccount') }}
+      <NuxtLink to="/auth/register" class="auth-link">{{ $t('auth.login.registerLink') }}</NuxtLink>
     </p>
+
+    <div class="locale-row">
+      <UiLocaleSwitcher />
+    </div>
   </div>
 </template>
 
@@ -125,4 +130,6 @@ async function handleLogin() {
 .auth-footer { text-align: center; font-size: 14px; color: #6b6b8a; margin: 20px 0 0; }
 .auth-link { color: #a78bfa; text-decoration: none; font-weight: 600; }
 .auth-link:hover { text-decoration: underline; }
+
+.locale-row { display: flex; justify-content: center; margin-top: 16px; }
 </style>

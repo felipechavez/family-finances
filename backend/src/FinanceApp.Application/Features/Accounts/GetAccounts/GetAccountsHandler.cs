@@ -1,18 +1,22 @@
 namespace FinanceApp.Application.Features.Accounts.GetAccounts;
-using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Supabase;
 
 /// <summary>
 /// Handles <see cref="GetAccountsQuery"/>: retrieves all accounts belonging to a family.
 /// </summary>
-public class GetAccountsHandler(IAppDbContext db) : IRequestHandler<GetAccountsQuery, IReadOnlyList<AccountDto>>
+public class GetAccountsHandler(Client supabase) : IRequestHandler<GetAccountsQuery, IReadOnlyList<AccountDto>>
 {
-    /// <inheritdoc/>
     public async Task<IReadOnlyList<AccountDto>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
-        => await db.Accounts
-            .AsNoTracking()
+    {
+        var response = await supabase.From<Account>()
             .Where(a => a.FamilyId == request.FamilyId)
+            .Get();
+
+        return response.Models?
             .Select(a => new AccountDto(a.Id, a.FamilyId, a.Name, a.Type.ToString(), a.Balance, a.CreatedAt))
-            .ToListAsync(cancellationToken);
+            .ToList()
+            ?? new List<AccountDto>();
+    }
 }

@@ -5,9 +5,12 @@ import { useTransaccionesStore } from '~/stores/transacciones'
 import { useCuentasStore } from '~/stores/cuentas'
 import { useCategorias } from '~/composables/use-categorias'
 import { useToast } from '~/composables/use-toast'
+import { useApiError } from '~/composables/use-api-error'
 import type { TransaccionCreateInput, TipoMovimiento, CategoriaId } from '#shared/types'
 
 definePageMeta({ middleware: 'auth' })
+
+const { t } = useI18n()
 useHead({ title: 'Transacciones - FinanzasApp' })
 
 const txStore = useTransaccionesStore()
@@ -16,6 +19,7 @@ const { categoriasGasto, categoriasIngreso } = useCategorias()
 const { ok: toastOk, error: toastError } = useToast()
 
 const { transacciones, status, error: txError } = storeToRefs(txStore)
+const { message: errorMessage } = useApiError(txError)
 const { cuentas } = storeToRefs(cuentasStore)
 
 const mostrarForm = ref(false)
@@ -30,7 +34,7 @@ const form = ref({
 })
 
 const categoriasPorTipo = computed(() =>
-  form.value.tipo === 'gasto' ? categoriasGasto : categoriasIngreso,
+  form.value.tipo === 'gasto' ? categoriasGasto.value : categoriasIngreso.value,
 )
 
 function handleTipoChange(tipo: TipoMovimiento) {
@@ -40,8 +44,8 @@ function handleTipoChange(tipo: TipoMovimiento) {
 
 async function handleCrear() {
   const monto = Number(form.value.monto)
-  if (!monto || monto <= 0) { toastError('Ingresa un monto válido'); return }
-  if (!form.value.descripcion.trim()) { toastError('La descripción es requerida'); return }
+  if (!monto || monto <= 0) { toastError(t('transacciones.montoInvalido')); return }
+  if (!form.value.descripcion.trim()) { toastError(t('transacciones.descripcionRequerida')); return }
 
   const input: TransaccionCreateInput = {
     accountId: form.value.accountId || (cuentas.value[0]?.id ?? ''),
@@ -56,18 +60,20 @@ async function handleCrear() {
     await txStore.crear(input)
     form.value = { ...form.value, monto: '', descripcion: '' }
     mostrarForm.value = false
-    toastOk(form.value.tipo === 'gasto' ? 'Gasto registrado' : 'Ingreso registrado')
+    toastOk(form.value.tipo === 'gasto'
+      ? t('transacciones.gastoRegistrado')
+      : t('transacciones.ingresoRegistrado'))
   } catch {
-    toastError('No se pudo guardar')
+    toastError(t('transacciones.noSePudoGuardar'))
   }
 }
 
 async function handleEliminar(id: string) {
   try {
     await txStore.eliminar(id)
-    toastOk('Eliminado')
+    toastOk(t('transacciones.eliminado'))
   } catch {
-    toastError('No se pudo eliminar')
+    toastError(t('transacciones.noSePudoEliminar'))
   }
 }
 </script>
@@ -75,9 +81,9 @@ async function handleEliminar(id: string) {
 <template>
   <div>
     <header class="header">
-      <h1 class="header-titulo">Transacciones</h1>
+      <h1 class="header-titulo">{{ $t('transacciones.title') }}</h1>
       <button class="btn-agregar" @click="mostrarForm = !mostrarForm">
-        {{ mostrarForm ? 'Cancelar' : '+ Nuevo' }}
+        {{ mostrarForm ? $t('transacciones.cancelar') : $t('transacciones.nuevo') }}
       </button>
     </header>
 
@@ -85,18 +91,22 @@ async function handleEliminar(id: string) {
       <!-- Form de creación -->
       <div v-if="mostrarForm" class="form-card">
         <div class="segmento">
-          <button class="seg-btn" :class="{ 'seg-btn--gasto': form.tipo === 'gasto' }" @click="handleTipoChange('gasto')">Gasto</button>
-          <button class="seg-btn" :class="{ 'seg-btn--ingreso': form.tipo === 'ingreso' }" @click="handleTipoChange('ingreso')">Ingreso</button>
+          <button class="seg-btn" :class="{ 'seg-btn--gasto': form.tipo === 'gasto' }" @click="handleTipoChange('gasto')">
+            {{ $t('transacciones.gasto') }}
+          </button>
+          <button class="seg-btn" :class="{ 'seg-btn--ingreso': form.tipo === 'ingreso' }" @click="handleTipoChange('ingreso')">
+            {{ $t('transacciones.ingreso') }}
+          </button>
         </div>
 
         <div class="form">
-          <label class="field-label">MONTO ($)</label>
+          <label class="field-label">{{ $t('transacciones.monto') }}</label>
           <input v-model="form.monto" class="input" type="number" placeholder="0" inputmode="numeric" />
 
-          <label class="field-label">DESCRIPCIÓN</label>
-          <input v-model="form.descripcion" class="input" type="text" placeholder="¿En qué se gastó?" />
+          <label class="field-label">{{ $t('transacciones.descripcion') }}</label>
+          <input v-model="form.descripcion" class="input" type="text" :placeholder="$t('transacciones.descripcionPlaceholder')" />
 
-          <label class="field-label">CATEGORÍA</label>
+          <label class="field-label">{{ $t('transacciones.categoria') }}</label>
           <select v-model="form.categoria" class="input select">
             <option v-for="cat in categoriasPorTipo" :key="cat.id" :value="cat.id">
               {{ cat.emoji }} {{ cat.label }}
@@ -105,29 +115,29 @@ async function handleEliminar(id: string) {
 
           <div class="form-row">
             <div class="form-col">
-              <label class="field-label">CUENTA</label>
+              <label class="field-label">{{ $t('transacciones.cuenta') }}</label>
               <select v-model="form.accountId" class="input select">
                 <option v-for="c in cuentas" :key="c.id" :value="c.id">{{ c.name }}</option>
               </select>
             </div>
             <div class="form-col">
-              <label class="field-label">FECHA</label>
+              <label class="field-label">{{ $t('transacciones.fecha') }}</label>
               <input v-model="form.fecha" class="input" type="date" />
             </div>
           </div>
 
           <button class="btn-primary" @click="handleCrear">
-            {{ form.tipo === 'gasto' ? 'Registrar gasto' : 'Registrar ingreso' }}
+            {{ form.tipo === 'gasto' ? $t('transacciones.registrarGasto') : $t('transacciones.registrarIngreso') }}
           </button>
         </div>
       </div>
 
       <!-- Lista -->
-      <UiSpinner v-if="status === 'pending'">Cargando...</UiSpinner>
-      <div v-else-if="txError" class="error-state"><p>Error al cargar</p></div>
+      <UiSpinner v-if="status === 'pending'">{{ $t('common.loading') }}</UiSpinner>
+      <UiError404 v-else-if="txError" :message="errorMessage" />
       <div v-else-if="transacciones.length === 0" class="empty-state">
         <span class="empty-icon">📭</span>
-        <p>Sin movimientos este mes</p>
+        <p>{{ $t('transacciones.empty') }}</p>
       </div>
       <div v-else class="card card--sin-padding">
         <TransaccionesRow
@@ -195,6 +205,7 @@ async function handleEliminar(id: string) {
 .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
 
 @media (min-width: 768px) {
-  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
 }
 </style>

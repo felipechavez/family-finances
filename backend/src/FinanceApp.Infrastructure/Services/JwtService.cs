@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Entities;
 using FinanceApp.Infrastructure.Settings;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,7 @@ public sealed class JwtService : IJwtService
     }
 
     /// <inheritdoc/>
-    public string GenerateToken(User user, Guid? familyId = null, string? role = null)
+    public string GenerateToken(Users user, Guid? familyId = null, string? role = null)
     {
         ArgumentNullException.ThrowIfNull(user);
 
@@ -40,14 +41,14 @@ public sealed class JwtService : IJwtService
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Name, user.Name),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(FamilyClaims.UserId, user.Id.ToString()),
+            new(FamilyClaims.Email, user.Email),
+            new(FamilyClaims.Name, user.Name),
+            new(FamilyClaims.Jti, Guid.NewGuid().ToString())
         };
 
         if (familyId.HasValue)
-            claims.Add(new Claim("family_id", familyId.Value.ToString()));
+            claims.Add(new Claim(FamilyClaims.FamilyId, familyId.Value.ToString()));
         if (!string.IsNullOrEmpty(role))
             claims.Add(new Claim(ClaimTypes.Role, role));
 

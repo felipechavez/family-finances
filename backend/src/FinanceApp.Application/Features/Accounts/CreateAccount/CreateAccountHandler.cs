@@ -1,6 +1,4 @@
-namespace FinanceApp.Application.Features.Accounts.CreateAccount;
-using FinanceApp.Application.Common.Interfaces;
-using FinanceApp.Application.Features.Families.CreateFamily;
+﻿namespace FinanceApp.Application.Features.Accounts.CreateAccount;
 using FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Enums;
 using MediatR;
@@ -10,19 +8,18 @@ using Supabase;
 /// <summary>
 /// Handles <see cref="CreateAccountCommand"/>: creates and persists a new financial account.
 /// </summary>
-
-public class CreateFamilyHandler(Client supabase, ILogger<CreateFamilyHandler> logger)
-    : IRequestHandler<CreateFamilyCommand, Guid>
+public class CreateAccountHandler(Client supabase, ILogger<CreateAccountHandler> logger)
+    : IRequestHandler<CreateAccountCommand, Guid>
 {
-    public async Task<Guid> Handle(CreateFamilyCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-        var family = Family.Create(request.Name, request.OwnerUserId);
-        family.AddMember(request.OwnerUserId, FamilyRole.Owner);
+        var account = Account.Create(request.FamilyId, request.Name, request.Type, request.InitialBalance);
 
-        await supabase.From<Family>().Insert(family);
+        await supabase.From<Account>().Insert(account);
 
-        logger.LogInformation("Family {FamilyId} created by user {UserId}", family.Id, request.OwnerUserId);
+        logger.LogInformation("Account {AccountId} created for family {FamilyId}",
+            account.Id, request.FamilyId);
 
-        return family.Id;
+        return account.Id;
     }
 }

@@ -5,19 +5,20 @@ import { useAuthStore } from '~/stores/auth'
 
 const auth = useAuthStore()
 const route = useRoute()
+const { t } = useI18n()
 
 interface NavItem {
   to: string
-  label: string
+  labelKey: string
   emoji: string
 }
 
-const items: NavItem[] = [
-  { to: '/',             label: 'Inicio',     emoji: '🏠' },
-  { to: '/transacciones', label: 'Historial', emoji: '📋' },
-  { to: '/cuentas',      label: 'Cuentas',    emoji: '💳' },
-  { to: '/presupuestos', label: 'Límites',    emoji: '📊' },
-  { to: '/reportes',     label: 'Reportes',   emoji: '📈' },
+const NAV_ITEMS: NavItem[] = [
+  { to: '/',             labelKey: 'nav.inicio',    emoji: '🏠' },
+  { to: '/transacciones', labelKey: 'nav.historial', emoji: '📋' },
+  { to: '/cuentas',      labelKey: 'nav.cuentas',   emoji: '💳' },
+  { to: '/presupuestos', labelKey: 'nav.limites',   emoji: '📊' },
+  { to: '/reportes',     labelKey: 'nav.reportes',  emoji: '📈' },
 ]
 
 function isActive(path: string): boolean {
@@ -37,20 +38,23 @@ function isActive(path: string): boolean {
 
       <nav class="sidebar-nav">
         <NuxtLink
-          v-for="item in items"
+          v-for="item in NAV_ITEMS"
           :key="item.to"
           :to="item.to"
           class="sidebar-item"
           :class="{ 'sidebar-item--active': isActive(item.to) }"
         >
           <span class="sidebar-emoji">{{ item.emoji }}</span>
-          <span class="sidebar-label">{{ item.label }}</span>
+          <span class="sidebar-label">{{ t(item.labelKey) }}</span>
         </NuxtLink>
       </nav>
 
       <div class="sidebar-footer">
-        <p class="sidebar-user">{{ auth.userName }}</p>
-        <button class="sidebar-logout" @click="auth.logout()">Cerrar sesión</button>
+        <ClientOnly>
+          <p class="sidebar-user">{{ auth.userName }}</p>
+        </ClientOnly>
+        <UiLocaleSwitcher class="sidebar-locale" />
+        <button class="sidebar-logout" @click="auth.logout()">{{ t('nav.cerrarSesion') }}</button>
       </div>
     </aside>
 
@@ -62,15 +66,16 @@ function isActive(path: string): boolean {
     <!-- ── BOTTOM NAV (mobile < 768px) ── -->
     <nav class="bottomnav">
       <NuxtLink
-        v-for="item in items"
+        v-for="item in NAV_ITEMS"
         :key="item.to"
         :to="item.to"
         class="bottomnav-item"
         :class="{ 'bottomnav-item--active': isActive(item.to) }"
       >
         <span class="bottomnav-emoji">{{ item.emoji }}</span>
-        <span class="bottomnav-label">{{ item.label }}</span>
+        <span class="bottomnav-label">{{ t(item.labelKey) }}</span>
       </NuxtLink>
+      <UiLocaleSwitcher class="bottomnav-locale" />
     </nav>
   </div>
 </template>
@@ -121,6 +126,7 @@ function isActive(path: string): boolean {
 
 .bottomnav-emoji { font-size: 18px; line-height: 1; }
 .bottomnav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.bottomnav-locale { align-self: center; }
 
 /* ── DESKTOP ── */
 @media (min-width: 768px) {
@@ -175,8 +181,13 @@ function isActive(path: string): boolean {
     border-top: 1px solid #2a2a40;
     margin-top: auto;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
-  .sidebar-user { font-size: 13px; color: #c4b5fd; font-weight: 600; margin: 0 0 8px; }
+  .sidebar-user { font-size: 13px; color: #c4b5fd; font-weight: 600; margin: 0; }
+  .sidebar-locale { margin-bottom: 0; }
   .sidebar-logout {
     background: none;
     border: 1px solid #2a2a40;
@@ -192,5 +203,6 @@ function isActive(path: string): boolean {
   .sidebar-logout:hover { border-color: #f87171; color: #f87171; }
 
   .bottomnav { display: none; }
+  .bottomnav-locale { display: none; }
 }
 </style>

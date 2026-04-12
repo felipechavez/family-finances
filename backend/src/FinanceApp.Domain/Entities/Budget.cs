@@ -18,7 +18,7 @@ public class Budget : Entity
     [Column("monthly_limit")]
     public decimal MonthlyLimit { get; set; }
 
-    private Budget() { }
+    public Budget() { }
 
     /// <summary>
     /// Creates a new <see cref="Budget"/> for the given family and category.

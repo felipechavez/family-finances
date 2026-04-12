@@ -1,45 +1,53 @@
 namespace FinanceApp.Application.Features.Transactions.GetTransactions;
-using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Application.Features.Transactions.CreateTransaction;
+using FinanceApp.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Supabase;
 
 /// <summary>
 /// Handles <see cref="GetTransactionsQuery"/>: retrieves transactions for a family with optional month/year filtering.
 /// </summary>
-public class GetTransactionsHandler(IAppDbContext db)
+public class GetTransactionsHandler(Client supabase)
     : IRequestHandler<GetTransactionsQuery, IReadOnlyList<TransactionDto>>
 {
-    /// <inheritdoc/>
     public async Task<IReadOnlyList<TransactionDto>> Handle(
         GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        var query = db.Transactions
-            .AsNoTracking()
-            .Where(t => t.FamilyId == request.FamilyId);
+        var transactionsResponse = await supabase.From<Transaction>()
+            .Where(t => t.FamilyId == request.FamilyId)
+            .Get();
+
+        var transactions = transactionsResponse.Models ?? new List<Transaction>();
 
         if (request.Year.HasValue)
-            query = query.Where(t => t.TransactionDate.Year == request.Year.Value);
+            transactions = transactions.Where(t => t.TransactionDate.Year == request.Year.Value).ToList();
         if (request.Month.HasValue)
-            query = query.Where(t => t.TransactionDate.Month == request.Month.Value);
+            transactions = transactions.Where(t => t.TransactionDate.Month == request.Month.Value).ToList();
 
-        return await query
+        var categoryIds = transactions.Select(t => t.CategoryId).Distinct().ToList();
+        var categoriesResponse = categoryIds.Any()
+            ? await supabase.From<Category>().Where(c => categoryIds.Contains(c.Id)).Get()
+            : null;
+
+        var categories = categoriesResponse?.Models?.ToDictionary(c => c.Id, c => c.Name)
+            ?? new Dictionary<Guid, string>();
+
+        return transactions
             .OrderByDescending(t => t.TransactionDate)
             .ThenByDescending(t => t.CreatedAt)
-            .Join(db.Categories, t => t.CategoryId, c => c.Id,
-                (t, c) => new TransactionDto(
-                    t.Id,
-                    t.FamilyId,
-                    t.AccountId,
-                    t.UserId,
-                    t.CategoryId,
-                    c.Name,
-                    t.Type.ToString(),
-                    t.Amount,
-                    t.Currency,
-                    t.Description,
-                    t.TransactionDate,
-                    t.CreatedAt))
-            .ToListAsync(cancellationToken);
+            .Select(t => new TransactionDto(
+                t.Id,
+                t.FamilyId,
+                t.AccountId,
+                t.UserId,
+                t.CategoryId,
+                categories.GetValueOrDefault(t.CategoryId, "Unknown"),
+                t.Type.ToString(),
+                t.Amount,
+                t.Currency,
+                t.Description,
+                t.TransactionDate,
+                t.CreatedAt))
+            .ToList();
     }
 }

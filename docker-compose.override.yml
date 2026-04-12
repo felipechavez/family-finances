@@ -1,0 +1,46 @@
+# Overrides de desarrollo — aplicados automáticamente con `docker compose up`.
+# Para producción: docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+services:
+  frontend:
+    build:
+      target: development
+    container_name: frontend-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - frontend_nm:/app/node_modules
+      - frontend_nuxt:/app/.nuxt
+    environment:
+      - NODE_ENV=development
+      # El navegador accede directamente al backend por el puerto expuesto en el host
+      - API_BASE_URL=${API_BASE_URL:-http://localhost:58196/}
+
+  backend:
+    container_name: backend-dev
+    ports:
+      - "58196:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      # Supabase (requerido — definir en .env)
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_SCHEMA=${SUPABASE_SCHEMA:-public}
+      # Redis (servicio interno)
+      - ConnectionStrings__Redis=redis:6379
+      # JWT (requerido — definir en .env)
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=FinanceApp
+      - Jwt__Audience=FinanceApp
+      - Jwt__ExpirationDays=${JWT_EXPIRATION_DAYS:-7}
+
+  redis:
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  frontend_nm:
+  frontend_nuxt:

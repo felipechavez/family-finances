@@ -1,20 +1,19 @@
 namespace FinanceApp.Application.Features.Reports.GetMonthlySummary;
-using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Supabase;
 using System.Text.Json;
 
 /// <summary>
 /// Handles <see cref="GetMonthlySummaryQuery"/>: computes income/expense totals grouped by category
 /// for a given month. Results are cached in Redis for 5 minutes to reduce database load.
 /// </summary>
-public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache, ILogger<GetMonthlySummaryHandler> logger)
+public class GetMonthlySummaryHandler(Client supabase, IDistributedCache cache, ILogger<GetMonthlySummaryHandler> logger)
     : IRequestHandler<GetMonthlySummaryQuery, MonthlySummaryDto>
 {
-    /// <inheritdoc/>
     public async Task<MonthlySummaryDto> Handle(GetMonthlySummaryQuery request, CancellationToken cancellationToken)
     {
         var cacheKey = $"report:monthly:{request.FamilyId}:{request.Year}:{request.Month}";
@@ -26,14 +25,16 @@ public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache,
             return JsonSerializer.Deserialize<MonthlySummaryDto>(cached)!;
         }
 
-        var transactions = await db.Transactions
-            .AsNoTracking()
-            .Where(t => t.FamilyId == request.FamilyId
-                && t.TransactionDate.Year == request.Year
-                && t.TransactionDate.Month == request.Month)
-            .ToListAsync(cancellationToken);
+        var transactionsResponse = await supabase.From<Transaction>()
+            .Where(t => t.FamilyId == request.FamilyId)
+            .Get();
 
-        var totalIncome  = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
+        var transactions = transactionsResponse.Models ?? new List<Transaction>();
+        transactions = transactions
+            .Where(t => t.TransactionDate.Year == request.Year && t.TransactionDate.Month == request.Month)
+            .ToList();
+
+        var totalIncome = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
         var totalExpense = transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
 
         var categoryGroups = transactions
@@ -44,15 +45,21 @@ public class GetMonthlySummaryHandler(IAppDbContext db, IDistributedCache cache,
 
         var categoryIds = categoryGroups.Select(g => g.CategoryId).ToList();
 
-        var categories = await db.Categories
-            .AsNoTracking()
-            .Where(c => categoryIds.Contains(c.Id))
-            .ToDictionaryAsync(c => c.Id, c => c.Name, cancellationToken);
+        var categoriesResponse = categoryIds.Any()
+            ? await supabase.From<Category>().Where(c => categoryIds.Contains(c.Id)).Get()
+            : null;
 
-        var budgets = await db.Budgets
-            .AsNoTracking()
-            .Where(b => b.FamilyId == request.FamilyId && categoryIds.Contains(b.CategoryId))
-            .ToDictionaryAsync(b => b.CategoryId, b => b.MonthlyLimit, cancellationToken);
+        var categories = categoriesResponse?.Models?.ToDictionary(c => c.Id, c => c.Name)
+            ?? new Dictionary<Guid, string>();
+
+        var budgetsResponse = categoryIds.Any()
+            ? await supabase.From<Budget>()
+                .Where(b => b.FamilyId == request.FamilyId && categoryIds.Contains(b.CategoryId))
+                .Get()
+            : null;
+
+        var budgets = budgetsResponse?.Models?.ToDictionary(b => b.CategoryId, b => b.MonthlyLimit)
+            ?? new Dictionary<Guid, decimal>();
 
         var expensesByCategory = categoryGroups
             .Select(g => new CategoryExpenseDto(

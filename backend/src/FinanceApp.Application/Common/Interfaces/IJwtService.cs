@@ -13,5 +13,5 @@ public interface IJwtService
     /// <param name="familyId">The user's active family, if any.</param>
     /// <param name="role">The user's role within the family, if any.</param>
     /// <returns>A signed JWT token string.</returns>
-    string GenerateToken(User user, Guid? familyId = null, string? role = null);
+    string GenerateToken(Users user, Guid? familyId = null, string? role = null);
 }

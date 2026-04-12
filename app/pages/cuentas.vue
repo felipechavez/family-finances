@@ -4,9 +4,12 @@ import { storeToRefs } from 'pinia'
 import { useCuentasStore } from '~/stores/cuentas'
 import { useFormato } from '~/composables/use-formato'
 import { useToast } from '~/composables/use-toast'
+import { useApiError } from '~/composables/use-api-error'
 import type { AccountType } from '#shared/types'
 
 definePageMeta({ middleware: 'auth' })
+
+const { t } = useI18n()
 useHead({ title: 'Cuentas - FinanzasApp' })
 
 const cuentasStore = useCuentasStore()
@@ -14,39 +17,40 @@ const { formatCLP } = useFormato()
 const { ok: toastOk, error: toastError } = useToast()
 
 const { cuentas, balanceTotal, status, error: cuentasError } = storeToRefs(cuentasStore)
+const { message: errorMessage } = useApiError(cuentasError)
 
 const mostrarForm = ref(false)
 const form = ref({ name: '', type: 'bank' as AccountType })
 
-const tiposCuenta: { value: AccountType; label: string; emoji: string }[] = [
-  { value: 'cash', label: 'Efectivo', emoji: '💵' },
-  { value: 'bank', label: 'Cuenta Bancaria', emoji: '🏦' },
-  { value: 'savings', label: 'Ahorro', emoji: '🐷' },
-  { value: 'credit_card', label: 'Tarjeta de Crédito', emoji: '💳' },
-]
+const tiposCuenta = computed(() => [
+  { value: 'cash' as AccountType,        label: t('cuentas.tipos.cash'),        emoji: '💵' },
+  { value: 'bank' as AccountType,        label: t('cuentas.tipos.bank'),        emoji: '🏦' },
+  { value: 'savings' as AccountType,     label: t('cuentas.tipos.savings'),     emoji: '🐷' },
+  { value: 'credit_card' as AccountType, label: t('cuentas.tipos.credit_card'), emoji: '💳' },
+])
 
-function tipoInfo(type: AccountType): { value: AccountType; label: string; emoji: string } {
-  return tiposCuenta.find(t => t.value === type) ?? tiposCuenta[0]!
+function tipoInfo(type: AccountType) {
+  return tiposCuenta.value.find(t => t.value === type) ?? tiposCuenta.value[0]!
 }
 
 async function handleCrear() {
-  if (!form.value.name.trim()) { toastError('Ingresa un nombre'); return }
+  if (!form.value.name.trim()) { toastError(t('cuentas.ingresaNombre')); return }
   try {
     await cuentasStore.crear({ name: form.value.name.trim(), type: form.value.type })
     form.value = { name: '', type: 'bank' }
     mostrarForm.value = false
-    toastOk('Cuenta creada')
+    toastOk(t('cuentas.creada'))
   } catch {
-    toastError('No se pudo crear la cuenta')
+    toastError(t('cuentas.noSePudoCrear'))
   }
 }
 
 async function handleEliminar(id: string) {
   try {
     await cuentasStore.eliminar(id)
-    toastOk('Cuenta eliminada')
+    toastOk(t('cuentas.eliminada'))
   } catch {
-    toastError('No se pudo eliminar')
+    toastError(t('cuentas.noSePudoEliminar'))
   }
 }
 </script>
@@ -54,42 +58,42 @@ async function handleEliminar(id: string) {
 <template>
   <div>
     <header class="header">
-      <h1 class="header-titulo">Cuentas</h1>
+      <h1 class="header-titulo">{{ $t('cuentas.title') }}</h1>
       <button class="btn-agregar" @click="mostrarForm = !mostrarForm">
-        {{ mostrarForm ? 'Cancelar' : '+ Nueva' }}
+        {{ mostrarForm ? $t('cuentas.cancelar') : $t('cuentas.nueva') }}
       </button>
     </header>
 
     <main class="main">
       <!-- Balance total -->
       <div class="balance-card">
-        <p class="balance-label">Balance total</p>
+        <p class="balance-label">{{ $t('cuentas.balanceTotal') }}</p>
         <p class="balance-monto">{{ formatCLP(balanceTotal) }}</p>
       </div>
 
       <!-- Form -->
       <div v-if="mostrarForm" class="form-card">
         <div class="form">
-          <label class="field-label">NOMBRE</label>
-          <input v-model="form.name" class="input" type="text" placeholder="Ej: Cuenta corriente BCI" />
+          <label class="field-label">{{ $t('cuentas.nombre') }}</label>
+          <input v-model="form.name" class="input" type="text" :placeholder="$t('cuentas.namePlaceholder')" />
 
-          <label class="field-label">TIPO</label>
+          <label class="field-label">{{ $t('cuentas.tipo') }}</label>
           <select v-model="form.type" class="input select">
-            <option v-for="t in tiposCuenta" :key="t.value" :value="t.value">
-              {{ t.emoji }} {{ t.label }}
+            <option v-for="tp in tiposCuenta" :key="tp.value" :value="tp.value">
+              {{ tp.emoji }} {{ tp.label }}
             </option>
           </select>
 
-          <button class="btn-primary" @click="handleCrear">Crear cuenta</button>
+          <button class="btn-primary" @click="handleCrear">{{ $t('cuentas.crearCuenta') }}</button>
         </div>
       </div>
 
       <!-- Lista -->
-      <UiSpinner v-if="status === 'pending'">Cargando...</UiSpinner>
-      <div v-else-if="cuentasError" class="error-state"><p>Error al cargar cuentas</p></div>
+      <UiSpinner v-if="status === 'pending'">{{ $t('common.loading') }}</UiSpinner>
+      <UiError404 v-else-if="cuentasError" :message="errorMessage" />
       <div v-else-if="cuentas.length === 0" class="empty-state">
         <span class="empty-icon">💳</span>
-        <p>No hay cuentas registradas</p>
+        <p>{{ $t('cuentas.empty') }}</p>
       </div>
       <div v-else class="cuentas-grid">
         <div v-for="cuenta in cuentas" :key="cuenta.id" class="cuenta-card">
@@ -175,13 +179,12 @@ async function handleEliminar(id: string) {
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
   color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
 }
-
-.error-state { text-align: center; color: #f87171; padding: 40px 20px; }
 .empty-state { text-align: center; color: #6b6b8a; padding: 60px 20px; }
 .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
 
 @media (min-width: 768px) {
-  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
   .cuentas-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1280px) {

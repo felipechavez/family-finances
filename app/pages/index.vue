@@ -5,8 +5,11 @@ import { storeToRefs } from 'pinia'
 import { useTransaccionesStore } from '~/stores/transacciones'
 import { usePresupuestosStore } from '~/stores/presupuestos'
 import { useFormato } from '~/composables/use-formato'
+import { useApiError } from '~/composables/use-api-error'
 
 definePageMeta({ middleware: 'auth' })
+
+const { t } = useI18n()
 useHead({ title: 'Dashboard - FinanzasApp' })
 
 const txStore = useTransaccionesStore()
@@ -22,14 +25,17 @@ const {
   balance,
   gastosPorCategoria,
   mes,
-} = storeToRefs(txStore)
+} = storeToRefs(txStore)  
+
+
+const { message: errorMessage } = useApiError(errorTx)
 
 const { presupuestoPorCategoria } = storeToRefs(presupStore)
 
 const mesActual = new Date().toISOString().slice(0, 7)
 
 const mesesDisponibles = computed(() => {
-  const meses = new Set(transacciones.value.map(t => t.fecha.slice(0, 7)))
+  const meses = new Set(transacciones.value.map(trx => trx.fecha.slice(0, 7)))
   meses.add(mesActual)
   return Array.from(meses).sort().reverse()
 })
@@ -40,8 +46,8 @@ const mesesDisponibles = computed(() => {
     <!-- Header -->
     <header class="header">
       <div>
-        <p class="header-sub">Familia</p>
-        <h1 class="header-titulo">Dashboard</h1>
+        <p class="header-sub">{{ $t('dashboard.family') }}</p>
+        <h1 class="header-titulo">{{ $t('dashboard.title') }}</h1>
       </div>
       <select v-model="mes" class="select-mes">
         <option v-for="m in mesesDisponibles" :key="m" :value="m">
@@ -51,10 +57,8 @@ const mesesDisponibles = computed(() => {
     </header>
 
     <main class="main">
-      <UiSpinner v-if="statusTx === 'pending'">Cargando...</UiSpinner>
-      <div v-else-if="errorTx" class="error-state">
-        <p>Error al cargar transacciones</p>
-      </div>
+      <UiSpinner v-if="statusTx === 'pending'">{{ $t('common.loading') }}</UiSpinner>
+      <UiError404 v-else-if="errorTx" :message="errorMessage" />     
       <template v-else>
         <div class="resumen-grid">
           <div class="resumen-col-izq">
@@ -72,8 +76,8 @@ const mesesDisponibles = computed(() => {
           <div class="resumen-col-der">
             <div v-if="transacciones.length" class="card">
               <div class="card-header">
-                <h3 class="card-titulo">Últimos movimientos</h3>
-                <NuxtLink to="/transacciones" class="btn-ver-todos">Ver todos</NuxtLink>
+                <h3 class="card-titulo">{{ $t('dashboard.recentMovements') }}</h3>
+                <NuxtLink to="/transacciones" class="btn-ver-todos">{{ $t('dashboard.seeAll') }}</NuxtLink>
               </div>
               <TransaccionesRow
                 v-for="tx in transacciones.slice(0, 6)"
@@ -121,7 +125,8 @@ const mesesDisponibles = computed(() => {
 .resumen-grid { display: flex; flex-direction: column; }
 
 @media (min-width: 768px) {
-  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
   .resumen-grid { flex-direction: row; gap: 24px; align-items: flex-start; }
   .resumen-col-izq { flex: 1; min-width: 0; }
   .resumen-col-der { width: 360px; flex-shrink: 0; }

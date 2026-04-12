@@ -7,15 +7,16 @@ import { useAuthStore } from '~/stores/auth'
 export default defineNuxtPlugin(() => {
   const auth = useAuthStore()
   const config = useRuntimeConfig()
-
   const api = $fetch.create({
     baseURL: config.public.apiBase,
     onRequest({ options }) {
+      const headers = new Headers(options.headers as HeadersInit)
       if (auth.token) {
-        const headers = new Headers(options.headers as HeadersInit)
         headers.set('Authorization', `Bearer ${auth.token}`)
-        options.headers = headers
       }
+      const locale = useNuxtApp().$i18n?.locale.value ?? 'es'
+      headers.set('Accept-Language', locale)
+      options.headers = headers
     },
     onResponseError({ response }) {
       if (response.status === 401) {

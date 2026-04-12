@@ -8,6 +8,19 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";  -- gen_random_uuid()
 
 -- =============================================================================
+-- SCHEMA
+-- =============================================================================
+CREATE SCHEMA IF NOT EXISTS finances;
+SET search_path TO finances, public;
+
+grant usage on schema finances to anon, authenticated, service_role;
+
+grant select, insert, update, delete on all tables in schema finances to anon, authenticated;
+
+alter default privileges in schema finances
+grant select, insert, update, delete on tables to anon, authenticated;
+
+-- =============================================================================
 -- USERS
 -- =============================================================================
 CREATE TABLE users (

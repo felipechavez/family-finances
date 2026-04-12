@@ -1,0 +1,142 @@
+{
+  "nav": {
+    "inicio": "Inicio",
+    "historial": "Historial",
+    "cuentas": "Cuentas",
+    "limites": "Límites",
+    "reportes": "Reportes",
+    "cerrarSesion": "Cerrar sesión"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Inicia sesión para continuar",
+      "email": "EMAIL",
+      "password": "CONTRASEÑA",
+      "emailPlaceholder": "tu{'@'}email.com",
+      "submitting": "Ingresando...",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿No tienes cuenta?",
+      "registerLink": "Regístrate",
+      "fillFields": "Completa todos los campos",
+      "invalidCredentials": "Credenciales incorrectas"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Únete a tu familia financiera",
+      "name": "NOMBRE",
+      "email": "EMAIL",
+      "password": "CONTRASEÑA",
+      "confirmPassword": "CONFIRMAR CONTRASEÑA",
+      "namePlaceholder": "Tu nombre",
+      "emailPlaceholder": "tu{'@'}email.com",
+      "passwordPlaceholder": "Mínimo 6 caracteres",
+      "confirmPasswordPlaceholder": "Repite la contraseña",
+      "fillFields": "Completa todos los campos",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "submitting": "Creando cuenta...",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "error": "No se pudo crear la cuenta. Intenta de nuevo."
+    }
+  },
+  "dashboard": {
+    "family": "Familia",
+    "title": "Dashboard",
+    "recentMovements": "Últimos movimientos",
+    "seeAll": "Ver todos",
+    "loadError": "Error al cargar transacciones"
+  },
+  "transacciones": {
+    "title": "Transacciones",
+    "nuevo": "+ Nuevo",
+    "cancelar": "Cancelar",
+    "gasto": "Gasto",
+    "ingreso": "Ingreso",
+    "monto": "MONTO ($)",
+    "descripcion": "DESCRIPCIÓN",
+    "categoria": "CATEGORÍA",
+    "cuenta": "CUENTA",
+    "fecha": "FECHA",
+    "descripcionPlaceholder": "¿En qué se gastó?",
+    "registrarGasto": "Registrar gasto",
+    "registrarIngreso": "Registrar ingreso",
+    "loadError": "Error al cargar",
+    "empty": "Sin movimientos este mes",
+    "montoInvalido": "Ingresa un monto válido",
+    "descripcionRequerida": "La descripción es requerida",
+    "gastoRegistrado": "Gasto registrado",
+    "ingresoRegistrado": "Ingreso registrado",
+    "noSePudoGuardar": "No se pudo guardar",
+    "eliminado": "Eliminado",
+    "noSePudoEliminar": "No se pudo eliminar"
+  },
+  "cuentas": {
+    "title": "Cuentas",
+    "nueva": "+ Nueva",
+    "cancelar": "Cancelar",
+    "balanceTotal": "Balance total",
+    "nombre": "NOMBRE",
+    "tipo": "TIPO",
+    "crearCuenta": "Crear cuenta",
+    "namePlaceholder": "Ej: Cuenta corriente BCI",
+    "loadError": "Error al cargar cuentas",
+    "empty": "No hay cuentas registradas",
+    "creada": "Cuenta creada",
+    "eliminada": "Cuenta eliminada",
+    "ingresaNombre": "Ingresa un nombre",
+    "noSePudoCrear": "No se pudo crear la cuenta",
+    "noSePudoEliminar": "No se pudo eliminar",
+    "tipos": {
+      "cash": "Efectivo",
+      "bank": "Cuenta Bancaria",
+      "savings": "Ahorro",
+      "credit_card": "Tarjeta de Crédito"
+    }
+  },
+  "presupuestos": {
+    "title": "Presupuestos",
+    "subtitle": "Define cuánto quieres gastar por categoría cada mes",
+    "loadError": "Error al cargar presupuestos",
+    "limiteSaved": "Límite guardado",
+    "noSePudoGuardar": "No se pudo guardar el límite",
+    "excedido": "⚠ Excedido",
+    "gastado": "Gastado",
+    "limite": "Límite",
+    "sinLimite": "Sin límite",
+    "guardar": "Guardar"
+  },
+  "reportes": {
+    "title": "Reportes",
+    "loadError": "Error al cargar datos",
+    "resumenMensual": "Resumen mensual",
+    "ingresos": "Ingresos",
+    "gastos": "Gastos",
+    "balance": "Balance",
+    "distribucion": "Distribución de gastos",
+    "sinGastos": "Sin gastos para mostrar",
+    "estadisticas": "Estadísticas",
+    "totalTransacciones": "Total transacciones",
+    "promedioPorGasto": "Promedio por gasto",
+    "categoriaMasAlta": "Categoría más alta"
+  },
+  "categorias": {
+    "alimentacion": "Alimentación",
+    "transporte": "Transporte",
+    "salud": "Salud",
+    "educacion": "Educación",
+    "hogar": "Hogar",
+    "entretenimiento": "Entretención",
+    "ropa": "Ropa",
+    "otros": "Otros",
+    "sueldo": "Sueldo",
+    "freelance": "Freelance",
+    "arriendo": "Arriendo",
+    "otros_ingreso": "Otros"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error"
+  }
+}

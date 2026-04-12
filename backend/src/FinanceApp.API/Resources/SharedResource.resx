@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Resources.Extensions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Resources.Extensions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51</value>
+  </resheader>
+
+  <!-- Auth -->
+  <data name="Auth_InvalidCredentials" xml:space="preserve">
+    <value>Invalid credentials.</value>
+  </data>
+  <data name="Auth_EmailAlreadyRegistered" xml:space="preserve">
+    <value>Email already registered.</value>
+  </data>
+
+  <!-- Accounts -->
+  <data name="Account_NoFamilyAssociated" xml:space="preserve">
+    <value>User does not have an associated family.</value>
+  </data>
+
+  <!-- Transactions -->
+  <data name="Transaction_CategoryNotFound" xml:space="preserve">
+    <value>Category {0} not found.</value>
+  </data>
+  <data name="Transaction_NotFound" xml:space="preserve">
+    <value>Transaction {0} not found.</value>
+  </data>
+
+  <!-- General -->
+  <data name="ErrorUnexpected" xml:space="preserve">
+    <value>An unexpected error occurred.</value>
+  </data>
+</root>

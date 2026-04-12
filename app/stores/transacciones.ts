@@ -18,8 +18,11 @@ interface TransactionDto {
 }
 
 export const useTransaccionesStore = defineStore('transacciones', () => {
-  const { $api } = useNuxtApp()
-  const mes = ref(new Date().toISOString().slice(0, 7))
+  function getApi() {
+    const nuxtApp = useNuxtApp()
+    return nuxtApp.$api as typeof $fetch
+  }
+  const mes = shallowRef(new Date().toISOString().slice(0, 7))
 
   const query = computed(() => {
     const [year, month] = mes.value.split('-').map(Number)
@@ -36,8 +39,9 @@ export const useTransaccionesStore = defineStore('transacciones', () => {
     refresh,
   } = useFetch<TransactionDto[]>('/transactions', {
     key: () => `transacciones-${mes.value}`,
-    query: query.value,
-    $fetch: $api as typeof $fetch,
+    server: false,
+    query,
+    $fetch: getApi(),
     default: (): TransactionDto[] => [],
   })
 
@@ -82,7 +86,8 @@ export const useTransaccionesStore = defineStore('transacciones', () => {
   })
 
   async function crear(input: TransaccionCreateInput): Promise<Transaccion> {
-    const res = await ($api as typeof $fetch)<Transaccion>('/transactions', {
+    const $api = getApi()
+    const res = await $api<Transaccion>('/transactions', {
       method: 'POST',
       body: input,
     })
@@ -91,7 +96,8 @@ export const useTransaccionesStore = defineStore('transacciones', () => {
   }
 
   async function eliminar(id: string): Promise<void> {
-    await ($api as typeof $fetch)(`/transactions/${id}`, { method: 'DELETE' })
+    const $api = getApi()
+    await $api(`/transactions/${id}`, { method: 'DELETE' })
     await refresh()
   }
 

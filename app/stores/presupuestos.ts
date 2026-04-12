@@ -12,7 +12,9 @@ interface BudgetDto {
 }
 
 export const usePresupuestosStore = defineStore('presupuestos', () => {
-  const { $api } = useNuxtApp()
+  function getApi() {
+    return useNuxtApp().$api as typeof $fetch
+  }
   const txStore = useTransaccionesStore()
   const { mes } = storeToRefs(txStore)
 
@@ -23,7 +25,8 @@ export const usePresupuestosStore = defineStore('presupuestos', () => {
     refresh,
   } = useFetch<BudgetDto[]>('/budgets', {
     key: () => `presupuestos-${mes.value}`,
-    $fetch: $api as typeof $fetch,
+    server: false,
+    $fetch: getApi(),
     default: (): BudgetDto[] => [],
   })
 
@@ -44,7 +47,8 @@ export const usePresupuestosStore = defineStore('presupuestos', () => {
   })
 
   async function guardarLimite(categoria: string, limite: number): Promise<void> {
-    await ($api as typeof $fetch)('/budgets', {
+    const $api = getApi()
+    await $api('/budgets', {
       method: 'POST',
       body: { categoria, limite },
     })

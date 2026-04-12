@@ -1,12 +1,15 @@
 namespace FinanceApp.API.Endpoints;
-using System.Security.Claims;
-using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Application.Common;
 using FinanceApp.Application.Features.Budgets.GetBudgets;
 using FinanceApp.Application.Features.Budgets.UpsertBudget;
+using FinanceApp.Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Supabase;
+using System.Net;
+using System.Security.Claims;
 
 /// <summary>
 /// Maps budget endpoints: list and upsert.
@@ -20,7 +23,9 @@ internal static class BudgetsEndpoints
 
         group.MapGet("/", async (ClaimsPrincipal user, IMediator mediator) =>
         {
-            var result = await mediator.Send(new GetBudgetsQuery(user.GetFamilyId()));
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+            var result = await mediator.Send(new GetBudgetsQuery(familyId));
             return Results.Ok(result);
         })
         .WithName("GetBudgets")
@@ -30,11 +35,13 @@ internal static class BudgetsEndpoints
             UpsertBudgetRequest req,
             ClaimsPrincipal user,
             IMediator mediator,
-            IAppDbContext db) =>
+            Client supabase) =>
         {
             var familyId = user.GetFamilyId();
-            var categoryId = await CategoryHelper.FindByNameAsync(db, req.Category, familyId);
-            var id = await mediator.Send(new UpsertBudgetCommand(familyId, categoryId, req.Limit));
+            if (familyId == null)
+                return Results.BadRequest("El usuario no tiene familia asociada.");
+            var categoryId = await CategoryHelper.FindByNameAsync(supabase, req.Category, familyId.Value);
+            var id = await mediator.Send(new UpsertBudgetCommand(familyId.Value, categoryId, req.Limit));
             return Results.Ok(new { id });
         })
         .WithName("UpsertBudget")

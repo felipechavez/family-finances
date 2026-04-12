@@ -1,30 +1,35 @@
 namespace FinanceApp.Application.Features.Auth.Login;
+using FinanceApp.Application.Common;
 using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Domain.Common;
+using FinanceApp.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Supabase;
 
 /// <summary>
 /// Handles <see cref="LoginCommand"/>: validates credentials and issues a JWT access token.
 /// </summary>
-public class LoginHandler(IAppDbContext db, IPasswordHasher hasher, IJwtService jwt, ILogger<LoginHandler> logger)
+public class LoginHandler(Client supabase, IPasswordHasher hasher, IJwtService jwt, ILogger<LoginHandler> logger)
     : IRequestHandler<LoginCommand, LoginResult>
 {
-    /// <inheritdoc/>
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await db.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken)
-            ?? throw new UnauthorizedAccessException("Invalid credentials.");
+        var userResponse = await supabase.From<Users>()
+            .Where(u => u.Email == request.Email)
+            .Get();
+
+        var user = userResponse.Model
+            ?? throw new AppException(LocalizationKeys.Auth_InvalidCredentials, 401);
 
         if (!hasher.Verify(request.Password, user.PasswordHash))
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new AppException(LocalizationKeys.Auth_InvalidCredentials, 401);
 
-        var membership = await db.FamilyMembers
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.UserId == user.Id, cancellationToken);
+        var membershipResponse = await supabase.From<FamilyMember>()
+            .Where(m => m.UserId == user.Id)
+            .Get();
 
+        var membership = membershipResponse.Model;
         var token = jwt.GenerateToken(user, membership?.FamilyId, membership?.Role.ToString());
 
         logger.LogInformation("User {UserId} authenticated successfully", user.Id);

@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE_URL ?? 'http://localhost:58196',
+      apiBase: process.env.API_BASE_URL ?? 'http://localhost:58196/',
     },
   },
 
@@ -39,7 +39,24 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@pinia/nuxt',
+    '@nuxtjs/i18n',
   ],
+
+  i18n: {
+    strategy: 'no_prefix',
+    defaultLocale: 'es',
+    lazy: true,
+    langDir: 'locales/',
+    locales: [
+      { code: 'es', language: 'es', name: 'Español', file: 'es.json' },
+      { code: 'en', language: 'en', name: 'English', file: 'en.json' },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_locale',
+      fallbackLocale: 'es',
+    },
+  },
 
   css: ['~/assets/css/main.css'],
 

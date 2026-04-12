@@ -8,14 +8,12 @@ using System.Security.Claims;
 internal static class ClaimsPrincipalExtensions
 {
     /// <summary>
-    /// Returns the family identifier embedded in the JWT, or throws if the claim is absent.
+    /// Returns the family identifier embedded in the JWT, or null if the claim is absent.
     /// </summary>
-    /// <exception cref="UnauthorizedAccessException">Thrown when the user has no family claim.</exception>
-    internal static Guid GetFamilyId(this ClaimsPrincipal user)
+    internal static Guid? GetFamilyId(this ClaimsPrincipal user)
     {
-        var claim = user.FindFirstValue("family_id")
-            ?? throw new UnauthorizedAccessException("No family associated with this user.");
-        return Guid.Parse(claim);
+        var claim = user.FindFirstValue("family_id");
+        return claim != null ? Guid.Parse(claim) : (Guid?)null;
     }
 
     /// <summary>

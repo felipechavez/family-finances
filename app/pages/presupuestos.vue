@@ -5,8 +5,11 @@ import { useTransaccionesStore } from '~/stores/transacciones'
 import { usePresupuestosStore } from '~/stores/presupuestos'
 import { useCategorias } from '~/composables/use-categorias'
 import { useToast } from '~/composables/use-toast'
+import { useApiError } from '~/composables/use-api-error'
 
 definePageMeta({ middleware: 'auth' })
+
+const { t } = useI18n()
 useHead({ title: 'Presupuestos - FinanzasApp' })
 
 const txStore = useTransaccionesStore()
@@ -16,13 +19,14 @@ const { ok: toastOk, error: toastError } = useToast()
 
 const { gastosPorCategoria } = storeToRefs(txStore)
 const { presupuestoPorCategoria, status, error: presupError } = storeToRefs(presupStore)
+const { message: errorMessage } = useApiError(presupError)
 
 async function handleGuardarLimite(categoria: string, limite: number) {
   try {
     await presupStore.guardarLimite(categoria, limite)
-    toastOk('Límite guardado')
+    toastOk(t('presupuestos.limiteSaved'))
   } catch {
-    toastError('No se pudo guardar el límite')
+    toastError(t('presupuestos.noSePudoGuardar'))
   }
 }
 </script>
@@ -31,14 +35,14 @@ async function handleGuardarLimite(categoria: string, limite: number) {
   <div>
     <header class="header">
       <div>
-        <h1 class="header-titulo">Presupuestos</h1>
-        <p class="header-sub">Define cuánto quieres gastar por categoría cada mes</p>
+        <h1 class="header-titulo">{{ $t('presupuestos.title') }}</h1>
+        <p class="header-sub">{{ $t('presupuestos.subtitle') }}</p>
       </div>
     </header>
 
     <main class="main">
-      <UiSpinner v-if="status === 'pending'">Cargando...</UiSpinner>
-      <div v-else-if="presupError" class="error-state"><p>Error al cargar presupuestos</p></div>
+      <UiSpinner v-if="status === 'pending'">{{ $t('common.loading') }}</UiSpinner>
+      <UiError404 v-else-if="presupError" :message="errorMessage" />
       <template v-else>
         <div class="presupuesto-grid">
           <PresupuestosCard
@@ -71,10 +75,9 @@ async function handleGuardarLimite(categoria: string, limite: number) {
 
 .presupuesto-grid { display: grid; grid-template-columns: 1fr; gap: 0; }
 
-.error-state { text-align: center; color: #f87171; padding: 40px 20px; }
-
 @media (min-width: 768px) {
-  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
   .presupuesto-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }
 @media (min-width: 1280px) {

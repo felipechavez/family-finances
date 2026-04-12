@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IAppDbContext
 {
-    DbSet<User> Users { get; }
+    DbSet<Users> Users { get; }
     DbSet<Family> Families { get; }
     DbSet<FamilyMember> FamilyMembers { get; }
     DbSet<Account> Accounts { get; }

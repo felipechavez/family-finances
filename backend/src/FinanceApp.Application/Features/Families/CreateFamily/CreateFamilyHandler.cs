@@ -1,5 +1,4 @@
 namespace FinanceApp.Application.Features.Families.CreateFamily;
-using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Domain.Entities;
 using FinanceApp.Domain.Enums;
 using MediatR;

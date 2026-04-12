@@ -4,8 +4,11 @@ import { storeToRefs } from 'pinia'
 import { useTransaccionesStore } from '~/stores/transacciones'
 import { useCategorias } from '~/composables/use-categorias'
 import { useFormato } from '~/composables/use-formato'
+import { useApiError } from '~/composables/use-api-error'
 
 definePageMeta({ middleware: 'auth' })
+
+const { t } = useI18n()
 useHead({ title: 'Reportes - FinanzasApp' })
 
 const txStore = useTransaccionesStore()
@@ -21,6 +24,7 @@ const {
   status,
   error: txError,
 } = storeToRefs(txStore)
+const { message: errorMessage } = useApiError(txError)
 
 // Distribución de gastos para chart/tabla
 const distribucion = computed(() => {
@@ -38,27 +42,27 @@ const distribucion = computed(() => {
 <template>
   <div>
     <header class="header">
-      <h1 class="header-titulo">Reportes</h1>
+      <h1 class="header-titulo">{{ $t('reportes.title') }}</h1>
     </header>
 
     <main class="main">
-      <UiSpinner v-if="status === 'pending'">Cargando...</UiSpinner>
-      <div v-else-if="txError" class="error-state"><p>Error al cargar datos</p></div>
+      <UiSpinner v-if="status === 'pending'">{{ $t('common.loading') }}</UiSpinner>
+      <UiError404 v-else-if="txError" :message="errorMessage" />
       <template v-else>
         <!-- Resumen mensual -->
         <section class="seccion">
-          <h2 class="seccion-titulo">Resumen mensual</h2>
+          <h2 class="seccion-titulo">{{ $t('reportes.resumenMensual') }}</h2>
           <div class="resumen-cards">
             <div class="resumen-item resumen-item--ingreso">
-              <p class="resumen-label">Ingresos</p>
+              <p class="resumen-label">{{ $t('reportes.ingresos') }}</p>
               <p class="resumen-valor">{{ formatCLP(totalIngresos) }}</p>
             </div>
             <div class="resumen-item resumen-item--gasto">
-              <p class="resumen-label">Gastos</p>
+              <p class="resumen-label">{{ $t('reportes.gastos') }}</p>
               <p class="resumen-valor">{{ formatCLP(totalGastos) }}</p>
             </div>
             <div class="resumen-item" :class="balance >= 0 ? 'resumen-item--positivo' : 'resumen-item--negativo'">
-              <p class="resumen-label">Balance</p>
+              <p class="resumen-label">{{ $t('reportes.balance') }}</p>
               <p class="resumen-valor">{{ formatCLP(balance) }}</p>
             </div>
           </div>
@@ -66,9 +70,9 @@ const distribucion = computed(() => {
 
         <!-- Distribución de gastos -->
         <section class="seccion">
-          <h2 class="seccion-titulo">Distribución de gastos</h2>
+          <h2 class="seccion-titulo">{{ $t('reportes.distribucion') }}</h2>
           <div v-if="distribucion.length === 0" class="empty-state">
-            <p>Sin gastos para mostrar</p>
+            <p>{{ $t('reportes.sinGastos') }}</p>
           </div>
           <div v-else class="distribucion-list">
             <div v-for="item in distribucion" :key="item.id" class="dist-row">
@@ -90,22 +94,22 @@ const distribucion = computed(() => {
 
         <!-- Estadísticas -->
         <section class="seccion">
-          <h2 class="seccion-titulo">Estadísticas</h2>
+          <h2 class="seccion-titulo">{{ $t('reportes.estadisticas') }}</h2>
           <div class="stats-grid">
             <div class="stat-card">
-              <p class="stat-label">Total transacciones</p>
+              <p class="stat-label">{{ $t('reportes.totalTransacciones') }}</p>
               <p class="stat-valor">{{ transacciones.length }}</p>
             </div>
             <div class="stat-card">
-              <p class="stat-label">Promedio por gasto</p>
+              <p class="stat-label">{{ $t('reportes.promedioPorGasto') }}</p>
               <p class="stat-valor">
-                {{ formatCLP(transacciones.filter(t => t.tipo === 'gasto').length > 0
-                  ? totalGastos / transacciones.filter(t => t.tipo === 'gasto').length
+                {{ formatCLP(transacciones.filter(tx => tx.tipo === 'gasto').length > 0
+                  ? totalGastos / transacciones.filter(tx => tx.tipo === 'gasto').length
                   : 0) }}
               </p>
             </div>
             <div class="stat-card">
-              <p class="stat-label">Categoría más alta</p>
+              <p class="stat-label">{{ $t('reportes.categoriaMasAlta') }}</p>
               <p class="stat-valor">{{ distribucion[0]?.label ?? '-' }}</p>
             </div>
           </div>
@@ -167,7 +171,8 @@ const distribucion = computed(() => {
 .empty-state { text-align: center; color: #6b6b8a; padding: 40px 20px; }
 
 @media (min-width: 768px) {
-  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
   .resumen-cards { grid-template-columns: repeat(3, 1fr); }
   .stats-grid { grid-template-columns: repeat(3, 1fr); }
 }

@@ -4,6 +4,8 @@
 import type { CategoriaInfo } from '~/types/ui'
 import { useFormato } from '~/composables/use-formato'
 
+const { t } = useI18n()
+
 const props = defineProps<{
   categoria: CategoriaInfo
   gastado: number
@@ -37,13 +39,13 @@ function handleGuardar(): void {
       <div class="cat-nombre">
         <span class="cat-emoji">{{ categoria.emoji }}</span>
         <span class="cat-label">{{ categoria.label }}</span>
-        <span v-if="sobre" class="badge-excedido">⚠ Excedido</span>
+        <span v-if="sobre" class="badge-excedido">{{ $t('presupuestos.excedido') }}</span>
       </div>
     </div>
 
     <div class="stats">
-      <span>Gastado: <strong :class="{ 'texto-rojo': sobre }">{{ formatCLP(gastado) }}</strong></span>
-      <span v-if="limite > 0">Límite: <strong class="texto-morado">{{ formatCLP(limite) }}</strong></span>
+      <span>{{ $t('presupuestos.gastado') }}: <strong :class="{ 'texto-rojo': sobre }">{{ formatCLP(gastado) }}</strong></span>
+      <span v-if="limite > 0">{{ $t('presupuestos.limite') }}: <strong class="texto-morado">{{ formatCLP(limite) }}</strong></span>
     </div>
 
     <div v-if="limite > 0" class="barra-track">
@@ -58,7 +60,7 @@ function handleGuardar(): void {
         v-model="inputLimite"
         type="number"
         class="input-limite"
-        placeholder="Sin límite"
+        :placeholder="t('presupuestos.sinLimite')"
         @focus="editando = true"
       />
       <button
@@ -66,7 +68,7 @@ function handleGuardar(): void {
         class="btn-guardar"
         @click="handleGuardar"
       >
-        Guardar
+        {{ $t('presupuestos.guardar') }}
       </button>
     </div>
   </div>

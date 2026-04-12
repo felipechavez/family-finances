@@ -1,15 +1,18 @@
 namespace FinanceApp.API.Endpoints;
-using System.Security.Claims;
-using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Application.Common;
 using FinanceApp.Application.Features.Transactions.CreateTransaction;
 using FinanceApp.Application.Features.Transactions.DeleteTransaction;
 using FinanceApp.Application.Features.Transactions.GetTransactions;
+using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Supabase;
+using System.Net;
+using System.Security.Claims;
 
 /// <summary>
 /// Maps transaction endpoints: list, create, and delete.
@@ -27,7 +30,10 @@ internal static class TransactionsEndpoints
             [FromQuery] int? month,
             [FromQuery] int? year) =>
         {
-            var result = await mediator.Send(new GetTransactionsQuery(user.GetFamilyId(), month, year));
+            var familyId = user.GetFamilyId();
+            if (familyId == null)
+                return Results.NotFound("El usuario no tiene familia asociada.");
+            var result = await mediator.Send(new GetTransactionsQuery(familyId.Value, month, year));
             return Results.Ok(result);
         })
         .WithName("GetTransactions")
@@ -37,10 +43,11 @@ internal static class TransactionsEndpoints
             CreateTransactionRequest req,
             ClaimsPrincipal user,
             IMediator mediator,
-            IAppDbContext db) =>
+            Client supabase) =>
         {
-            var familyId = user.GetFamilyId();
-            var categoryId = await CategoryHelper.FindByNameAsync(db, req.Category, familyId);
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+            var categoryId = await CategoryHelper.FindByNameAsync(supabase, req.Category, familyId);
             var type = req.Type?.ToLowerInvariant() == "expense"
                 ? TransactionType.Expense
                 : TransactionType.Income;
@@ -68,7 +75,10 @@ internal static class TransactionsEndpoints
             ClaimsPrincipal user,
             IMediator mediator) =>
         {
-            await mediator.Send(new DeleteTransactionCommand(id, user.GetFamilyId()));
+            var familyId = user.GetFamilyId();
+            if (familyId == null)
+                return Results.BadRequest("El usuario no tiene familia asociada.");
+            await mediator.Send(new DeleteTransactionCommand(id, familyId.Value));
             return Results.NoContent();
         })
         .WithName("DeleteTransaction")

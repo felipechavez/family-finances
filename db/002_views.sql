@@ -2,6 +2,7 @@
 -- 002_views.sql
 -- Reporting views used by GET /reports/monthly and /reports/trend
 -- =============================================================================
+SET search_path TO finances, public;
 
 -- Monthly summary per family
 CREATE OR REPLACE VIEW v_monthly_summary AS

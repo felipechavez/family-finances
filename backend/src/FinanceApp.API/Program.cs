@@ -1,9 +1,10 @@
 using FinanceApp.API.Endpoints;
+using FinanceApp.API.Initializations;
+using FinanceApp.API.Resources;
 using FinanceApp.Application;
+using FinanceApp.Domain.Common;
 using FinanceApp.Infrastructure;
-// using FinanceApp.Infrastructure.Persistence; // Eliminado EF Core
-// using Microsoft.EntityFrameworkCore; // Eliminado EF Core
-using Supabase;
+using Microsoft.Extensions.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,31 +29,33 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddLocalization();
+
 builder.Services.AddCors(opts =>
     opts.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-// Eliminado HealthChecks de EF Core
-// builder.Services.AddHealthChecks()
-//     .AddDbContextCheck<AppDbContext>("database");
+SupabaseConfiguration.Initialize(builder.Services);
 
-var url = Environment.GetEnvironmentVariable("SUPABASE_URL");
-var key = Environment.GetEnvironmentVariable("SUPABASE_KEY");
-var options = new SupabaseOptions
-{
-    AutoRefreshToken = true,
-    AutoConnectRealtime = true,
-    // SessionHandler = new SupabaseSessionHandler() <-- This must be implemented by el developer
-};
-
-builder.Services.AddSingleton(provider => new Client(url!, key, options));
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // Eliminado código de migraciones y acceso a AppDbContext
+    // Eliminado cÃ³digo de migraciones y acceso a AppDbContext
 }
+
+app.UseRequestLocalization(options =>
+{
+    var supportedCultures = new[] { "en", "es" };
+    options.SetDefaultCulture("en")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
+    
+    // Reemplazar los proveedores con solo el AcceptLanguageHeaderRequestCultureProvider
+    options.RequestCultureProviders.Clear();
+    options.RequestCultureProviders.Add(new Microsoft.AspNetCore.Localization.AcceptLanguageHeaderRequestCultureProvider());
+});
 
 app.UseExceptionHandler(errorApp =>
 {
@@ -61,20 +64,35 @@ app.UseExceptionHandler(errorApp =>
         var feature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
         var ex = feature?.Error;
 
+        // Obtener la cultura actual del contexto HTTP
+        var cultureFeature = context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>();
+        var culture = cultureFeature?.RequestCulture.Culture ?? System.Globalization.CultureInfo.InvariantCulture;
+        
+        // Establecer la cultura ANTES de obtener el localizer
+        System.Globalization.CultureInfo.CurrentCulture = culture;
+        System.Globalization.CultureInfo.CurrentUICulture = culture;
+        System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+        System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+
+        var localizer = context.RequestServices
+            .GetRequiredService<IStringLocalizer<SharedResource>>();
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = ex switch
         {
+            AppException appEx => appEx.StatusCode,
             FluentValidation.ValidationException => 400,
             UnauthorizedAccessException => 401,
             KeyNotFoundException => 404,
             _ => 500
         };
-
+        
         var message = ex switch
         {
+            AppException appEx => localizer[appEx.ResourceKey, appEx.Args].Value,
             FluentValidation.ValidationException ve =>
-                string.Join("; ", ve.Errors.Select(e => e.ErrorMessage)),
-            _ => ex?.Message ?? "An unexpected error occurred"
+                LocalizedFluentValidator.GetLocalizedValidationErrors(ve, localizer),
+            _ => ex?.Message ?? localizer["ErrorUnexpected"].Value
         };
 
         await context.Response.WriteAsJsonAsync(new { error = message });

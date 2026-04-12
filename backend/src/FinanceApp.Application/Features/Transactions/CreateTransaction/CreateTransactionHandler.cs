@@ -1,17 +1,17 @@
 namespace FinanceApp.Application.Features.Transactions.CreateTransaction;
-using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Application.Common;
+using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Supabase;
 
 /// <summary>
 /// Handles <see cref="CreateTransactionCommand"/>: persists a new transaction and returns its projection.
 /// </summary>
-public class CreateTransactionHandler(IAppDbContext db, ILogger<CreateTransactionHandler> logger)
+public class CreateTransactionHandler(Client supabase, ILogger<CreateTransactionHandler> logger)
     : IRequestHandler<CreateTransactionCommand, TransactionDto>
 {
-    /// <inheritdoc/>
     public async Task<TransactionDto> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
     {
         var tx = Transaction.Create(
@@ -19,14 +19,14 @@ public class CreateTransactionHandler(IAppDbContext db, ILogger<CreateTransactio
             request.CategoryId, request.Type, request.Amount,
             request.Description, request.TransactionDate, request.Currency);
 
-        db.Transactions.Add(tx);
-        await db.SaveChangesAsync(cancellationToken);
+        await supabase.From<Transaction>().Insert(tx);
 
-        var categoryName = await db.Categories
-            .AsNoTracking()
+        var categoryResponse = await supabase.From<Category>()
             .Where(c => c.Id == tx.CategoryId)
-            .Select(c => c.Name)
-            .SingleAsync(cancellationToken);
+            .Get();
+
+        var categoryName = categoryResponse.Model?.Name
+            ?? throw new AppException(LocalizationKeys.Transaction_CategoryNotFound, 404, tx.CategoryId);
 
         logger.LogInformation("Transaction {TransactionId} ({Type} {Amount}) created for family {FamilyId}",
             tx.Id, tx.Type, tx.Amount, request.FamilyId);
@@ -34,7 +34,6 @@ public class CreateTransactionHandler(IAppDbContext db, ILogger<CreateTransactio
         return ToDto(tx, categoryName);
     }
 
-    /// <summary>Maps a <see cref="Transaction"/> and its category name to a <see cref="TransactionDto"/>.</summary>
     internal static TransactionDto ToDto(Transaction tx, string categoryName) => new(
         tx.Id, tx.FamilyId, tx.AccountId, tx.UserId, tx.CategoryId,
         categoryName, tx.Type.ToString(), tx.Amount, tx.Currency, tx.Description,
