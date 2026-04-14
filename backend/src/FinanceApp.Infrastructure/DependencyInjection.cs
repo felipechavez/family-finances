@@ -1,5 +1,6 @@
 namespace FinanceApp.Infrastructure;
 using System.Text;
+using FinanceApp.Application.Common;
 using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Infrastructure.Services;
 using FinanceApp.Infrastructure.Settings;
@@ -30,6 +31,10 @@ public static class DependencyInjection
             .Bind(config.GetSection("Jwt"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        // Email verification feature flag (set Enabled=false in dev to skip Resend)
+        services.AddOptions<EmailVerificationOptions>()
+            .Bind(config.GetSection(EmailVerificationOptions.SectionName));
 
         // Redis
         services.AddStackExchangeRedisCache(opts =>

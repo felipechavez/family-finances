@@ -1,4 +1,5 @@
 namespace FinanceApp.API.Endpoints;
+using Microsoft.AspNetCore.Mvc;
 using FinanceApp.Application.Features.Auth.Confirm2Fa;
 using FinanceApp.Application.Features.Auth.Disable2Fa;
 using FinanceApp.Application.Features.Auth.Login;
@@ -87,7 +88,7 @@ internal static class AuthEndpoints
         .ProducesProblem(400)
         .ProducesProblem(409);
 
-        secured.MapDelete("/disable-2fa", async (Disable2FaRequest req, ClaimsPrincipal user, IMediator mediator) =>
+        secured.MapDelete("/disable-2fa", async ([FromBody] Disable2FaRequest req, ClaimsPrincipal user, IMediator mediator) =>
         {
             var userId = user.GetUserId();
             await mediator.Send(new Disable2FaCommand(userId, req.Code));

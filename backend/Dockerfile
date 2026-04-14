@@ -8,19 +8,22 @@ EXPOSE 8080
 
 # ──────────────────────────────────────────────
 # Stage 2: Build
+# Build context must be the repository root so
+# that paths below resolve correctly.
 # ──────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copiar sólo .csproj primero para aprovechar caché de NuGet
-COPY ["src/FinanceApp.API/FinanceApp.API.csproj",             "src/FinanceApp.API/"]
-COPY ["src/FinanceApp.Application/FinanceApp.Application.csproj", "src/FinanceApp.Application/"]
-COPY ["src/FinanceApp.Infrastructure/FinanceApp.Infrastructure.csproj", "src/FinanceApp.Infrastructure/"]
-COPY ["src/FinanceApp.Domain/FinanceApp.Domain.csproj",       "src/FinanceApp.Domain/"]
+# Copy .csproj files first to maximise NuGet layer cache
+COPY ["backend/src/FinanceApp.API/FinanceApp.API.csproj",                     "src/FinanceApp.API/"]
+COPY ["backend/src/FinanceApp.Application/FinanceApp.Application.csproj",     "src/FinanceApp.Application/"]
+COPY ["backend/src/FinanceApp.Infrastructure/FinanceApp.Infrastructure.csproj","src/FinanceApp.Infrastructure/"]
+COPY ["backend/src/FinanceApp.Domain/FinanceApp.Domain.csproj",               "src/FinanceApp.Domain/"]
 RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet restore "src/FinanceApp.API/FinanceApp.API.csproj"
 
-COPY . .
+# Copy only the backend source (avoids pulling in app/, i18n/, etc.)
+COPY backend/src/ src/
 WORKDIR "/src/src/FinanceApp.API"
 RUN dotnet build "FinanceApp.API.csproj" -c Release -o /app/build
 
@@ -32,7 +35,7 @@ RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet publish "FinanceApp.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # ──────────────────────────────────────────────
-# Stage 4: Runtime final (imagen mínima)
+# Stage 4: Runtime final (minimal image)
 # ──────────────────────────────────────────────
 FROM base AS final
 WORKDIR /app

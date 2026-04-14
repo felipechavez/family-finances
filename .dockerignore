@@ -1,25 +1,31 @@
-# Dependencias y builds
+# Frontend build artifacts
 node_modules
 .nuxt
 .output
+app/
+i18n/
+shared/
+skills-lock.json
+
+# Backend build artifacts (keep source, exclude binaries)
+backend/**/bin/
+backend/**/obj/
+backend/tests/
 
 # Git
 .git
 .gitignore
 
-# Variables de entorno (nunca al build context)
+# Environment files (never in build context)
 .env
 .env.*
-
-# Backend (tiene su propio contexto)
-backend/
 
 # DB / docs
 db/
 *.md
 README*
 
-# Logs y temporales
+# Logs and temp
 *.log
 .DS_Store
 Thumbs.db

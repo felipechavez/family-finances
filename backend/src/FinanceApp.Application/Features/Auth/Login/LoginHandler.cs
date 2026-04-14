@@ -5,13 +5,19 @@ using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Supabase;
 
 /// <summary>
 /// Handles <see cref="LoginCommand"/>: validates credentials and issues a JWT access token.
-/// Enforces email verification and handles the 2FA challenge flow.
+/// Enforces email verification (unless disabled via config) and handles the 2FA challenge flow.
 /// </summary>
-public class LoginHandler(Client supabase, IPasswordHasher hasher, IJwtService jwt, ILogger<LoginHandler> logger)
+public class LoginHandler(
+    Client supabase,
+    IPasswordHasher hasher,
+    IJwtService jwt,
+    IOptions<EmailVerificationOptions> emailVerificationOptions,
+    ILogger<LoginHandler> logger)
     : IRequestHandler<LoginCommand, LoginResult>
 {
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -26,8 +32,8 @@ public class LoginHandler(Client supabase, IPasswordHasher hasher, IJwtService j
         if (!hasher.Verify(request.Password, user.PasswordHash))
             throw new AppException(LocalizationKeys.Auth_InvalidCredentials, 401);
 
-        // Block login until the email is verified.
-        if (!user.EmailVerified)
+        // Block login until the email is verified (skip when disabled in config for local dev).
+        if (emailVerificationOptions.Value.Enabled && !user.EmailVerified)
             throw new AppException(LocalizationKeys.Auth_EmailNotVerified, 403);
 
         // If 2FA is enabled, return a short-lived challenge token instead of the full JWT.
