@@ -1,10 +1,12 @@
 namespace FinanceApp.API.Endpoints;
-using System.Security.Claims;
+using FinanceApp.Application.Features.Families;
 using FinanceApp.Application.Features.Families.CreateFamily;
+using FinanceApp.Application.Features.Families.JoinFamily;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using System.Security.Claims;
 
 /// <summary>
 /// Maps family management endpoints.
@@ -16,15 +18,38 @@ internal static class FamiliesEndpoints
     {
         var group = app.MapGroup("/families").WithTags("Families").RequireAuthorization();
 
-        group.MapPost("/", async (CreateFamilyCommand cmd, IMediator mediator) =>
+        group.MapPost("/", async (
+            CreateFamilyRequest req,
+            ClaimsPrincipal user,
+            IMediator mediator) =>
         {
-            var id = await mediator.Send(cmd);
-            return Results.Created($"/families/{id}", new { id });
+            var userId = user.GetUserId();
+            var result = await mediator.Send(new CreateFamilyCommand(req.Name, userId));
+            return Results.Created($"/families/{result.FamilyId}", result);
         })
         .WithName("CreateFamily")
-        .Produces<object>(201)
+        .Produces<FamilySetupResult>(201)
         .ProducesProblem(400);
+
+        group.MapPost("/join", async (
+            JoinFamilyRequest req,
+            ClaimsPrincipal user,
+            IMediator mediator) =>
+        {
+            var userId = user.GetUserId();
+            var result = await mediator.Send(new JoinFamilyCommand(req.FamilyId, userId));
+            return Results.Ok(result);
+        })
+        .WithName("JoinFamily")
+        .Produces<FamilySetupResult>()
+        .ProducesProblem(404);
 
         return app;
     }
 }
+
+/// <summary>Request body for creating a new family.</summary>
+internal record CreateFamilyRequest(string Name);
+
+/// <summary>Request body for joining an existing family by its identifier.</summary>
+internal record JoinFamilyRequest(Guid FamilyId);

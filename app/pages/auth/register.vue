@@ -10,6 +10,7 @@ const auth = useAuthStore()
 const form = ref({ name: '', email: '', password: '', confirmPassword: '' })
 const errorMsg = shallowRef('')
 const loading = shallowRef(false)
+const registered = shallowRef(false)
 
 async function handleRegister() {
   errorMsg.value = ''
@@ -34,11 +35,8 @@ async function handleRegister() {
       email: form.value.email,
       password: form.value.password,
     })
-    await auth.login({
-      email: form.value.email,
-      password: form.value.password,
-    })
-    await navigateTo('/')
+    // Show "check your email" message instead of auto-login (email not yet verified).
+    registered.value = true
   } catch(e) {
     console.error('Error al registrar:', e)
     errorMsg.value = t('auth.register.error')
@@ -103,12 +101,18 @@ async function handleRegister() {
 
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
 
-      <button type="submit" class="btn-primary" :disabled="loading">
-        {{ loading ? $t('auth.register.submitting') : $t('auth.register.submit') }}
-      </button>
+      <div v-if="registered" class="success-box">
+        <p class="success-msg">{{ $t('auth.register.checkEmail') }}</p>
+        <NuxtLink to="/auth/login" class="auth-link">{{ $t('auth.register.loginLink') }}</NuxtLink>
+      </div>
+      <template v-else>
+        <button type="submit" class="btn-primary" :disabled="loading">
+          {{ loading ? $t('auth.register.submitting') : $t('auth.register.submit') }}
+        </button>
+      </template>
     </form>
 
-    <p class="auth-footer">
+    <p v-if="!registered" class="auth-footer">
       {{ $t('auth.register.hasAccount') }}
       <NuxtLink to="/auth/login" class="auth-link">{{ $t('auth.register.loginLink') }}</NuxtLink>
     </p>
@@ -171,6 +175,19 @@ async function handleRegister() {
 .auth-footer { text-align: center; font-size: 14px; color: #6b6b8a; margin: 20px 0 0; }
 .auth-link { color: #a78bfa; text-decoration: none; font-weight: 600; }
 .auth-link:hover { text-decoration: underline; }
+
+.success-box {
+  background: #0d1f18;
+  border: 1px solid #34d399;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.success-msg { color: #34d399; font-size: 14px; line-height: 1.5; margin: 0; }
 
 .locale-row { display: flex; justify-content: center; margin-top: 16px; }
 </style>

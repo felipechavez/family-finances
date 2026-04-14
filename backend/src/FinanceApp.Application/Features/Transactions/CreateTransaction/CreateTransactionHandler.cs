@@ -2,6 +2,7 @@ namespace FinanceApp.Application.Features.Transactions.CreateTransaction;
 using FinanceApp.Application.Common;
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Entities;
+using FinanceApp.Domain.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Supabase;
@@ -20,6 +21,11 @@ public class CreateTransactionHandler(Client supabase, ILogger<CreateTransaction
             request.Description, request.TransactionDate, request.Currency);
 
         await supabase.From<Transaction>().Insert(tx);
+
+        // Ajuste atómico del balance: evita read-modify-write y condiciones de carrera.
+        var delta = tx.Type == TransactionType.Income ? tx.Amount : -tx.Amount;
+        await supabase.Rpc("adjust_account_balance",
+            new Dictionary<string, object> { ["p_account_id"] = tx.AccountId, ["p_delta"] = delta });
 
         var categoryResponse = await supabase.From<Category>()
             .Where(c => c.Id == tx.CategoryId)

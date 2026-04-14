@@ -1,6 +1,6 @@
 // app/stores/cuentas.ts
 import { defineStore } from 'pinia'
-import type { Account, AccountCreateInput } from '#shared/types'
+import type { Account, AccountCreateInput, AccountUpdateInput } from '#shared/types'
 
 export const useCuentasStore = defineStore('cuentas', () => {
   function getApi() {
@@ -36,6 +36,15 @@ export const useCuentasStore = defineStore('cuentas', () => {
     return res
   }
 
+  async function actualizar(id: string, input: AccountUpdateInput): Promise<void> {
+    const $api = getApi()
+    await $api(`/accounts/${id}`, {
+      method: 'PATCH',
+      body: input,
+    })
+    await refresh()
+  }
+
   async function eliminar(id: string): Promise<void> {
     const $api = getApi()
     await $api(`/accounts/${id}`, { method: 'DELETE' })
@@ -49,6 +58,7 @@ export const useCuentasStore = defineStore('cuentas', () => {
     error,
     refresh,
     crear,
+    actualizar,
     eliminar,
   }
 })

@@ -89,7 +89,14 @@ export const useTransaccionesStore = defineStore('transacciones', () => {
     const $api = getApi()
     const res = await $api<Transaccion>('/transactions', {
       method: 'POST',
-      body: input,
+      body: {
+        accountId: input.accountId,
+        category: input.categoria,
+        type: input.tipo === 'gasto' ? 'expense' : 'income',
+        amount: input.monto,
+        description: input.descripcion,
+        date: input.fecha,
+      },
     })
     await refresh()
     return res

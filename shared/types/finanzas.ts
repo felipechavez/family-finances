@@ -60,6 +60,12 @@ export interface Account {
 export interface AccountCreateInput {
   name: string
   type: AccountType
+  initialBalance?: number
+}
+
+export interface AccountUpdateInput {
+  name: string
+  balance: number
 }
 
 // ── Categories ──

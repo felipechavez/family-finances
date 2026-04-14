@@ -1,6 +1,6 @@
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Supabase.Postgrest.Attributes;
 
 namespace FinanceApp.Domain.Entities;
@@ -14,11 +14,11 @@ public class Family : Entity
     public string Name { get; set; } = default!;
 
     [Column("owner_user_id")]
-    [JsonInclude]
-    [JsonPropertyName("owner_user_id")]
+    [JsonProperty("owner_user_id")]
     public Guid OwnerUserId { get; set; }
 
     private readonly List<FamilyMember> _members = [];
+    [JsonIgnore]
     public IReadOnlyCollection<FamilyMember> Members => _members.AsReadOnly();
 
     public static Family Create(string name, Guid ownerUserId)

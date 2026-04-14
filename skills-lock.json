@@ -16,6 +16,11 @@
       "sourceType": "github",
       "computedHash": "e5556c606d3a64877877728f7b945bc189b694ead92ee4b76b475d4633f14d37"
     },
+    "dotnet-10-csharp-14": {
+      "source": "mhagrelius/dotfiles",
+      "sourceType": "github",
+      "computedHash": "9cf6f204c46377203415bced22b9d56c844aece170bb6aa5afab2fe50d7e78fb"
+    },
     "dotnet-localization": {
       "source": "wshaddix/dotnet-skills",
       "sourceType": "github",

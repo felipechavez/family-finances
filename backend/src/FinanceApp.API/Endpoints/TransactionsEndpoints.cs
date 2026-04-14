@@ -30,10 +30,9 @@ internal static class TransactionsEndpoints
             [FromQuery] int? month,
             [FromQuery] int? year) =>
         {
-            var familyId = user.GetFamilyId();
-            if (familyId == null)
-                return Results.NotFound("El usuario no tiene familia asociada.");
-            var result = await mediator.Send(new GetTransactionsQuery(familyId.Value, month, year));
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+            var result = await mediator.Send(new GetTransactionsQuery(familyId, month, year));
             return Results.Ok(result);
         })
         .WithName("GetTransactions")
@@ -75,10 +74,9 @@ internal static class TransactionsEndpoints
             ClaimsPrincipal user,
             IMediator mediator) =>
         {
-            var familyId = user.GetFamilyId();
-            if (familyId == null)
-                return Results.BadRequest("El usuario no tiene familia asociada.");
-            await mediator.Send(new DeleteTransactionCommand(id, familyId.Value));
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+            await mediator.Send(new DeleteTransactionCommand(id, familyId));
             return Results.NoContent();
         })
         .WithName("DeleteTransaction")

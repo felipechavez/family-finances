@@ -37,11 +37,10 @@ internal static class BudgetsEndpoints
             IMediator mediator,
             Client supabase) =>
         {
-            var familyId = user.GetFamilyId();
-            if (familyId == null)
-                return Results.BadRequest("El usuario no tiene familia asociada.");
-            var categoryId = await CategoryHelper.FindByNameAsync(supabase, req.Category, familyId.Value);
-            var id = await mediator.Send(new UpsertBudgetCommand(familyId.Value, categoryId, req.Limit));
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+            var categoryId = await CategoryHelper.FindByNameAsync(supabase, req.Category, familyId);
+            var id = await mediator.Send(new UpsertBudgetCommand(familyId, categoryId, req.Limit));
             return Results.Ok(new { id });
         })
         .WithName("UpsertBudget")

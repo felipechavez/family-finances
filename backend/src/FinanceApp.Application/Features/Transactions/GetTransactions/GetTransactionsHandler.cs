@@ -3,6 +3,7 @@ using FinanceApp.Application.Features.Transactions.CreateTransaction;
 using FinanceApp.Domain.Entities;
 using MediatR;
 using Supabase;
+using static Supabase.Postgrest.Constants;
 
 /// <summary>
 /// Handles <see cref="GetTransactionsQuery"/>: retrieves transactions for a family with optional month/year filtering.
@@ -25,8 +26,12 @@ public class GetTransactionsHandler(Client supabase)
             transactions = transactions.Where(t => t.TransactionDate.Month == request.Month.Value).ToList();
 
         var categoryIds = transactions.Select(t => t.CategoryId).Distinct().ToList();
+        // Where(c => categoryIds.Contains(c.Id)) no es soportado por el SDK (captura variable externa).
+        // Usar Filter con Operator.In para generar: id=in.(guid1,guid2,...)
         var categoriesResponse = categoryIds.Any()
-            ? await supabase.From<Category>().Where(c => categoryIds.Contains(c.Id)).Get()
+            ? await supabase.From<Category>()
+                .Filter("id", Operator.In, categoryIds)
+                .Get()
             : null;
 
         var categories = categoriesResponse?.Models?.ToDictionary(c => c.Id, c => c.Name)

@@ -63,4 +63,56 @@ public sealed class JwtService : IJwtService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    /// <inheritdoc/>
+    public string GenerateChallengeToken(Guid userId)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var claims = new[]
+        {
+            new Claim(FamilyClaims.UserId, userId.ToString()),
+            new Claim("scope", "2fa_challenge"),
+            new Claim(FamilyClaims.Jti, Guid.NewGuid().ToString()),
+        };
+        var token = new JwtSecurityToken(
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(5),
+            signingCredentials: creds);
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    /// <inheritdoc/>
+    public Guid? ValidateChallengeToken(string token)
+    {
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
+            handler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = true,
+                ValidIssuer = _settings.Issuer,
+                ValidateAudience = true,
+                ValidAudience = _settings.Audience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            }, out var validated);
+
+            var jwtToken = (JwtSecurityToken)validated;
+            var scope = jwtToken.Claims.FirstOrDefault(c => c.Type == "scope")?.Value;
+            if (scope != "2fa_challenge") return null;
+
+            var userIdStr = jwtToken.Claims.FirstOrDefault(c => c.Type == FamilyClaims.UserId)?.Value;
+            return Guid.TryParse(userIdStr, out var id) ? id : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

@@ -30,6 +30,42 @@ public class Users : Entity
 
     public Users() { }
 
+    /// <summary>Whether the user has verified their email address.</summary>
+    [Column("email_verified")]
+    [JsonInclude]
+    [JsonPropertyName("email_verified")]
+    public bool EmailVerified { get; set; } = false;
+
+    /// <summary>One-time token sent to the user's email for verification.</summary>
+    [Column("verification_token")]
+    [JsonInclude]
+    [JsonPropertyName("verification_token")]
+    public string? VerificationToken { get; set; }
+
+    /// <summary>UTC expiration time for the verification token.</summary>
+    [Column("verification_token_exp")]
+    [JsonInclude]
+    [JsonPropertyName("verification_token_exp")]
+    public DateTime? VerificationTokenExp { get; set; }
+
+    /// <summary>Whether TOTP-based two-factor authentication is enabled.</summary>
+    [Column("two_factor_enabled")]
+    [JsonInclude]
+    [JsonPropertyName("two_factor_enabled")]
+    public bool TwoFactorEnabled { get; set; } = false;
+
+    /// <summary>Base32-encoded TOTP secret. Null when 2FA is not set up.</summary>
+    [Column("totp_secret")]
+    [JsonInclude]
+    [JsonPropertyName("totp_secret")]
+    public string? TotpSecret { get; set; }
+
+    /// <summary>Whether this user receives a daily email summary of family finances.</summary>
+    [Column("daily_summary_enabled")]
+    [JsonInclude]
+    [JsonPropertyName("daily_summary_enabled")]
+    public bool DailySummaryEnabled { get; set; } = true;
+
     /// <summary>
     /// Creates a new <see cref="Users"/> with the provided credentials.
     /// </summary>

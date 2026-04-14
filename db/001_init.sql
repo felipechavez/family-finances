@@ -54,7 +54,7 @@ CREATE TABLE family_members (
     family_id  UUID        NOT NULL REFERENCES families (id) ON DELETE CASCADE,
     user_id    UUID        NOT NULL REFERENCES users    (id) ON DELETE CASCADE,
     role       family_role NOT NULL DEFAULT 'member',
-    joined_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (family_id, user_id)
 );
 

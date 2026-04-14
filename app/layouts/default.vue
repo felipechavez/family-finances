@@ -75,7 +75,10 @@ function isActive(path: string): boolean {
         <span class="bottomnav-emoji">{{ item.emoji }}</span>
         <span class="bottomnav-label">{{ t(item.labelKey) }}</span>
       </NuxtLink>
-      <UiLocaleSwitcher class="bottomnav-locale" />
+      <button class="bottomnav-item bottomnav-logout" @click="auth.logout()">
+        <span class="bottomnav-emoji">🚪</span>
+        <span class="bottomnav-label">{{ t('nav.cerrarSesion') }}</span>
+      </button>
     </nav>
   </div>
 </template>
@@ -126,7 +129,13 @@ function isActive(path: string): boolean {
 
 .bottomnav-emoji { font-size: 18px; line-height: 1; }
 .bottomnav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-.bottomnav-locale { align-self: center; }
+.bottomnav-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottomnav-logout:active { color: #f87171; }
 
 /* ── DESKTOP ── */
 @media (min-width: 768px) {
@@ -203,6 +212,5 @@ function isActive(path: string): boolean {
   .sidebar-logout:hover { border-color: #f87171; color: #f87171; }
 
   .bottomnav { display: none; }
-  .bottomnav-locale { display: none; }
 }
 </style>

@@ -1,6 +1,6 @@
+using Newtonsoft.Json;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
-using System.Text.Json.Serialization;
 
 namespace FinanceApp.Domain.Common;
 
@@ -10,14 +10,12 @@ namespace FinanceApp.Domain.Common;
 public abstract class Entity : BaseModel
 {
     /// <summary>Gets the unique identifier for this entity.</summary>
-    [PrimaryKey("id", false)]
-    [JsonInclude]
-    [JsonPropertyName("id")]
-    public Guid Id { get; protected set; } = Guid.NewGuid();
+    [PrimaryKey("id", true)]
+    [JsonProperty("id")]
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>Gets the UTC timestamp when this entity was created.</summary>
     [Column("created_at")]
-    [JsonInclude]
-    [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
+    [JsonProperty("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

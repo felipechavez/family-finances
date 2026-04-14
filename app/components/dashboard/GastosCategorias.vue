@@ -14,7 +14,7 @@ const { formatCLP, pct } = useFormato()
 const { categoriasGasto } = useCategorias()
 
 const categoriasConGasto = computed(() =>
-  categoriasGasto
+  categoriasGasto.value
     .filter(c => props.gastosPorCategoria[c.id] !== undefined)
     .sort((a, b) => (props.gastosPorCategoria[b.id] ?? 0) - (props.gastosPorCategoria[a.id] ?? 0)),
 )

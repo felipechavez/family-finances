@@ -8,7 +8,17 @@ public static class LocalizationKeys
 {
     public const string Auth_InvalidCredentials     = nameof(Auth_InvalidCredentials);
     public const string Auth_EmailAlreadyRegistered = nameof(Auth_EmailAlreadyRegistered);
+    public const string Auth_EmailNotVerified       = nameof(Auth_EmailNotVerified);
+    public const string Auth_InvalidToken           = nameof(Auth_InvalidToken);
+    public const string Auth_TokenExpired           = nameof(Auth_TokenExpired);
+    public const string Auth_AlreadyVerified        = nameof(Auth_AlreadyVerified);
+    public const string Auth_InvalidTotpCode        = nameof(Auth_InvalidTotpCode);
+    public const string Auth_TwoFactorAlreadyEnabled = nameof(Auth_TwoFactorAlreadyEnabled);
+    public const string Auth_TwoFactorNotEnabled    = nameof(Auth_TwoFactorNotEnabled);
     public const string Account_NoFamilyAssociated  = nameof(Account_NoFamilyAssociated);
+    public const string Account_DuplicateName        = nameof(Account_DuplicateName);
+    public const string Account_NotFound             = nameof(Account_NotFound);
     public const string Transaction_CategoryNotFound = nameof(Transaction_CategoryNotFound);
     public const string Transaction_NotFound         = nameof(Transaction_NotFound);
+    public const string Family_NotFound              = nameof(Family_NotFound);
 }

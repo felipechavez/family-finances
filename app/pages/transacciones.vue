@@ -37,6 +37,12 @@ const categoriasPorTipo = computed(() =>
   form.value.tipo === 'gasto' ? categoriasGasto.value : categoriasIngreso.value,
 )
 
+const descripcionPlaceholder = computed(() =>
+  form.value.tipo === 'gasto'
+    ? t('transacciones.descripcionPlaceholder')
+    : t('transacciones.descripcionPlaceholderIngreso'),
+)
+
 function handleTipoChange(tipo: TipoMovimiento) {
   form.value.tipo = tipo
   form.value.categoria = tipo === 'gasto' ? 'alimentacion' : 'sueldo'
@@ -104,7 +110,7 @@ async function handleEliminar(id: string) {
           <input v-model="form.monto" class="input" type="number" placeholder="0" inputmode="numeric" />
 
           <label class="field-label">{{ $t('transacciones.descripcion') }}</label>
-          <input v-model="form.descripcion" class="input" type="text" :placeholder="$t('transacciones.descripcionPlaceholder')" />
+          <input v-model="form.descripcion" class="input" type="text" :placeholder="descripcionPlaceholder" />
 
           <label class="field-label">{{ $t('transacciones.categoria') }}</label>
           <select v-model="form.categoria" class="input select">

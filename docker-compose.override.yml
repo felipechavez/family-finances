@@ -35,6 +35,7 @@ services:
       - Jwt__Issuer=FinanceApp
       - Jwt__Audience=FinanceApp
       - Jwt__ExpirationDays=${JWT_EXPIRATION_DAYS:-7}
+      - Resend__ApiToken=${RESEND_API_KEY}
 
   redis:
     container_name: redis

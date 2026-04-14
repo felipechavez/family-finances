@@ -6,6 +6,7 @@ using FinanceApp.API.Resources;
 using FinanceApp.Application.Common;
 using FinanceApp.Application.Features.Accounts.CreateAccount;
 using FinanceApp.Application.Features.Accounts.GetAccounts;
+using FinanceApp.Application.Features.Accounts.UpdateAccount;
 using FinanceApp.Domain.Common;
 using FinanceApp.Domain.Enums;
 using MediatR;
@@ -58,9 +59,32 @@ internal static class AccountsEndpoints
         .Produces<object>(201)
         .ProducesProblem(400);
 
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
+            [FromBody] UpdateAccountRequest req,
+            ClaimsPrincipal user,
+            IMediator mediator) =>
+        {
+            var familyId = user.GetFamilyId()
+                ?? throw new AppException(LocalizationKeys.Account_NoFamilyAssociated, (int)HttpStatusCode.NotFound);
+
+            await mediator.Send(new UpdateAccountCommand(id, familyId, req.Name, req.Balance));
+            return Results.NoContent();
+        })
+        .WithName("UpdateAccount")
+        .Produces(204)
+        .ProducesProblem(400)
+        .ProducesProblem(404)
+        .ProducesProblem(409);
+
         return app;
     }
 }
+
+/// <summary>Request body for updating an existing account.</summary>
+/// <param name="Name">New display name.</param>
+/// <param name="Balance">New current balance (may be negative for credit accounts).</param>
+internal record UpdateAccountRequest(string Name, decimal Balance);
 
 /// <summary>Request body for creating a new account.</summary>
 /// <param name="Name">The display name of the account.</param>

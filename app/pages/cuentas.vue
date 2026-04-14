@@ -5,7 +5,7 @@ import { useCuentasStore } from '~/stores/cuentas'
 import { useFormato } from '~/composables/use-formato'
 import { useToast } from '~/composables/use-toast'
 import { useApiError } from '~/composables/use-api-error'
-import type { AccountType } from '#shared/types'
+import type { Account, AccountType } from '#shared/types'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -20,7 +20,20 @@ const { cuentas, balanceTotal, status, error: cuentasError } = storeToRefs(cuent
 const { message: errorMessage } = useApiError(cuentasError)
 
 const mostrarForm = ref(false)
-const form = ref({ name: '', type: 'bank' as AccountType })
+const form = ref({ name: '', type: 'bank' as AccountType, initialBalance: 0 })
+
+const cuentaEditando = shallowRef<Account | null>(null)
+const formEdicion = ref({ name: '', balance: 0 })
+
+function iniciarEdicion(cuenta: Account) {
+  mostrarForm.value = false
+  cuentaEditando.value = cuenta
+  formEdicion.value = { name: cuenta.name, balance: cuenta.balance }
+}
+
+function cancelarEdicion() {
+  cuentaEditando.value = null
+}
 
 const tiposCuenta = computed(() => [
   { value: 'cash' as AccountType,        label: t('cuentas.tipos.cash'),        emoji: '💵' },
@@ -36,12 +49,29 @@ function tipoInfo(type: AccountType) {
 async function handleCrear() {
   if (!form.value.name.trim()) { toastError(t('cuentas.ingresaNombre')); return }
   try {
-    await cuentasStore.crear({ name: form.value.name.trim(), type: form.value.type })
-    form.value = { name: '', type: 'bank' }
+    await cuentasStore.crear({ name: form.value.name.trim(), type: form.value.type, initialBalance: form.value.initialBalance })
+    form.value = { name: '', type: 'bank', initialBalance: 0 }
     mostrarForm.value = false
     toastOk(t('cuentas.creada'))
-  } catch {
-    toastError(t('cuentas.noSePudoCrear'))
+  } catch (err) {
+    const serverMessage = (err as { data?: { error?: string } }).data?.error
+    toastError(serverMessage ?? t('cuentas.noSePudoCrear'))
+  }
+}
+
+async function handleActualizar() {
+  if (!formEdicion.value.name.trim()) { toastError(t('cuentas.ingresaNombre')); return }
+  if (!cuentaEditando.value) return
+  try {
+    await cuentasStore.actualizar(cuentaEditando.value.id, {
+      name: formEdicion.value.name.trim(),
+      balance: formEdicion.value.balance,
+    })
+    cuentaEditando.value = null
+    toastOk(t('cuentas.actualizada'))
+  } catch (err) {
+    const serverMessage = (err as { data?: { error?: string } }).data?.error
+    toastError(serverMessage ?? t('cuentas.noSePudoActualizar'))
   }
 }
 
@@ -71,7 +101,24 @@ async function handleEliminar(id: string) {
         <p class="balance-monto">{{ formatCLP(balanceTotal) }}</p>
       </div>
 
-      <!-- Form -->
+      <!-- Form edición -->
+      <div v-if="cuentaEditando" class="form-card form-card--edicion">
+        <p class="form-titulo">{{ $t('cuentas.editarCuenta') }}: <strong>{{ cuentaEditando.name }}</strong></p>
+        <div class="form">
+          <label class="field-label">{{ $t('cuentas.nombre') }}</label>
+          <input v-model="formEdicion.name" class="input" type="text" :placeholder="$t('cuentas.namePlaceholder')" />
+
+          <label class="field-label">{{ $t('cuentas.balanceActual') }}</label>
+          <input v-model.number="formEdicion.balance" class="input" type="number" step="0.01" placeholder="0" />
+
+          <div class="form-acciones">
+            <button class="btn-primary" @click="handleActualizar">{{ $t('cuentas.guardarCambios') }}</button>
+            <button class="btn-cancelar" @click="cancelarEdicion">{{ $t('cuentas.cancelar') }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form creación -->
       <div v-if="mostrarForm" class="form-card">
         <div class="form">
           <label class="field-label">{{ $t('cuentas.nombre') }}</label>
@@ -83,6 +130,9 @@ async function handleEliminar(id: string) {
               {{ tp.emoji }} {{ tp.label }}
             </option>
           </select>
+
+          <label class="field-label">{{ $t('cuentas.balanceInicial') }}</label>
+          <input v-model.number="form.initialBalance" class="input" type="number" step="0.01" min="0" placeholder="0" />
 
           <button class="btn-primary" @click="handleCrear">{{ $t('cuentas.crearCuenta') }}</button>
         </div>
@@ -103,6 +153,7 @@ async function handleEliminar(id: string) {
               <p class="cuenta-nombre">{{ cuenta.name }}</p>
               <p class="cuenta-tipo">{{ tipoInfo(cuenta.type).label }}</p>
             </div>
+            <button class="btn-editar" @click="iniciarEdicion(cuenta)">✏</button>
             <button class="btn-eliminar" @click="handleEliminar(cuenta.id)">✕</button>
           </div>
           <p class="cuenta-balance" :class="{ 'cuenta-balance--negativo': cuenta.balance < 0 }">
@@ -175,9 +226,22 @@ async function handleEliminar(id: string) {
 .cuenta-balance { font-size: 22px; font-weight: 700; color: #c4b5fd; margin: 0; }
 .cuenta-balance--negativo { color: #f87171; }
 
+.btn-editar {
+  background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
+  color: #a78bfa; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+}
 .btn-eliminar {
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
   color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+}
+.form-card--edicion { border-color: #4f46e5; }
+.form-titulo { font-size: 13px; color: #a78bfa; font-weight: 600; margin: 0 0 12px; }
+.form-titulo strong { color: #f0eeff; }
+.form-acciones { display: flex; gap: 8px; margin-top: 8px; }
+.form-acciones .btn-primary { flex: 1; margin-top: 0; }
+.btn-cancelar {
+  flex: 1; background: transparent; border: 1.5px solid #2a2a40; color: #8888aa;
+  border-radius: 14px; padding: 14px 24px; font-size: 15px; font-weight: 600; cursor: pointer;
 }
 .empty-state { text-align: center; color: #6b6b8a; padding: 60px 20px; }
 .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }

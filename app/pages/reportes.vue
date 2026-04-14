@@ -28,7 +28,7 @@ const { message: errorMessage } = useApiError(txError)
 
 // Distribución de gastos para chart/tabla
 const distribucion = computed(() => {
-  return categoriasGasto
+  return categoriasGasto.value
     .filter(c => gastosPorCategoria.value[c.id] !== undefined)
     .map(c => ({
       ...c,

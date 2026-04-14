@@ -16,10 +16,37 @@
   <data name="Auth_EmailAlreadyRegistered" xml:space="preserve">
     <value>El correo ya está registrado.</value>
   </data>
+  <data name="Auth_EmailNotVerified" xml:space="preserve">
+    <value>Correo no verificado. Por favor revisa tu bandeja de entrada.</value>
+  </data>
+  <data name="Auth_InvalidToken" xml:space="preserve">
+    <value>Token inválido o expirado.</value>
+  </data>
+  <data name="Auth_TokenExpired" xml:space="preserve">
+    <value>El enlace de verificación ha expirado. Por favor solicita uno nuevo.</value>
+  </data>
+  <data name="Auth_AlreadyVerified" xml:space="preserve">
+    <value>El correo ya está verificado.</value>
+  </data>
+  <data name="Auth_InvalidTotpCode" xml:space="preserve">
+    <value>Código de autenticación inválido.</value>
+  </data>
+  <data name="Auth_TwoFactorAlreadyEnabled" xml:space="preserve">
+    <value>La autenticación de dos factores ya está activada.</value>
+  </data>
+  <data name="Auth_TwoFactorNotEnabled" xml:space="preserve">
+    <value>La autenticación de dos factores no está activada.</value>
+  </data>
 
   <!-- Accounts -->
   <data name="Account_NoFamilyAssociated" xml:space="preserve">
     <value>El usuario no tiene familia asociada.</value>
+  </data>
+  <data name="Account_DuplicateName" xml:space="preserve">
+    <value>Ya existe una cuenta con ese nombre.</value>
+  </data>
+  <data name="Account_NotFound" xml:space="preserve">
+    <value>Cuenta no encontrada.</value>
   </data>
 
   <!-- Transactions -->
@@ -28,6 +55,11 @@
   </data>
   <data name="Transaction_NotFound" xml:space="preserve">
     <value>Transacción {0} no encontrada.</value>
+  </data>
+
+  <!-- Families -->
+  <data name="Family_NotFound" xml:space="preserve">
+    <value>Familia no encontrada.</value>
   </data>
 
   <!-- General -->
