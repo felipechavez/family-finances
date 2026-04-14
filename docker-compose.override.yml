@@ -35,7 +35,9 @@ services:
       - Jwt__Issuer=FinanceApp
       - Jwt__Audience=FinanceApp
       - Jwt__ExpirationDays=${JWT_EXPIRATION_DAYS:-7}
-      - Resend__ApiToken=${RESEND_API_KEY}
+      - MailerSend__SmtpUser=${MAILERSEND_SMTP_USER}
+      - MailerSend__SmtpPassword=${MAILERSEND_SMTP_PASSWORD}
+      - MailerSend__FromAddress=${MAILERSEND_FROM_ADDRESS}
 
   redis:
     container_name: redis

@@ -3,19 +3,20 @@ using System.Text;
 using FinanceApp.Application.Common.Email;
 using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Infrastructure.Settings;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Resend;
+using MimeKit;
 
 /// <summary>
-/// Sends transactional emails via the Resend API.
+/// Sends transactional emails via the MailerSend SMTP relay (smtp.mailersend.net:587).
 /// </summary>
-public sealed class ResendEmailService(
-    IResend resend,
-    IOptions<ResendSettings> settings,
-    ILogger<ResendEmailService> logger) : IEmailService
+public sealed class MailerSendEmailService(
+    IOptions<MailerSendSettings> settings,
+    ILogger<MailerSendEmailService> logger) : IEmailService
 {
-    private readonly ResendSettings _cfg = settings.Value;
+    private readonly MailerSendSettings _cfg = settings.Value;
 
     /// <inheritdoc />
     public async Task SendVerificationEmailAsync(
@@ -26,13 +27,11 @@ public sealed class ResendEmailService(
     {
         var link = $"{_cfg.AppBaseUrl}/auth/verify-email?token={Uri.EscapeDataString(verificationToken)}";
 
-        var message = new EmailMessage
-        {
-            From = _cfg.FromAddress,
-            Subject = "Verifica tu email — FinanzasApp",
-            HtmlBody = BuildVerificationHtml(toName, link),
-        };
-        message.To.Add(toEmail);
+        var message = BuildMessage(
+            toEmail,
+            toName,
+            "Verifica tu email — FinanzasApp",
+            BuildVerificationHtml(toName, link));
 
         await SendAsync(message, nameof(SendVerificationEmailAsync), toEmail, ct);
     }
@@ -44,13 +43,11 @@ public sealed class ResendEmailService(
         DailySummaryData data,
         CancellationToken ct = default)
     {
-        var message = new EmailMessage
-        {
-            From = _cfg.FromAddress,
-            Subject = $"Resumen del día {data.Date:dd/MM/yyyy} — {data.FamilyName}",
-            HtmlBody = BuildDailySummaryHtml(toName, data),
-        };
-        message.To.Add(toEmail);
+        var message = BuildMessage(
+            toEmail,
+            toName,
+            $"Resumen del día {data.Date:dd/MM/yyyy} — {data.FamilyName}",
+            BuildDailySummaryHtml(toName, data));
 
         await SendAsync(message, nameof(SendDailySummaryAsync), toEmail, ct);
     }
@@ -64,24 +61,36 @@ public sealed class ResendEmailService(
         decimal limit,
         CancellationToken ct = default)
     {
-        var message = new EmailMessage
-        {
-            From = _cfg.FromAddress,
-            Subject = $"⚠ Límite de gasto superado: {categoryName}",
-            HtmlBody = BuildBudgetAlertHtml(toName, categoryName, spent, limit),
-        };
-        message.To.Add(toEmail);
+        var message = BuildMessage(
+            toEmail,
+            toName,
+            $"⚠ Límite de gasto superado: {categoryName}",
+            BuildBudgetAlertHtml(toName, categoryName, spent, limit));
 
         await SendAsync(message, nameof(SendBudgetAlertAsync), toEmail, ct);
     }
 
     // ── private helpers ────────────────────────────────────────────────────────
 
-    private async Task SendAsync(EmailMessage message, string operation, string toEmail, CancellationToken ct)
+    private MimeMessage BuildMessage(string toEmail, string toName, string subject, string htmlBody)
+    {
+        var message = new MimeMessage();
+        message.From.Add(MailboxAddress.Parse(_cfg.FromAddress));
+        message.To.Add(new MailboxAddress(toName, toEmail));
+        message.Subject = subject;
+        message.Body = new TextPart("html") { Text = htmlBody };
+        return message;
+    }
+
+    private async Task SendAsync(MimeMessage message, string operation, string toEmail, CancellationToken ct)
     {
         try
         {
-            await resend.EmailSendAsync(message, ct);
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_cfg.SmtpHost, _cfg.SmtpPort, SecureSocketOptions.StartTls, ct);
+            await smtp.AuthenticateAsync(_cfg.SmtpUser, _cfg.SmtpPassword, ct);
+            await smtp.SendAsync(message, ct);
+            await smtp.DisconnectAsync(true, ct);
             logger.LogInformation("{Operation} sent to {Email}", operation, toEmail);
         }
         catch (Exception ex)

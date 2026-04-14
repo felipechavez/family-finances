@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Resend;
 
 /// <summary>
 /// Extension methods for registering Infrastructure services into the DI container.
@@ -45,18 +44,13 @@ public static class DependencyInjection
         services.AddSingleton<IJwtService, JwtService>();
         services.AddSingleton<ITotpService, TotpService>();
 
-        // Email (Resend)
-        services.AddOptions<ResendSettings>()
-            .Bind(config.GetSection("Resend"))
+        // Email (MailerSend SMTP relay)
+        services.AddOptions<MailerSendSettings>()
+            .Bind(config.GetSection("MailerSend"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddOptions();
-        services.AddHttpClient<ResendClient>();
-        services.Configure<ResendClientOptions>(o =>
-            o.ApiToken = config["Resend:ApiToken"] ?? string.Empty);
-        services.AddTransient<IResend, ResendClient>();
-        services.AddTransient<IEmailService, ResendEmailService>();
+        services.AddTransient<IEmailService, MailerSendEmailService>();
 
         // JWT Authentication
         var jwtSettings = config.GetSection("Jwt").Get<JwtSettings>()
