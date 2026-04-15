@@ -5,6 +5,7 @@
     "cuentas": "Cuentas",
     "limites": "Límites",
     "reportes": "Reportes",
+    "configuracion": "Configuración",
     "cerrarSesion": "Cerrar sesión"
   },
   "auth": {
@@ -180,6 +181,42 @@
     "joinSuccess": "¡Te uniste a la familia!",
     "joinError": "No se pudo unir. Verifica el ID.",
     "joinHint": "Pídele el ID a alguien que ya esté en la familia."
+  },
+  "configuracion": {
+    "title": "Configuración",
+    "cancelar": "Cancelar",
+    "apariencia": {
+      "title": "Apariencia",
+      "tema": "Tema",
+      "oscuro": "Modo oscuro",
+      "claro": "Modo claro"
+    },
+    "idioma": {
+      "title": "Idioma"
+    },
+    "seguridad": {
+      "title": "Seguridad",
+      "dosFa": "Verificación en dos pasos (2FA)",
+      "activo": "Activado — tu cuenta está protegida con TOTP",
+      "inactivo": "Desactivado",
+      "estado": "Haz clic en Activar para comenzar la configuración",
+      "activar": "Activar",
+      "desactivar": "Desactivar",
+      "yaActivo": "El 2FA ya está activo. Desactívalo primero para reconfigurarlo.",
+      "errorSetup": "No se pudo iniciar la configuración de 2FA",
+      "escanea": "Escanea este código QR con tu app autenticadora (Google Authenticator, Authy, etc.) y luego ingresa el código generado.",
+      "codigoLabel": "CÓDIGO DE VERIFICACIÓN",
+      "codigoPlaceholder": "123456",
+      "confirmar": "Confirmar y activar",
+      "codigoIncorrecto": "Código incorrecto. Intenta de nuevo.",
+      "activado": "2FA activado correctamente",
+      "desactivado": "2FA desactivado",
+      "ingresaCodigoDesactivar": "Ingresa el código de tu app autenticadora para desactivar el 2FA."
+    },
+    "cuenta": {
+      "title": "Cuenta",
+      "sesionActiva": "Sesión activa"
+    }
   },
   "common": {
     "loading": "Cargando...",

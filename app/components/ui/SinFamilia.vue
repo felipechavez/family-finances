@@ -1,12 +1,12 @@
+<!-- app/components/ui/SinFamilia.vue -->
+<!-- Auto-imported as <UiSinFamilia /> -->
+<!-- Shown in the default layout when the user is authenticated but has no family. -->
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/use-toast'
 
-definePageMeta({ middleware: 'auth' })
-useHead({ title: 'Configurar familia - FinanzasApp' })
-
-const { t } = useI18n()
 const auth = useAuthStore()
+const { t } = useI18n()
 const { ok: toastOk } = useToast()
 
 const tab = shallowRef<'create' | 'join'>('create')
@@ -19,13 +19,12 @@ async function handleSuccess(token: string, familyId: string) {
 </script>
 
 <template>
-  <div class="page">
+  <div class="sin-familia">
     <div class="card">
       <div class="card-icon">💜</div>
       <h1 class="card-title">{{ $t('familia.setupTitle') }}</h1>
       <p class="card-subtitle">{{ $t('familia.setupSubtitle') }}</p>
 
-      <!-- Tab switcher -->
       <div class="tabs">
         <button
           class="tab-btn"
@@ -43,9 +42,12 @@ async function handleSuccess(token: string, familyId: string) {
         </button>
       </div>
 
-      <!-- Form panels -->
       <FamiliaSetupCreate v-if="tab === 'create'" @success="handleSuccess" />
       <FamiliaSetupJoin v-else @success="handleSuccess" />
+
+      <button class="btn-logout" @click="auth.logout()">
+        {{ $t('nav.cerrarSesion') }}
+      </button>
     </div>
 
     <UiToast />
@@ -53,7 +55,7 @@ async function handleSuccess(token: string, familyId: string) {
 </template>
 
 <style scoped>
-.page {
+.sin-familia {
   min-height: 100dvh;
   display: flex;
   align-items: center;
@@ -103,6 +105,20 @@ async function handleSuccess(token: string, familyId: string) {
   background: var(--accent-bg);
   color: var(--accent-soft);
 }
+
+.btn-logout {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s;
+}
+.btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
 @media (min-width: 480px) {
   .card { padding: 40px 36px; }

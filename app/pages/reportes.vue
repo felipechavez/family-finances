@@ -124,7 +124,7 @@ const distribucion = computed(() => {
 <style scoped>
 .header {
   padding: 20px 20px 0;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 16px;
   margin-bottom: 4px;
 }
@@ -133,42 +133,42 @@ const distribucion = computed(() => {
 .main { padding: 16px 16px 100px; flex: 1; }
 
 .seccion { margin-bottom: 28px; }
-.seccion-titulo { font-size: 16px; font-weight: 700; color: #c4b5fd; margin: 0 0 14px; }
+.seccion-titulo { font-size: 16px; font-weight: 700; color: var(--accent-light); margin: 0 0 14px; }
 
 .resumen-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .resumen-item {
-  background: #18182a; border: 1px solid #2a2a40; border-radius: 16px; padding: 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 16px; padding: 16px;
   text-align: center;
 }
 .resumen-item--ingreso { border-color: rgba(34,197,94,0.3); }
 .resumen-item--gasto { border-color: rgba(239,68,68,0.3); }
 .resumen-item--positivo { border-color: rgba(34,197,94,0.3); }
 .resumen-item--negativo { border-color: rgba(239,68,68,0.3); }
-.resumen-label { font-size: 12px; color: #6b6b8a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px; }
-.resumen-valor { font-size: 22px; font-weight: 700; color: #f0eeff; margin: 0; }
-.resumen-item--ingreso .resumen-valor { color: #4ade80; }
-.resumen-item--gasto .resumen-valor { color: #f87171; }
-.resumen-item--positivo .resumen-valor { color: #4ade80; }
-.resumen-item--negativo .resumen-valor { color: #f87171; }
+.resumen-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px; }
+.resumen-valor { font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0; }
+.resumen-item--ingreso .resumen-valor { color: var(--success-bright); }
+.resumen-item--gasto .resumen-valor { color: var(--danger); }
+.resumen-item--positivo .resumen-valor { color: var(--success-bright); }
+.resumen-item--negativo .resumen-valor { color: var(--danger); }
 
-.distribucion-list { background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 16px; }
+.distribucion-list { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; }
 .dist-row { margin-bottom: 14px; }
 .dist-row:last-child { margin-bottom: 0; }
 .dist-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .dist-emoji { font-size: 16px; }
-.dist-label { font-size: 13px; font-weight: 500; color: #f0eeff; flex: 1; }
-.dist-pct { font-size: 12px; font-weight: 700; color: #a78bfa; }
-.dist-monto { font-size: 13px; font-weight: 700; color: #f0eeff; min-width: 90px; text-align: right; }
-.dist-bar-track { height: 6px; background: #2a2a40; border-radius: 100px; overflow: hidden; }
+.dist-label { font-size: 13px; font-weight: 500; color: var(--text-primary); flex: 1; }
+.dist-pct { font-size: 12px; font-weight: 700; color: var(--accent-soft); }
+.dist-monto { font-size: 13px; font-weight: 700; color: var(--text-primary); min-width: 90px; text-align: right; }
+.dist-bar-track { height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
 .dist-bar-fill { height: 100%; border-radius: 100px; transition: width 0.6s cubic-bezier(.34,1.56,.64,1); }
 
 .stats-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.stat-card { background: #18182a; border: 1px solid #2a2a40; border-radius: 16px; padding: 16px; text-align: center; }
-.stat-label { font-size: 12px; color: #6b6b8a; font-weight: 600; text-transform: uppercase; margin: 0 0 4px; }
-.stat-valor { font-size: 20px; font-weight: 700; color: #c4b5fd; margin: 0; }
+.stat-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 16px; padding: 16px; text-align: center; }
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 4px; }
+.stat-valor { font-size: 20px; font-weight: 700; color: var(--accent-light); margin: 0; }
 
-.error-state { text-align: center; color: #f87171; padding: 40px 20px; }
-.empty-state { text-align: center; color: #6b6b8a; padding: 40px 20px; }
+.error-state { text-align: center; color: var(--danger); padding: 40px 20px; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
 
 @media (min-width: 768px) {
   .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }

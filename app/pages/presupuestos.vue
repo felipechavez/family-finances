@@ -64,12 +64,12 @@ async function handleGuardarLimite(categoria: string, limite: number) {
 <style scoped>
 .header {
   padding: 20px 20px 0;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 16px;
   margin-bottom: 4px;
 }
 .header-titulo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 4px; }
-.header-sub { font-size: 13px; color: #6b6b8a; margin: 0; }
+.header-sub { font-size: 13px; color: var(--text-muted); margin: 0; }
 
 .main { padding: 16px 16px 100px; flex: 1; }
 

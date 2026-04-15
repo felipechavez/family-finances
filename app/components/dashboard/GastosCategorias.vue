@@ -77,8 +77,8 @@ const filasPorCategoria = computed((): Record<string, FilaCat> => {
 </template>
 
 <style scoped>
-.card { background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
-.titulo { font-size: 14px; font-weight: 700; color: #c4b5fd; margin: 0 0 14px; }
+.card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+.titulo { font-size: 14px; font-weight: 700; color: var(--accent-light); margin: 0 0 14px; }
 
 .categoria-row { margin-bottom: 12px; }
 .categoria-row:last-child { margin-bottom: 0; }
@@ -86,18 +86,18 @@ const filasPorCategoria = computed((): Record<string, FilaCat> => {
 .cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
 .cat-nombre { display: flex; align-items: center; gap: 7px; }
 .cat-emoji { font-size: 16px; }
-.cat-label { font-size: 13px; font-weight: 500; color: #f0eeff; }
+.cat-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 
 .badge-excedido {
-  background: rgba(239,68,68,0.15); color: #f87171;
+  background: rgba(239,68,68,0.15); color: var(--danger);
   border-radius: 100px; padding: 2px 8px; font-size: 10px; font-weight: 600;
 }
 
-.cat-monto { font-size: 13px; font-weight: 700; color: #f0eeff; }
-.cat-monto--rojo { color: #f87171; }
+.cat-monto { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.cat-monto--rojo { color: var(--danger); }
 
-.barra-track { height: 6px; background: #2a2a40; border-radius: 100px; overflow: hidden; }
+.barra-track { height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
 .barra-fill { height: 100%; border-radius: 100px; transition: width 0.6s cubic-bezier(.34,1.56,.64,1); }
 
-.limite-texto { font-size: 10px; color: #6b6b8a; margin: 3px 0 0; }
+.limite-texto { font-size: 10px; color: var(--text-muted); margin: 3px 0 0; }
 </style>

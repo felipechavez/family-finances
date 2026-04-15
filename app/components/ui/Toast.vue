@@ -37,8 +37,8 @@ const { toasts, quitar } = useToast()
 }
 
 .toast {
-  background: #18182a;
-  border: 1px solid #3a3a55;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   padding: 12px 22px;
   border-radius: 100px;
   font-size: 14px;
@@ -48,9 +48,9 @@ const { toasts, quitar } = useToast()
   cursor: pointer;
 }
 
-.toast--ok { color: #4ade80; border-color: #2a4a2a; }
-.toast--error { color: #f87171; border-color: #5a2a2a; }
-.toast--info { color: #a78bfa; border-color: #3a2a60; }
+.toast--ok { color: var(--success-bright); border-color: #2a4a2a; }
+.toast--error { color: var(--danger); border-color: #5a2a2a; }
+.toast--info { color: var(--accent-soft); border-color: var(--border-accent); }
 
 .toast-enter-active { transition: all 0.3s ease; }
 .toast-leave-active { transition: all 0.25s ease; }

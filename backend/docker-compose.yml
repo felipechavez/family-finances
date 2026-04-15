@@ -9,10 +9,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Jwt__Secret=${JWT_SECRET}
       - Jwt__Issuer=FinanceApp
-      - Jwt__Audience=FinanceApp
-      - MailerSend__SmtpUser=${MAILERSEND_SMTP_USER}
-      - MailerSend__SmtpPassword=${MAILERSEND_SMTP_PASSWORD}
-      - MailerSend__FromAddress=${MAILERSEND_FROM_ADDRESS}
+      - Jwt__Audience=FinanceApp      
+      - Smtp__Password=${SMTP_PASSWORD}
+      - Smtp__Host=${SMTP_HOST}
+      - Smtp__Port=${SMTP_PORT}
+      - Smtp__User=${SMTP_USER}      
     depends_on:
       postgres:
         condition: service_healthy

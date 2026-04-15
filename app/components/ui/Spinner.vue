@@ -19,14 +19,14 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid #2a2a40;
-  border-top-color: #7c3aed;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
 .spinner-text {
-  color: #6b6b8a;
+  color: var(--text-muted);
   font-size: 14px;
 }
 

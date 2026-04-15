@@ -68,8 +68,8 @@ onMounted(async () => {
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background: #18182a;
-  border: 1px solid #2a2a40;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 22px;
   padding: 32px 28px;
   display: flex;
@@ -79,14 +79,14 @@ onMounted(async () => {
 
 .auth-header { text-align: center; }
 .auth-icon { font-size: 48px; display: block; margin-bottom: 12px; }
-.auth-title { font-size: 20px; font-weight: 700; color: #c4b5fd; margin: 0; }
+.auth-title { font-size: 20px; font-weight: 700; color: var(--accent-light); margin: 0; }
 
 .status-body { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 
 .msg { font-size: 14px; line-height: 1.6; text-align: center; margin: 0; }
-.msg--muted  { color: #6b6b8a; }
-.msg--success { color: #34d399; }
-.msg--error   { color: #f87171; }
+.msg--muted  { color: var(--text-muted); }
+.msg--success { color: var(--success); }
+.msg--error   { color: var(--danger); }
 
 .btn-primary {
   display: inline-block;

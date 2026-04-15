@@ -127,35 +127,35 @@ async function handleRegister() {
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background: #18182a;
-  border: 1px solid #2a2a40;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 22px;
   padding: 32px 28px;
 }
 
 .auth-header { text-align: center; margin-bottom: 28px; }
 .auth-icon { font-size: 40px; display: block; margin-bottom: 8px; }
-.auth-title { font-size: 24px; font-weight: 700; color: #c4b5fd; margin: 0 0 4px; }
-.auth-subtitle { font-size: 14px; color: #6b6b8a; margin: 0; }
+.auth-title { font-size: 24px; font-weight: 700; color: var(--accent-light); margin: 0 0 4px; }
+.auth-subtitle { font-size: 14px; color: var(--text-muted); margin: 0; }
 
 .auth-form { display: flex; flex-direction: column; gap: 16px; }
 
 .field { display: flex; flex-direction: column; gap: 6px; }
-.field-label { font-size: 12px; color: #8888aa; font-weight: 600; letter-spacing: 0.5px; }
+.field-label { font-size: 12px; color: var(--text-label); font-weight: 600; letter-spacing: 0.5px; }
 
 .input {
   width: 100%;
-  background: #0f0f18;
-  border: 1.5px solid #2a2a40;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 13px 16px;
   font-size: 15px;
-  color: #f0eeff;
+  color: var(--text-primary);
   outline: none;
 }
-.input:focus { border-color: #7c3aed; }
+.input:focus { border-color: var(--accent); }
 
-.error { color: #f87171; font-size: 13px; margin: 0; text-align: center; }
+.error { color: var(--danger); font-size: 13px; margin: 0; text-align: center; }
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
@@ -172,13 +172,13 @@ async function handleRegister() {
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-primary:active:not(:disabled) { opacity: 0.85; transform: scale(0.98); }
 
-.auth-footer { text-align: center; font-size: 14px; color: #6b6b8a; margin: 20px 0 0; }
-.auth-link { color: #a78bfa; text-decoration: none; font-weight: 600; }
+.auth-footer { text-align: center; font-size: 14px; color: var(--text-muted); margin: 20px 0 0; }
+.auth-link { color: var(--accent-soft); text-decoration: none; font-weight: 600; }
 .auth-link:hover { text-decoration: underline; }
 
 .success-box {
-  background: #0d1f18;
-  border: 1px solid #34d399;
+  background: var(--accent-bg);
+  border: 1px solid var(--success);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -187,7 +187,7 @@ async function handleRegister() {
   gap: 12px;
   text-align: center;
 }
-.success-msg { color: #34d399; font-size: 14px; line-height: 1.5; margin: 0; }
+.success-msg { color: var(--success); font-size: 14px; line-height: 1.5; margin: 0; }
 
 .locale-row { display: flex; justify-content: center; margin-top: 16px; }
 </style>

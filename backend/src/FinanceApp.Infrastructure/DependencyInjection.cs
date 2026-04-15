@@ -44,13 +44,13 @@ public static class DependencyInjection
         services.AddSingleton<IJwtService, JwtService>();
         services.AddSingleton<ITotpService, TotpService>();
 
-        // Email (MailerSend SMTP relay)
-        services.AddOptions<MailerSendSettings>()
-            .Bind(config.GetSection("MailerSend"))
+        // Email (SMTP)
+        services.AddOptions<SmtpSettings>()
+            .Bind(config.GetSection("Smtp"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddTransient<IEmailService, MailerSendEmailService>();
+        services.AddTransient<IEmailService, SmtpEmailService>();
 
         // JWT Authentication
         var jwtSettings = config.GetSection("Jwt").Get<JwtSettings>()

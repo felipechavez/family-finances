@@ -100,27 +100,27 @@ const mesesDisponibles = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 16px;
   margin-bottom: 4px;
 }
-.header-sub { font-size: 11px; color: #6b6b8a; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+.header-sub { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
 .header-titulo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 4px 0 0; }
 
 .select-mes {
-  background: #1a1228; border: 1.5px solid #3a2a60; border-radius: 10px;
-  color: #a78bfa; padding: 8px 12px; font-size: 13px; font-weight: 600; outline: none;
+  background: var(--bg-input); border: 1.5px solid var(--border-accent); border-radius: 10px;
+  color: var(--accent-soft); padding: 8px 12px; font-size: 13px; font-weight: 600; outline: none;
   -webkit-appearance: none; cursor: pointer;
 }
 
 .main { padding: 16px 16px 100px; flex: 1; }
 
-.card { background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+.card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.card-titulo { font-size: 14px; font-weight: 700; color: #c4b5fd; margin: 0; }
-.btn-ver-todos { background: none; border: none; color: #7c3aed; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; text-decoration: none; }
+.card-titulo { font-size: 14px; font-weight: 700; color: var(--accent-light); margin: 0; }
+.btn-ver-todos { background: none; border: none; color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; text-decoration: none; }
 
-.error-state { text-align: center; color: #f87171; padding: 40px 20px; }
+.error-state { text-align: center; color: var(--danger); padding: 40px 20px; }
 
 .resumen-grid { display: flex; flex-direction: column; }
 

@@ -36,7 +36,7 @@ defineProps<{
 .error404-code {
   font-size: 48px;
   font-weight: 800;
-  color: #c4b5fd;
+  color: var(--accent-light);
   letter-spacing: -2px;
   margin: 16px 0 8px;
   line-height: 1;
@@ -44,7 +44,7 @@ defineProps<{
 
 .error404-msg {
   font-size: 15px;
-  color: #6b6b8a;
+  color: var(--text-muted);
   margin: 0;
   max-width: 360px;
   line-height: 1.5;

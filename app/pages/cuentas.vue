@@ -173,7 +173,7 @@ async function handleEliminar(id: string) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 16px;
   margin-bottom: 4px;
 }
@@ -188,24 +188,24 @@ async function handleEliminar(id: string) {
 .main { padding: 16px 16px 100px; flex: 1; }
 
 .balance-card {
-  background: linear-gradient(135deg, #1e0a4a 0%, #0d1f4a 100%);
-  border: 1px solid #3a2a60;
+  background: var(--hero-bg);
+  border: 1px solid var(--hero-border);
   border-radius: 18px;
   padding: 20px;
   margin-bottom: 20px;
   text-align: center;
 }
-.balance-label { font-size: 12px; color: #a78bfa; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px; }
-.balance-monto { font-size: 32px; font-weight: 700; color: #c4b5fd; margin: 0; }
+.balance-label { font-size: 12px; color: var(--accent-soft); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px; }
+.balance-monto { font-size: 32px; font-weight: 700; color: var(--accent-light); margin: 0; }
 
-.form-card { max-width: 500px; margin-bottom: 20px; background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 20px; }
+.form-card { max-width: 500px; margin-bottom: 20px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .form { display: flex; flex-direction: column; gap: 10px; }
-.field-label { font-size: 12px; color: #8888aa; font-weight: 600; letter-spacing: 0.5px; }
+.field-label { font-size: 12px; color: var(--text-label); font-weight: 600; letter-spacing: 0.5px; }
 .input {
-  width: 100%; background: #0f0f18; border: 1.5px solid #2a2a40; border-radius: 12px;
-  padding: 13px 16px; font-size: 15px; color: #f0eeff; outline: none;
+  width: 100%; background: var(--bg-input); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 13px 16px; font-size: 15px; color: var(--text-primary); outline: none;
 }
-.input:focus { border-color: #7c3aed; }
+.input:focus { border-color: var(--accent); }
 .select { -webkit-appearance: none; cursor: pointer; }
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #fff; border: none;
@@ -216,34 +216,34 @@ async function handleEliminar(id: string) {
 .cuentas-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 
 .cuenta-card {
-  background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 16px;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px;
 }
 .cuenta-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .cuenta-emoji { font-size: 28px; }
 .cuenta-info { flex: 1; }
-.cuenta-nombre { font-size: 15px; font-weight: 600; color: #f0eeff; margin: 0; }
-.cuenta-tipo { font-size: 12px; color: #6b6b8a; margin: 2px 0 0; }
-.cuenta-balance { font-size: 22px; font-weight: 700; color: #c4b5fd; margin: 0; }
-.cuenta-balance--negativo { color: #f87171; }
+.cuenta-nombre { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.cuenta-tipo { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
+.cuenta-balance { font-size: 22px; font-weight: 700; color: var(--accent-light); margin: 0; }
+.cuenta-balance--negativo { color: var(--danger); }
 
 .btn-editar {
   background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
-  color: #a78bfa; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+  color: var(--accent-soft); border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
 }
 .btn-eliminar {
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
-  color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+  color: var(--danger); border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;
 }
 .form-card--edicion { border-color: #4f46e5; }
-.form-titulo { font-size: 13px; color: #a78bfa; font-weight: 600; margin: 0 0 12px; }
-.form-titulo strong { color: #f0eeff; }
+.form-titulo { font-size: 13px; color: var(--accent-soft); font-weight: 600; margin: 0 0 12px; }
+.form-titulo strong { color: var(--text-primary); }
 .form-acciones { display: flex; gap: 8px; margin-top: 8px; }
 .form-acciones .btn-primary { flex: 1; margin-top: 0; }
 .btn-cancelar {
-  flex: 1; background: transparent; border: 1.5px solid #2a2a40; color: #8888aa;
+  flex: 1; background: transparent; border: 1.5px solid var(--border); color: var(--text-label);
   border-radius: 14px; padding: 14px 24px; font-size: 15px; font-weight: 600; cursor: pointer;
 }
-.empty-state { text-align: center; color: #6b6b8a; padding: 60px 20px; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 60px 20px; }
 .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
 
 @media (min-width: 768px) {

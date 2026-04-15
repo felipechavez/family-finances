@@ -23,8 +23,8 @@ function toggle() {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #1a1a2e;
-  border: 1px solid #2a2a40;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 20px;
   padding: 5px 12px;
   font-size: 11px;
@@ -32,11 +32,11 @@ function toggle() {
   letter-spacing: 0.5px;
   cursor: pointer;
   transition: border-color 0.15s;
-  color: #6b6b8a;
+  color: var(--text-muted);
 }
-.locale-btn:hover { border-color: #7c3aed; }
+.locale-btn:hover { border-color: var(--accent); }
 
-.locale-active { color: #a78bfa; }
-.locale-sep { color: #3a3a5a; }
-.locale-other { color: #6b6b8a; }
+.locale-active { color: var(--accent-soft); }
+.locale-sep { color: var(--border); }
+.locale-other { color: var(--text-muted); }
 </style>

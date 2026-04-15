@@ -166,7 +166,7 @@ async function handleEliminar(id: string) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 16px;
   margin-bottom: 4px;
 }
@@ -180,21 +180,21 @@ async function handleEliminar(id: string) {
 
 .main { padding: 16px 16px 100px; flex: 1; }
 
-.form-card { max-width: 560px; margin-bottom: 24px; background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 20px; }
+.form-card { max-width: 560px; margin-bottom: 24px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .segmento { display: flex; gap: 8px; margin-bottom: 16px; }
 .seg-btn {
-  flex: 1; padding: 10px; border: 1.5px solid #2a2a40; background: transparent;
-  color: #8888aa; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+  flex: 1; padding: 10px; border: 1.5px solid var(--border); background: transparent;
+  color: var(--text-label); border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .seg-btn--gasto { background: #2d1a1a; border-color: #ef4444; color: #f87171; }
 .seg-btn--ingreso { background: #1a2d1a; border-color: #22c55e; color: #4ade80; }
 .form { display: flex; flex-direction: column; gap: 10px; }
-.field-label { font-size: 12px; color: #8888aa; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: -4px; }
+.field-label { font-size: 12px; color: var(--text-label); font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: -4px; }
 .input {
-  width: 100%; background: #0f0f18; border: 1.5px solid #2a2a40; border-radius: 12px;
-  padding: 13px 16px; font-size: 15px; color: #f0eeff; outline: none;
+  width: 100%; background: var(--bg-input); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 13px 16px; font-size: 15px; color: var(--text-primary); outline: none;
 }
-.input:focus { border-color: #7c3aed; }
+.input:focus { border-color: var(--accent); }
 .select { -webkit-appearance: none; cursor: pointer; }
 .form-row { display: flex; gap: 10px; }
 .form-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
@@ -204,10 +204,10 @@ async function handleEliminar(id: string) {
   cursor: pointer; width: 100%; margin-top: 8px;
 }
 
-.card { background: #18182a; border: 1px solid #2a2a40; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+.card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 .card--sin-padding { padding: 0 16px; }
-.error-state { text-align: center; color: #f87171; padding: 40px 20px; }
-.empty-state { text-align: center; color: #6b6b8a; padding: 60px 20px; }
+.error-state { text-align: center; color: var(--danger); padding: 40px 20px; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 60px 20px; }
 .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
 
 @media (min-width: 768px) {

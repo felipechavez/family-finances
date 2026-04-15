@@ -5,6 +5,7 @@
     "cuentas": "Accounts",
     "limites": "Limits",
     "reportes": "Reports",
+    "configuracion": "Settings",
     "cerrarSesion": "Log out"
   },
   "auth": {
@@ -180,6 +181,42 @@
     "joinSuccess": "You joined the family!",
     "joinError": "Could not join. Check the ID.",
     "joinHint": "Ask someone already in the family for their ID."
+  },
+  "configuracion": {
+    "title": "Settings",
+    "cancelar": "Cancel",
+    "apariencia": {
+      "title": "Appearance",
+      "tema": "Theme",
+      "oscuro": "Dark mode",
+      "claro": "Light mode"
+    },
+    "idioma": {
+      "title": "Language"
+    },
+    "seguridad": {
+      "title": "Security",
+      "dosFa": "Two-factor authentication (2FA)",
+      "activo": "Enabled — your account is protected with TOTP",
+      "inactivo": "Disabled",
+      "estado": "Click Activate to start setup",
+      "activar": "Activate",
+      "desactivar": "Deactivate",
+      "yaActivo": "2FA is already active. Deactivate it first to reconfigure.",
+      "errorSetup": "Could not start 2FA setup",
+      "escanea": "Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.) then enter the generated code.",
+      "codigoLabel": "VERIFICATION CODE",
+      "codigoPlaceholder": "123456",
+      "confirmar": "Confirm & activate",
+      "codigoIncorrecto": "Incorrect code. Please try again.",
+      "activado": "2FA activated successfully",
+      "desactivado": "2FA deactivated",
+      "ingresaCodigoDesactivar": "Enter the code from your authenticator app to deactivate 2FA."
+    },
+    "cuenta": {
+      "title": "Account",
+      "sesionActiva": "Active session"
+    }
   },
   "common": {
     "loading": "Loading...",

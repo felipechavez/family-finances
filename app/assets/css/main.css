@@ -1,6 +1,74 @@
-/* app/assets/css/main.css */
 @import "tailwindcss";
 
-/* La app usa estilos scoped en cada componente Vue,
-   este archivo solo activa Tailwind para las utilidades
-   que se usen en plantillas */
+/* ── Design tokens ────────────────────────────────────────────────────────── */
+
+:root {
+  /* Backgrounds */
+  --bg-base:     #0c0c18;
+  --bg-card:     #13131f;
+  --bg-elevated: #18182a;
+  --bg-input:    #0f0f18;
+
+  /* Borders */
+  --border:        #2a2a40;
+  --border-subtle: #1a1a2e;
+  --border-accent: #3a2a60;
+
+  /* Text */
+  --text-primary: #f0eeff;
+  --text-muted:   #6b6b8a;
+  --text-label:   #8888aa;
+
+  /* Accent */
+  --accent:       #7c3aed;
+  --accent-soft:  #a78bfa;
+  --accent-light: #c4b5fd;
+  --accent-bg:    #1e1230;
+  --accent-hover: #1e1e30;
+
+  /* Semantic — intentionally constant across themes */
+  --danger:         #f87171;
+  --success:        #34d399;
+  --success-bright: #4ade80;
+
+  /* Hero gradient (balance cards) */
+  --hero-bg:     linear-gradient(135deg, #1e0a4a 0%, #0d1f4a 100%);
+  --hero-border: #3a2a60;
+}
+
+[data-theme="light"] {
+  --bg-base:     #f0eff8;
+  --bg-card:     #ffffff;
+  --bg-elevated: #f5f4fc;
+  --bg-input:    #ffffff;
+
+  --border:        #ddd8f0;
+  --border-subtle: #e8e4f4;
+  --border-accent: #c4b5fd;
+
+  --text-primary: #1a1030;
+  --text-muted:   #7a7a9a;
+  --text-label:   #5a5a7a;
+
+  --accent:       #7c3aed;
+  --accent-soft:  #6d28d9;
+  --accent-light: #6d28d9;
+  --accent-bg:    #ede9fe;
+  --accent-hover: #ede9fe;
+
+  --danger:         #dc2626;
+  --success:        #059669;
+  --success-bright: #16a34a;
+
+  --hero-bg:     linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+  --hero-border: #c4b5fd;
+}
+
+/* ── Global base ──────────────────────────────────────────────────────────── */
+/* Body background and color are set via CSS vars in app.vue so they
+   participate in theme transitions. The html element is covered here
+   to avoid a flash on full-page load. */
+
+html {
+  background: var(--bg-base);
+}

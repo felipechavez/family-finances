@@ -188,37 +188,37 @@ async function handleVerify2Fa() {
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background: #18182a;
-  border: 1px solid #2a2a40;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 22px;
   padding: 32px 28px;
 }
 
 .auth-header { text-align: center; margin-bottom: 28px; }
 .auth-icon { font-size: 40px; display: block; margin-bottom: 8px; }
-.auth-title { font-size: 24px; font-weight: 700; color: #c4b5fd; margin: 0 0 4px; }
-.auth-subtitle { font-size: 14px; color: #6b6b8a; margin: 0; }
+.auth-title { font-size: 24px; font-weight: 700; color: var(--accent-light); margin: 0 0 4px; }
+.auth-subtitle { font-size: 14px; color: var(--text-muted); margin: 0; }
 
 .auth-form { display: flex; flex-direction: column; gap: 16px; }
 
 .field { display: flex; flex-direction: column; gap: 6px; }
-.field-label { font-size: 12px; color: #8888aa; font-weight: 600; letter-spacing: 0.5px; }
+.field-label { font-size: 12px; color: var(--text-label); font-weight: 600; letter-spacing: 0.5px; }
 
 .input {
   width: 100%;
-  background: #0f0f18;
-  border: 1.5px solid #2a2a40;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 13px 16px;
   font-size: 15px;
-  color: #f0eeff;
+  color: var(--text-primary);
   outline: none;
 }
-.input:focus { border-color: #7c3aed; }
+.input:focus { border-color: var(--accent); }
 .input--center { text-align: center; font-size: 22px; letter-spacing: 6px; font-weight: 700; }
 
-.error { color: #f87171; font-size: 13px; margin: 0; text-align: center; }
-.info-msg { color: #34d399; font-size: 13px; margin: 0; text-align: center; }
+.error { color: var(--danger); font-size: 13px; margin: 0; text-align: center; }
+.info-msg { color: var(--success); font-size: 13px; margin: 0; text-align: center; }
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
@@ -237,8 +237,8 @@ async function handleVerify2Fa() {
 
 .btn-secondary {
   background: none;
-  border: 1.5px solid #2a2a40;
-  color: #a78bfa;
+  border: 1.5px solid var(--border);
+  color: var(--accent-soft);
   border-radius: 12px;
   padding: 11px 16px;
   font-size: 13px;
@@ -247,11 +247,11 @@ async function handleVerify2Fa() {
   width: 100%;
   transition: border-color 0.15s;
 }
-.btn-secondary:hover { border-color: #7c3aed; }
+.btn-secondary:hover { border-color: var(--accent); }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.auth-footer { text-align: center; font-size: 14px; color: #6b6b8a; margin: 20px 0 0; }
-.auth-link { color: #a78bfa; text-decoration: none; font-weight: 600; }
+.auth-footer { text-align: center; font-size: 14px; color: var(--text-muted); margin: 20px 0 0; }
+.auth-link { color: var(--accent-soft); text-decoration: none; font-weight: 600; }
 .auth-link:hover { text-decoration: underline; }
 
 .locale-row { display: flex; justify-content: center; margin-top: 16px; }

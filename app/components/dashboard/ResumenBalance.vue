@@ -56,8 +56,8 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 .balance-card {
   border-radius: 22px;
   padding: 20px;
-  background: linear-gradient(135deg, #1e0a4a 0%, #0d1f4a 100%);
-  border: 1px solid #3a2a60;
+  background: var(--hero-bg);
+  border: 1px solid var(--hero-border);
   margin-bottom: 14px;
 }
 .balance-card--negativo {
@@ -65,11 +65,11 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
   border-color: #5a2a2a;
 }
 
-.label { font-size: 12px; color: #a78bfa; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px; }
+.label { font-size: 12px; color: var(--accent-soft); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px; }
 
 .monto { font-size: 38px; font-weight: 700; letter-spacing: -1.5px; margin: 0 0 16px; }
-.monto--morado { color: #c4b5fd; }
-.monto--rojo { color: #f87171; }
+.monto--morado { color: var(--accent-light); }
+.monto--rojo { color: var(--danger); }
 
 .fila-resumen { display: flex; gap: 12px; margin-bottom: 16px; }
 
@@ -86,13 +86,13 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 .resumen-chip--gasto .chip-monto { color: #f87171; }
 
 .barra-info { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.barra-texto { font-size: 13px; font-weight: 600; color: #8888aa; }
-.barra-pct { font-size: 13px; font-weight: 700; color: #a78bfa; }
-.barra-pct--rojo { color: #f87171; }
+.barra-texto { font-size: 13px; font-weight: 600; color: var(--text-label); }
+.barra-pct { font-size: 13px; font-weight: 700; color: var(--accent-soft); }
+.barra-pct--rojo { color: var(--danger); }
 
-.barra-track { height: 8px; background: #2a2a40; border-radius: 100px; overflow: hidden; }
+.barra-track { height: 8px; background: var(--border); border-radius: 100px; overflow: hidden; }
 .barra-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg,#7c3aed,#4f46e5); transition: width 0.6s cubic-bezier(.34,1.56,.64,1); }
 .barra-fill--rojo { background: linear-gradient(90deg,#ef4444,#dc2626); }
 
-.disponible { font-size: 11px; color: #6b6b8a; margin: 6px 0 0; }
+.disponible { font-size: 11px; color: var(--text-muted); margin: 6px 0 0; }
 </style>

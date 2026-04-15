@@ -54,20 +54,20 @@ function handleEliminar(id: string): void {
 </template>
 
 <style scoped>
-.tx-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #1e1e2e; }
+.tx-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border-subtle); }
 .tx-row:last-child { border-bottom: none; }
 
 .icono { width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 
 .info { flex: 1; min-width: 0; }
-.descripcion { font-size: 14px; font-weight: 500; color: #f0eeff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 2px; }
-.meta { font-size: 11px; color: #6b6b8a; margin: 0; }
+.descripcion { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 2px; }
+.meta { font-size: 11px; color: var(--text-muted); margin: 0; }
 
 .derecha { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
 
 .monto { font-size: 15px; font-weight: 700; }
-.monto--verde { color: #4ade80; }
-.monto--rojo { color: #f87171; }
+.monto--verde { color: var(--success-bright); }
+.monto--rojo { color: var(--danger); }
 
 .btn-eliminar {
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);

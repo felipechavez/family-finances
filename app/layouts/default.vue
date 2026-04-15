@@ -14,11 +14,12 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/',             labelKey: 'nav.inicio',    emoji: '🏠' },
-  { to: '/transacciones', labelKey: 'nav.historial', emoji: '📋' },
-  { to: '/cuentas',      labelKey: 'nav.cuentas',   emoji: '💳' },
-  { to: '/presupuestos', labelKey: 'nav.limites',   emoji: '📊' },
-  { to: '/reportes',     labelKey: 'nav.reportes',  emoji: '📈' },
+  { to: '/',              labelKey: 'nav.inicio',         emoji: '🏠' },
+  { to: '/transacciones', labelKey: 'nav.historial',      emoji: '📋' },
+  { to: '/cuentas',       labelKey: 'nav.cuentas',        emoji: '💳' },
+  { to: '/presupuestos',  labelKey: 'nav.limites',        emoji: '📊' },
+  { to: '/reportes',      labelKey: 'nav.reportes',       emoji: '📈' },
+  { to: '/configuracion', labelKey: 'nav.configuracion',  emoji: '⚙️' },
 ]
 
 function isActive(path: string): boolean {
@@ -28,7 +29,12 @@ function isActive(path: string): boolean {
 </script>
 
 <template>
-  <div class="layout">
+  <!-- No family: show setup screen, skip nav entirely -->
+  <ClientOnly>
+    <UiSinFamilia v-if="!auth.hasFamiliy" />
+  </ClientOnly>
+
+  <div v-if="auth.hasFamiliy" class="layout">
     <!-- ── SIDEBAR (desktop >= 768px) ── -->
     <aside class="sidebar">
       <div class="sidebar-logo">
@@ -105,8 +111,8 @@ function isActive(path: string): boolean {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #18182a;
-  border-top: 1px solid #2a2a40;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
   display: flex;
   padding: 6px 8px;
   z-index: 100;
@@ -121,11 +127,11 @@ function isActive(path: string): boolean {
   padding: 8px 4px;
   cursor: pointer;
   text-decoration: none;
-  color: #6b6b8a;
+  color: var(--text-muted);
   -webkit-tap-highlight-color: transparent;
   transition: color 0.2s;
 }
-.bottomnav-item--active { color: #a78bfa; }
+.bottomnav-item--active { color: var(--accent-soft); }
 
 .bottomnav-emoji { font-size: 18px; line-height: 1; }
 .bottomnav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -135,7 +141,7 @@ function isActive(path: string): boolean {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.bottomnav-logout:active { color: #f87171; }
+.bottomnav-logout:active { color: var(--danger); }
 
 /* ── DESKTOP ── */
 @media (min-width: 768px) {
@@ -144,8 +150,8 @@ function isActive(path: string): boolean {
     flex-direction: column;
     width: 220px;
     min-height: 100dvh;
-    background: #13131f;
-    border-right: 1px solid #2a2a40;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
     padding: 28px 16px;
     position: sticky;
     top: 0;
@@ -157,11 +163,11 @@ function isActive(path: string): boolean {
     align-items: center;
     gap: 10px;
     padding: 0 8px 32px;
-    border-bottom: 1px solid #2a2a40;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 24px;
   }
   .logo-icon { font-size: 24px; }
-  .logo-text { font-size: 16px; font-weight: 700; color: #f0eeff; letter-spacing: -0.3px; }
+  .logo-text { font-size: 16px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
 
   .sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 
@@ -172,22 +178,22 @@ function isActive(path: string): boolean {
     padding: 11px 14px;
     border-radius: 12px;
     text-decoration: none;
-    color: #6b6b8a;
+    color: var(--text-muted);
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
     width: 100%;
   }
-  .sidebar-item:hover { background: #1e1e30; color: #c4b5fd; }
-  .sidebar-item--active { background: #1e1230; color: #a78bfa; }
+  .sidebar-item:hover { background: var(--accent-hover); color: var(--accent-light); }
+  .sidebar-item--active { background: var(--accent-bg); color: var(--accent-soft); }
 
   .sidebar-emoji { font-size: 18px; width: 24px; text-align: center; }
   .sidebar-label { font-size: 14px; }
 
   .sidebar-footer {
     padding-top: 24px;
-    border-top: 1px solid #2a2a40;
+    border-top: 1px solid var(--border);
     margin-top: auto;
     text-align: center;
     display: flex;
@@ -195,12 +201,12 @@ function isActive(path: string): boolean {
     align-items: center;
     gap: 8px;
   }
-  .sidebar-user { font-size: 13px; color: #c4b5fd; font-weight: 600; margin: 0; }
+  .sidebar-user { font-size: 13px; color: var(--accent-light); font-weight: 600; margin: 0; }
   .sidebar-locale { margin-bottom: 0; }
   .sidebar-logout {
     background: none;
-    border: 1px solid #2a2a40;
-    color: #6b6b8a;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
     border-radius: 10px;
     padding: 8px 16px;
     font-size: 12px;
@@ -209,7 +215,7 @@ function isActive(path: string): boolean {
     width: 100%;
     transition: all 0.15s;
   }
-  .sidebar-logout:hover { border-color: #f87171; color: #f87171; }
+  .sidebar-logout:hover { border-color: var(--danger); color: var(--danger); }
 
   .bottomnav { display: none; }
 }

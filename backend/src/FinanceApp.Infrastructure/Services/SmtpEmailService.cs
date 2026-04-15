@@ -10,13 +10,13 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 
 /// <summary>
-/// Sends transactional emails via the MailerSend SMTP relay (smtp.mailersend.net:587).
+/// Sends transactional emails via the configured SMTP relay using SSL on port 465.
 /// </summary>
-public sealed class MailerSendEmailService(
-    IOptions<MailerSendSettings> settings,
-    ILogger<MailerSendEmailService> logger) : IEmailService
+public sealed class SmtpEmailService(
+    IOptions<SmtpSettings> settings,
+    ILogger<SmtpEmailService> logger) : IEmailService
 {
-    private readonly MailerSendSettings _cfg = settings.Value;
+    private readonly SmtpSettings _cfg = settings.Value;
 
     /// <inheritdoc />
     public async Task SendVerificationEmailAsync(
@@ -75,7 +75,7 @@ public sealed class MailerSendEmailService(
     private MimeMessage BuildMessage(string toEmail, string toName, string subject, string htmlBody)
     {
         var message = new MimeMessage();
-        message.From.Add(MailboxAddress.Parse(_cfg.FromAddress));
+        message.From.Add(new MailboxAddress("FinanzasApp", _cfg.User));
         message.To.Add(new MailboxAddress(toName, toEmail));
         message.Subject = subject;
         message.Body = new TextPart("html") { Text = htmlBody };
@@ -87,8 +87,8 @@ public sealed class MailerSendEmailService(
         try
         {
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_cfg.SmtpHost, _cfg.SmtpPort, SecureSocketOptions.StartTls, ct);
-            await smtp.AuthenticateAsync(_cfg.SmtpUser, _cfg.SmtpPassword, ct);
+            await smtp.ConnectAsync(_cfg.Host, _cfg.Port, SecureSocketOptions.SslOnConnect, ct);
+            await smtp.AuthenticateAsync(_cfg.User, _cfg.Password, ct);
             await smtp.SendAsync(message, ct);
             await smtp.DisconnectAsync(true, ct);
             logger.LogInformation("{Operation} sent to {Email}", operation, toEmail);
