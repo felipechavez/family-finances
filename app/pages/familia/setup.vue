@@ -3,7 +3,7 @@ import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/use-toast'
 
 definePageMeta({ middleware: 'auth' })
-useHead({ title: 'Configurar familia - FinanzasApp' })
+useHead({ title: 'Configurar familia - DomusPay' })
 
 const { t } = useI18n()
 const auth = useAuthStore()

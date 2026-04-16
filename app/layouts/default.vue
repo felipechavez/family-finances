@@ -40,7 +40,7 @@ function isActive(path: string): boolean {
     <aside class="sidebar">
       <div class="sidebar-logo">
         <span class="logo-icon">💜</span>
-        <span class="logo-text">FinanzasApp</span>
+        <span class="logo-text">DomusPay</span>
       </div>
 
       <nav class="sidebar-nav">

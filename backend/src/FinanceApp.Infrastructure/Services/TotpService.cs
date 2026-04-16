@@ -15,7 +15,7 @@ public sealed class TotpService : ITotpService
     }
 
     /// <inheritdoc/>
-    public string BuildProvisioningUri(string secret, string userEmail, string issuer = "FinanzasApp")
+    public string BuildProvisioningUri(string secret, string userEmail, string issuer = "DomusPay")
     {
         var encodedEmail = Uri.EscapeDataString(userEmail);
         var encodedIssuer = Uri.EscapeDataString(issuer);

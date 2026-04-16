@@ -147,7 +147,7 @@ export function useReportExport() {
         doc.setFontSize(9)
         doc.setTextColor(150, 150, 170)
         const pageH = doc.internal.pageSize.getHeight()
-        doc.text(`Generado el ${dateStr} · FinanzasApp`, 14, pageH - 8)
+        doc.text(`Generado el ${dateStr} · DomusPay`, 14, pageH - 8)
         doc.text(`${i} / ${pageCount}`, pageW - 14, pageH - 8, { align: 'right' })
       }
 

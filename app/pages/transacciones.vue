@@ -11,7 +11,7 @@ import type { TransaccionCreateInput, TipoMovimiento, CategoriaId } from '#share
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
-useHead({ title: 'Transacciones - FinanzasApp' })
+useHead({ title: 'Transacciones - DomusPay' })
 
 const txStore = useTransaccionesStore()
 const cuentasStore = useCuentasStore()

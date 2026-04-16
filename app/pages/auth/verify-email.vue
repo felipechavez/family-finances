@@ -2,7 +2,7 @@
 <!-- Reads ?token= from the URL, calls POST /auth/verify-email, and shows result. -->
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useHead({ title: 'Verificar correo - FinanzasApp' })
+useHead({ title: 'Verificar correo - DomusPay' })
 
 const { t } = useI18n()
 const route = useRoute()

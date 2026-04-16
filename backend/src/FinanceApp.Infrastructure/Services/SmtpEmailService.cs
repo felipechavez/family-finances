@@ -30,7 +30,7 @@ public sealed class SmtpEmailService(
         var message = BuildMessage(
             toEmail,
             toName,
-            "Verifica tu email — FinanzasApp",
+            "Verifica tu email — DomusPay",
             BuildVerificationHtml(toName, link));
 
         await SendAsync(message, nameof(SendVerificationEmailAsync), toEmail, ct);
@@ -75,7 +75,7 @@ public sealed class SmtpEmailService(
     private MimeMessage BuildMessage(string toEmail, string toName, string subject, string htmlBody)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("FinanzasApp", _cfg.User));
+        message.From.Add(new MailboxAddress("DomusPay", _cfg.User));
         message.To.Add(new MailboxAddress(toName, toEmail));
         message.Subject = subject;
         message.Body = new TextPart("html") { Text = htmlBody };
@@ -105,7 +105,7 @@ public sealed class SmtpEmailService(
         <html lang="es">
         <body style="font-family:sans-serif;background:#0c0c18;color:#f0eeff;padding:32px">
           <div style="max-width:480px;margin:auto;background:#13131f;border:1px solid #2a2a40;border-radius:16px;padding:32px">
-            <h1 style="color:#a78bfa;font-size:22px;margin:0 0 8px">FinanzasApp Familiar</h1>
+            <h1 style="color:#a78bfa;font-size:22px;margin:0 0 8px">DomusPay Familiar</h1>
             <h2 style="font-size:18px;font-weight:600;margin:0 0 20px">Verifica tu dirección de email</h2>
             <p style="color:#c4b5fd;margin:0 0 24px">Hola {name}, haz clic en el botón para activar tu cuenta:</p>
             <a href="{link}"
@@ -129,7 +129,7 @@ public sealed class SmtpEmailService(
             <html lang="es">
             <body style="font-family:sans-serif;background:#0c0c18;color:#f0eeff;padding:32px">
               <div style="max-width:480px;margin:auto;background:#13131f;border:1px solid #2a2a40;border-radius:16px;padding:32px">
-                <h1 style="color:#a78bfa;font-size:22px;margin:0 0 8px">FinanzasApp Familiar</h1>
+                <h1 style="color:#a78bfa;font-size:22px;margin:0 0 8px">DomusPay Familiar</h1>
                 <h2 style="font-size:18px;font-weight:600;margin:0 0 20px;color:#f87171">⚠ Límite de gasto superado</h2>
                 <p style="color:#c4b5fd;margin:0 0 16px">Hola {name},</p>
                 <p style="margin:0 0 20px">
@@ -149,7 +149,7 @@ public sealed class SmtpEmailService(
                     <td style="padding:8px 0;text-align:right;color:#f87171;font-weight:700">{pct}%</td>
                   </tr>
                 </table>
-                <p style="color:#6b6b8a;font-size:12px;margin:0">Revisa tu presupuesto en FinanzasApp.</p>
+                <p style="color:#6b6b8a;font-size:12px;margin:0">Revisa tu presupuesto en DomusPay.</p>
               </div>
             </body>
             </html>
@@ -184,7 +184,7 @@ public sealed class SmtpEmailService(
             <html lang="es">
             <body style="font-family:sans-serif;background:#0c0c18;color:#f0eeff;padding:32px">
               <div style="max-width:560px;margin:auto;background:#13131f;border:1px solid #2a2a40;border-radius:16px;padding:32px">
-                <h1 style="color:#a78bfa;font-size:22px;margin:0 0 4px">FinanzasApp Familiar</h1>
+                <h1 style="color:#a78bfa;font-size:22px;margin:0 0 4px">DomusPay Familiar</h1>
                 <p style="color:#6b6b8a;font-size:13px;margin:0 0 24px">Resumen del {data.Date:dd/MM/yyyy} · {data.FamilyName}</p>
                 <p style="margin:0 0 20px;color:#c4b5fd">Hola {name}, aquí tienes el resumen de hoy:</p>
 

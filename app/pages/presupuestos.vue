@@ -10,7 +10,7 @@ import { useApiError } from '~/composables/use-api-error'
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
-useHead({ title: 'Presupuestos - FinanzasApp' })
+useHead({ title: 'Presupuestos - DomusPay' })
 
 const txStore = useTransaccionesStore()
 const presupStore = usePresupuestosStore()

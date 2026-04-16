@@ -10,7 +10,7 @@ import { useReportExport } from '~/composables/use-report-export'
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
-useHead({ title: 'Reportes - FinanzasApp' })
+useHead({ title: 'Reportes - DomusPay' })
 
 const txStore = useTransaccionesStore()
 const { categoriasGasto } = useCategorias()

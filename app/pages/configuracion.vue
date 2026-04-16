@@ -5,7 +5,7 @@ import { useTheme } from '~/composables/use-theme'
 import { useToast } from '~/composables/use-toast'
 
 definePageMeta({ middleware: 'auth' })
-useHead({ title: 'Configuración - FinanzasApp' })
+useHead({ title: 'Configuración - DomusPay' })
 
 const { t, locale, availableLocales, setLocale } = useI18n()
 const auth = useAuthStore()

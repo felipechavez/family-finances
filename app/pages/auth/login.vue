@@ -96,7 +96,7 @@ async function handleVerify2Fa() {
     <template v-if="step === 'credentials'">
       <div class="auth-header">
         <span class="auth-icon">💜</span>
-        <h1 class="auth-title">FinanzasApp</h1>
+        <h1 class="auth-title">DomusPay</h1>
         <p class="auth-subtitle">{{ $t('auth.login.subtitle') }}</p>
       </div>
 

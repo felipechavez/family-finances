@@ -10,7 +10,7 @@ import type { Account, AccountType } from '#shared/types'
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
-useHead({ title: 'Cuentas - FinanzasApp' })
+useHead({ title: 'Cuentas - DomusPay' })
 
 const cuentasStore = useCuentasStore()
 const { formatCLP } = useFormato()

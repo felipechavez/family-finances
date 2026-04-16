@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: 'FinanzasApp Familiar',
+      title: 'DomusPay',
       meta: [
         { name: 'description', content: 'Gestión de finanzas familiares' },
         { name: 'theme-color', content: '#0f0f14' },

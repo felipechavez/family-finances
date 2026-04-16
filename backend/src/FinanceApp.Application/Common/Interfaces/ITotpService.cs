@@ -13,7 +13,7 @@ public interface ITotpService
     /// <summary>
     /// Builds the <c>otpauth://</c> URI for QR-code provisioning (e.g., Google Authenticator).
     /// </summary>
-    string BuildProvisioningUri(string secret, string userEmail, string issuer = "FinanzasApp");
+    string BuildProvisioningUri(string secret, string userEmail, string issuer = "DomusPay");
 
     /// <summary>
     /// Verifies a 6-digit TOTP code against the given secret.

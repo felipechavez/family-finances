@@ -5,7 +5,7 @@ import { useAuthStore } from '~/stores/auth'
 import { useToast } from '~/composables/use-toast'
 
 definePageMeta({ middleware: 'auth' })
-useHead({ title: 'Mi Familia - FinanzasApp' })
+useHead({ title: 'Mi Familia - DomusPay' })
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -85,7 +85,7 @@ async function shareCode() {
   const text = t('familia.gestion.shareText', { code: inviteCode.value, url: joinUrl.value })
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'FinanzasApp — Unirse a la familia', text, url: joinUrl.value })
+      await navigator.share({ title: 'DomusPay — Unirse a la familia', text, url: joinUrl.value })
     } catch { /* user cancelled */ }
   } else {
     // fallback: copy the full share text
