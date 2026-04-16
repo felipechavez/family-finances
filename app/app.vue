@@ -6,6 +6,7 @@
 
 <style>
 *, *::before, *::after { box-sizing: border-box; }
+
 body {
   margin: 0;
   background: var(--bg-base);
