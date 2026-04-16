@@ -6,6 +6,7 @@
     "limites": "Límites",
     "reportes": "Reportes",
     "configuracion": "Configuración",
+    "familia": "Familia",
     "cerrarSesion": "Cerrar sesión"
   },
   "auth": {
@@ -147,7 +148,10 @@
     "estadisticas": "Estadísticas",
     "totalTransacciones": "Total transacciones",
     "promedioPorGasto": "Promedio por gasto",
-    "categoriaMasAlta": "Categoría más alta"
+    "categoriaMasAlta": "Categoría más alta",
+    "exportarCSV": "Exportar CSV",
+    "exportarPDF": "Exportar PDF",
+    "exportando": "Exportando..."
   },
   "categorias": {
     "alimentacion": "Alimentación",
@@ -174,13 +178,35 @@
     "creating": "Creando...",
     "createSuccess": "¡Familia creada!",
     "createError": "No se pudo crear la familia",
-    "joinLabel": "ID DE LA FAMILIA",
-    "joinPlaceholder": "Pega el ID que te compartieron",
+    "joinLabel": "CÓDIGO DE INVITACIÓN",
+    "joinPlaceholder": "Ej: AB3CDE4F",
     "joinBtn": "Unirse",
     "joining": "Uniéndose...",
     "joinSuccess": "¡Te uniste a la familia!",
-    "joinError": "No se pudo unir. Verifica el ID.",
-    "joinHint": "Pídele el ID a alguien que ya esté en la familia."
+    "joinError": "Código inválido. Verifica e intenta de nuevo.",
+    "joinHint": "Pídele el código de 8 caracteres a alguien que ya esté en la familia.",
+    "roles": {
+      "owner":  "Propietario",
+      "admin":  "Admin",
+      "member": "Miembro"
+    },
+    "gestion": {
+      "title": "Mi Familia",
+      "codigoInvitacion": "Código de invitación",
+      "copiar": "Copiar código",
+      "compartir": "Compartir",
+      "regenerar": "Nuevo código",
+      "codigoRegenerado": "Código regenerado",
+      "errorRegenerado": "No se pudo regenerar el código",
+      "linkCopiado": "Enlace copiado al portapapeles",
+      "inviteHint": "Comparte este código o QR para que otros se unan a tu familia",
+      "shareText": "Únete a mi familia en FinanzasApp con el código {code} — {url}",
+      "miembros": "Miembros",
+      "tu": "tú",
+      "desde": "Desde",
+      "infoFamilia": "Información",
+      "nombre": "NOMBRE DE LA FAMILIA"
+    }
   },
   "configuracion": {
     "title": "Configuración",

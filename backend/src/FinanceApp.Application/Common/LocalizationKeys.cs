@@ -6,6 +6,7 @@ namespace FinanceApp.Application.Common;
 /// </summary>
 public static class LocalizationKeys
 {
+    public const string Auth_UserNotFound           = nameof(Auth_UserNotFound);
     public const string Auth_InvalidCredentials     = nameof(Auth_InvalidCredentials);
     public const string Auth_EmailAlreadyRegistered = nameof(Auth_EmailAlreadyRegistered);
     public const string Auth_EmailNotVerified       = nameof(Auth_EmailNotVerified);
@@ -21,4 +22,6 @@ public static class LocalizationKeys
     public const string Transaction_CategoryNotFound = nameof(Transaction_CategoryNotFound);
     public const string Transaction_NotFound         = nameof(Transaction_NotFound);
     public const string Family_NotFound              = nameof(Family_NotFound);
+    public const string Family_InvalidInviteCode     = nameof(Family_InvalidInviteCode);
+    public const string Family_NotOwner              = nameof(Family_NotOwner);
 }

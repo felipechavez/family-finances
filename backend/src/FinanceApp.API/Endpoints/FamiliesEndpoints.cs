@@ -1,7 +1,10 @@
 namespace FinanceApp.API.Endpoints;
 using FinanceApp.Application.Features.Families;
 using FinanceApp.Application.Features.Families.CreateFamily;
+using FinanceApp.Application.Features.Families.GetFamilyInfo;
+using FinanceApp.Application.Features.Families.JoinByCode;
 using FinanceApp.Application.Features.Families.JoinFamily;
+using FinanceApp.Application.Features.Families.RegenerateInviteCode;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +21,7 @@ internal static class FamiliesEndpoints
     {
         var group = app.MapGroup("/families").WithTags("Families").RequireAuthorization();
 
+        // ── Create ────────────────────────────────────────────────────────────
         group.MapPost("/", async (
             CreateFamilyRequest req,
             ClaimsPrincipal user,
@@ -31,6 +35,7 @@ internal static class FamiliesEndpoints
         .Produces<FamilySetupResult>(201)
         .ProducesProblem(400);
 
+        // ── Join by UUID (legacy) ─────────────────────────────────────────────
         group.MapPost("/join", async (
             JoinFamilyRequest req,
             ClaimsPrincipal user,
@@ -44,6 +49,51 @@ internal static class FamiliesEndpoints
         .Produces<FamilySetupResult>()
         .ProducesProblem(404);
 
+        // ── Join by invite code ───────────────────────────────────────────────
+        group.MapPost("/join-by-code", async (
+            JoinByCodeRequest req,
+            ClaimsPrincipal user,
+            IMediator mediator) =>
+        {
+            var userId = user.GetUserId();
+            var result = await mediator.Send(new JoinByCodeCommand(req.Code, userId));
+            return Results.Ok(result);
+        })
+        .WithName("JoinFamilyByCode")
+        .Produces<FamilySetupResult>()
+        .ProducesProblem(404);
+
+        // ── Get current family info (members + invite code) ───────────────────
+        group.MapGet("/me", async (
+            ClaimsPrincipal user,
+            IMediator mediator) =>
+        {
+            var userId   = user.GetUserId();
+            var familyId = user.GetFamilyId()
+                ?? throw new UnauthorizedAccessException("No family associated with this token.");
+            var result = await mediator.Send(new GetFamilyInfoQuery(familyId, userId));
+            return Results.Ok(result);
+        })
+        .WithName("GetFamilyInfo")
+        .Produces<FamilyInfoResult>()
+        .ProducesProblem(404);
+
+        // ── Regenerate invite code (owner only) ───────────────────────────────
+        group.MapPost("/me/regenerate-code", async (
+            ClaimsPrincipal user,
+            IMediator mediator) =>
+        {
+            var userId   = user.GetUserId();
+            var familyId = user.GetFamilyId()
+                ?? throw new UnauthorizedAccessException("No family associated with this token.");
+            var newCode = await mediator.Send(new RegenerateInviteCodeCommand(familyId, userId));
+            return Results.Ok(new { inviteCode = newCode });
+        })
+        .WithName("RegenerateInviteCode")
+        .Produces<object>()
+        .ProducesProblem(403)
+        .ProducesProblem(404);
+
         return app;
     }
 }
@@ -53,3 +103,6 @@ internal record CreateFamilyRequest(string Name);
 
 /// <summary>Request body for joining an existing family by its identifier.</summary>
 internal record JoinFamilyRequest(Guid FamilyId);
+
+/// <summary>Request body for joining a family using a short invite code.</summary>
+internal record JoinByCodeRequest(string Code);

@@ -5,6 +5,7 @@ import { useTransaccionesStore } from '~/stores/transacciones'
 import { useCategorias } from '~/composables/use-categorias'
 import { useFormato } from '~/composables/use-formato'
 import { useApiError } from '~/composables/use-api-error'
+import { useReportExport } from '~/composables/use-report-export'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -14,9 +15,11 @@ useHead({ title: 'Reportes - FinanzasApp' })
 const txStore = useTransaccionesStore()
 const { categoriasGasto } = useCategorias()
 const { formatCLP, pct } = useFormato()
+const { exportCSV, exportPDF, exporting } = useReportExport()
 
 const {
   transacciones,
+  mes,
   totalIngresos,
   totalGastos,
   balance,
@@ -37,12 +40,35 @@ const distribucion = computed(() => {
     }))
     .sort((a, b) => b.monto - a.monto)
 })
+
+function getReportData() {
+  return {
+    transacciones: transacciones.value,
+    totalIngresos: totalIngresos.value,
+    totalGastos: totalGastos.value,
+    balance: balance.value,
+    distribucion: distribucion.value,
+    mes: mes.value,
+  }
+}
+
+function handleExportCSV() { exportCSV(getReportData()) }
+function handleExportPDF() { exportPDF(getReportData()) }
 </script>
 
 <template>
   <div>
     <header class="header">
       <h1 class="header-titulo">{{ $t('reportes.title') }}</h1>
+      <div class="header-actions">
+        <button class="btn-export" :disabled="exporting || status === 'pending'" @click="handleExportCSV">
+          📄 {{ $t('reportes.exportarCSV') }}
+        </button>
+        <button class="btn-export btn-export--pdf" :disabled="exporting || status === 'pending'" @click="handleExportPDF">
+          <span v-if="exporting">{{ $t('reportes.exportando') }}</span>
+          <span v-else>📑 {{ $t('reportes.exportarPDF') }}</span>
+        </button>
+      </div>
     </header>
 
     <main class="main">
@@ -123,12 +149,36 @@ const distribucion = computed(() => {
 
 <style scoped>
 .header {
-  padding: 20px 20px 0;
+  padding: 20px 20px 16px;
   border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 16px;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.header-titulo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 0; }
+.header-titulo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 0; flex: 1; }
+.header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.btn-export:hover:not(:disabled) { background: var(--bg-card); border-color: var(--accent-soft); }
+.btn-export--pdf { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-soft); }
+.btn-export--pdf:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.btn-export:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .main { padding: 16px 16px 100px; flex: 1; }
 
@@ -171,7 +221,7 @@ const distribucion = computed(() => {
 .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; }
 
 @media (min-width: 768px) {
-  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
+  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; box-sizing: border-box; }
   .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
   .resumen-cards { grid-template-columns: repeat(3, 1fr); }
   .stats-grid { grid-template-columns: repeat(3, 1fr); }

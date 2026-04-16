@@ -21,11 +21,21 @@ const { $api } = useNuxtApp()
 type TwoFaState = 'idle' | 'qr' | 'disable'
 
 const twoFaState    = shallowRef<TwoFaState>('idle')
-const twoFaEnabled  = shallowRef<boolean | null>(null)  // null = unknown
+const twoFaEnabled  = shallowRef<boolean | null>(null)  // null = loading
 const qrUri         = shallowRef('')
 const totpCode      = shallowRef('')
 const twoFaLoading  = shallowRef(false)
 const twoFaError    = shallowRef('')
+
+// Load current 2FA status from the server on mount
+onMounted(async () => {
+  try {
+    const res = await ($api as typeof $fetch)('/auth/me') as { twoFactorEnabled: boolean }
+    twoFaEnabled.value = res.twoFactorEnabled
+  } catch {
+    twoFaEnabled.value = false
+  }
+})
 
 async function handleSetup2Fa() {
   twoFaError.value = ''
@@ -160,7 +170,7 @@ function cancelTwoFa() {
               <button
                 v-if="twoFaEnabled !== true"
                 class="btn-small btn-small--accent"
-                :disabled="twoFaLoading"
+                :disabled="twoFaLoading || twoFaEnabled === null"
                 @click="handleSetup2Fa"
               >
                 {{ twoFaLoading ? '…' : $t('configuracion.seguridad.activar') }}

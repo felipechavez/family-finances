@@ -61,6 +61,12 @@
   <data name="Family_NotFound" xml:space="preserve">
     <value>Familia no encontrada.</value>
   </data>
+  <data name="Family_InvalidInviteCode" xml:space="preserve">
+    <value>Código de invitación inválido. Verifica e intenta de nuevo.</value>
+  </data>
+  <data name="Family_NotOwner" xml:space="preserve">
+    <value>Solo el propietario de la familia puede realizar esta acción.</value>
+  </data>
 
   <!-- General -->
   <data name="ErrorUnexpected" xml:space="preserve">

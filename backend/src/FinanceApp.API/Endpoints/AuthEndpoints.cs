@@ -2,6 +2,7 @@ namespace FinanceApp.API.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 using FinanceApp.Application.Features.Auth.Confirm2Fa;
 using FinanceApp.Application.Features.Auth.Disable2Fa;
+using FinanceApp.Application.Features.Auth.GetUserProfile;
 using FinanceApp.Application.Features.Auth.Login;
 using FinanceApp.Application.Features.Auth.Register;
 using FinanceApp.Application.Features.Auth.ResendVerification;
@@ -67,6 +68,15 @@ internal static class AuthEndpoints
         // ── 2FA Management (requires authentication) ──────────────────────────
 
         var secured = app.MapGroup("/auth").WithTags("Auth").RequireAuthorization();
+
+        secured.MapGet("/me", async (ClaimsPrincipal user, IMediator mediator) =>
+        {
+            var userId = user.GetUserId();
+            var result = await mediator.Send(new GetUserProfileQuery(userId));
+            return Results.Ok(result);
+        })
+        .WithName("GetUserProfile")
+        .Produces<UserProfileResult>();
 
         secured.MapPost("/setup-2fa", async (ClaimsPrincipal user, IMediator mediator) =>
         {

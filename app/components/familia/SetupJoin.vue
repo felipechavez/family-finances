@@ -6,19 +6,25 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const { $api } = useNuxtApp()
 
-const familyIdInput = shallowRef('')
+const code = shallowRef('')
 const loading = shallowRef(false)
 const errorMsg = shallowRef<string | null>(null)
 
-const canSubmit = computed(() => familyIdInput.value.trim().length > 0 && !loading.value)
+// Normalize to uppercase as the user types
+const codeDisplay = computed({
+  get: () => code.value,
+  set: (v: string) => { code.value = v.toUpperCase().replace(/[^A-Z0-9]/g, '') },
+})
+
+const canSubmit = computed(() => code.value.length >= 6 && !loading.value)
 
 async function handleJoin() {
   errorMsg.value = null
   loading.value = true
   try {
-    const res = await ($api as typeof $fetch)('/families/join', {
+    const res = await ($api as typeof $fetch)('/families/join-by-code', {
       method: 'POST',
-      body: { familyId: familyIdInput.value.trim() },
+      body: { code: code.value },
     }) as { token: string; familyId: string }
     emit('success', res.token, res.familyId)
   } catch {
@@ -33,9 +39,15 @@ async function handleJoin() {
   <div class="form">
     <label class="field-label">{{ $t('familia.joinLabel') }}</label>
     <input
-      v-model="familyIdInput"
-      class="input"
+      v-model="codeDisplay"
+      class="input input--code"
       type="text"
+      inputmode="text"
+      maxlength="10"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="characters"
+      spellcheck="false"
       :placeholder="$t('familia.joinPlaceholder')"
       :disabled="loading"
       @keydown.enter="canSubmit && handleJoin()"
@@ -55,6 +67,13 @@ async function handleJoin() {
   width: 100%; background: var(--bg-input); border: 1.5px solid var(--border); border-radius: 12px;
   padding: 14px 16px; font-size: 15px; color: var(--text-primary); outline: none;
   transition: border-color 0.15s;
+}
+.input--code {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
 }
 .input:focus { border-color: var(--accent); }
 .input:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -17,6 +17,13 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['jspdf', 'jspdf-autotable'],
+    },
+  },
+
+  build: {
+    transpile: ['jspdf', 'jspdf-autotable'],
   },
 
   typescript: {

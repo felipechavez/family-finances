@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/cuentas',       labelKey: 'nav.cuentas',        emoji: '💳' },
   { to: '/presupuestos',  labelKey: 'nav.limites',        emoji: '📊' },
   { to: '/reportes',      labelKey: 'nav.reportes',       emoji: '📈' },
+  { to: '/familia',       labelKey: 'nav.familia',        emoji: '👨‍👩‍👧' },
   { to: '/configuracion', labelKey: 'nav.configuracion',  emoji: '⚙️' },
 ]
 

@@ -6,6 +6,7 @@
     "limites": "Limits",
     "reportes": "Reports",
     "configuracion": "Settings",
+    "familia": "Family",
     "cerrarSesion": "Log out"
   },
   "auth": {
@@ -147,7 +148,10 @@
     "estadisticas": "Statistics",
     "totalTransacciones": "Total transactions",
     "promedioPorGasto": "Average per expense",
-    "categoriaMasAlta": "Top category"
+    "categoriaMasAlta": "Top category",
+    "exportarCSV": "Export CSV",
+    "exportarPDF": "Export PDF",
+    "exportando": "Exporting..."
   },
   "categorias": {
     "alimentacion": "Food & Groceries",
@@ -174,13 +178,35 @@
     "creating": "Creating...",
     "createSuccess": "Family created!",
     "createError": "Could not create family",
-    "joinLabel": "FAMILY ID",
-    "joinPlaceholder": "Paste the ID you were shared",
+    "joinLabel": "INVITE CODE",
+    "joinPlaceholder": "E.g. AB3CDE4F",
     "joinBtn": "Join",
     "joining": "Joining...",
     "joinSuccess": "You joined the family!",
-    "joinError": "Could not join. Check the ID.",
-    "joinHint": "Ask someone already in the family for their ID."
+    "joinError": "Invalid code. Please check and try again.",
+    "joinHint": "Ask someone already in the family for their 8-character invite code.",
+    "roles": {
+      "owner":  "Owner",
+      "admin":  "Admin",
+      "member": "Member"
+    },
+    "gestion": {
+      "title": "My Family",
+      "codigoInvitacion": "Invite code",
+      "copiar": "Copy code",
+      "compartir": "Share",
+      "regenerar": "New code",
+      "codigoRegenerado": "Code regenerated",
+      "errorRegenerado": "Could not regenerate the code",
+      "linkCopiado": "Link copied to clipboard",
+      "inviteHint": "Share this code or QR so others can join your family",
+      "shareText": "Join my family on FinanzasApp with code {code} — {url}",
+      "miembros": "Members",
+      "tu": "you",
+      "desde": "Since",
+      "infoFamilia": "Info",
+      "nombre": "FAMILY NAME"
+    }
   },
   "configuracion": {
     "title": "Settings",
