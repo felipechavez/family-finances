@@ -27,13 +27,37 @@ const totpCode      = shallowRef('')
 const twoFaLoading  = shallowRef(false)
 const twoFaError    = shallowRef('')
 
-// Load current 2FA status from the server on mount
+// ── Daily summary toggle ──────────────────────────────────────────────────────
+const dailySummary        = shallowRef<boolean | null>(null)
+const dailySummaryLoading = shallowRef(false)
+
+async function toggleDailySummary() {
+  if (dailySummary.value === null) return
+  dailySummaryLoading.value = true
+  const newVal = !dailySummary.value
+  try {
+    await ($api as typeof $fetch)('/auth/daily-summary', {
+      method: 'PATCH',
+      body: { enabled: newVal },
+    })
+    dailySummary.value = newVal
+    toastOk(newVal ? t('configuracion.correo.activado') : t('configuracion.correo.desactivado'))
+  } catch {
+    toastError(t('configuracion.correo.error'))
+  } finally {
+    dailySummaryLoading.value = false
+  }
+}
+
+// Load current 2FA status + daily summary preference from the server on mount
 onMounted(async () => {
   try {
-    const res = await ($api as typeof $fetch)('/auth/me') as { twoFactorEnabled: boolean }
-    twoFaEnabled.value = res.twoFactorEnabled
+    const res = await ($api as typeof $fetch)('/auth/me') as { twoFactorEnabled: boolean; dailySummaryEnabled: boolean }
+    twoFaEnabled.value   = res.twoFactorEnabled
+    dailySummary.value   = res.dailySummaryEnabled
   } catch {
     twoFaEnabled.value = false
+    dailySummary.value = true
   }
 })
 
@@ -257,6 +281,25 @@ function cancelTwoFa() {
             </div>
           </div>
         </template>
+      </section>
+
+      <!-- ── Correo diario ─────────────────────────────────────────────────── -->
+      <section class="seccion">
+        <h2 class="seccion-titulo">{{ $t('configuracion.correo.title') }}</h2>
+        <div class="card row-card">
+          <div class="row-info">
+            <p class="row-label">{{ $t('configuracion.correo.resumen') }}</p>
+            <p class="row-desc">{{ $t('configuracion.correo.desc') }}</p>
+          </div>
+          <button
+            class="toggle-btn"
+            :class="{ 'toggle-btn--on': dailySummary === true }"
+            :disabled="dailySummaryLoading || dailySummary === null"
+            @click="toggleDailySummary"
+          >
+            <span class="toggle-thumb" />
+          </button>
+        </div>
       </section>
 
       <!-- ── Cuenta ──────────────────────────────────────────────────────── -->

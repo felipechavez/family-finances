@@ -239,10 +239,23 @@
       "desactivado": "2FA deactivated",
       "ingresaCodigoDesactivar": "Enter the code from your authenticator app to deactivate 2FA."
     },
+    "correo": {
+      "title": "Daily email",
+      "resumen": "Daily summary email",
+      "desc": "Receive a summary of income, expenses and budgets every day at 8:00 PM",
+      "activado": "Daily summary enabled",
+      "desactivado": "Daily summary disabled",
+      "error": "Could not update preference"
+    },
     "cuenta": {
       "title": "Account",
       "sesionActiva": "Active session"
     }
+  },
+  "notificaciones": {
+    "titulo": "Notifications",
+    "sinNotificaciones": "No notifications",
+    "marcarTodas": "Mark all as read"
   },
   "common": {
     "loading": "Loading...",

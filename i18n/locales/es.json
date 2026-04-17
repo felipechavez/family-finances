@@ -239,10 +239,23 @@
       "desactivado": "2FA desactivado",
       "ingresaCodigoDesactivar": "Ingresa el código de tu app autenticadora para desactivar el 2FA."
     },
+    "correo": {
+      "title": "Correo diario",
+      "resumen": "Resumen diario por email",
+      "desc": "Recibe un resumen de ingresos, gastos y presupuestos cada día a las 20:00",
+      "activado": "Resumen diario activado",
+      "desactivado": "Resumen diario desactivado",
+      "error": "No se pudo actualizar la preferencia"
+    },
     "cuenta": {
       "title": "Cuenta",
       "sesionActiva": "Sesión activa"
     }
+  },
+  "notificaciones": {
+    "titulo": "Notificaciones",
+    "sinNotificaciones": "Sin notificaciones",
+    "marcarTodas": "Marcar todas como leídas"
   },
   "common": {
     "loading": "Cargando...",

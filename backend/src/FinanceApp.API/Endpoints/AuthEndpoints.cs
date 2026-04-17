@@ -119,6 +119,19 @@ internal static class AuthEndpoints
         .Produces<LoginResult>()
         .ProducesProblem(401);
 
+        // ── Daily summary toggle ────────────────────────────────────────────────
+
+        secured.MapPatch("/daily-summary", async (DailySummaryToggleRequest req, ClaimsPrincipal user, Supabase.Client supabase) =>
+        {
+            var userId = user.GetUserId();
+            await supabase.From<FinanceApp.Domain.Entities.Users>()
+                .Where(u => u.Id == userId)
+                .Set(u => u.DailySummaryEnabled, req.Enabled)
+                .Update();
+            return TypedResults.NoContent();
+        })
+        .WithName("ToggleDailySummary");
+
         return app;
     }
 }
@@ -134,3 +147,6 @@ internal record Confirm2FaRequest(string Code);
 
 /// <summary>Request body for disabling 2FA.</summary>
 internal record Disable2FaRequest(string Code);
+
+/// <summary>Request body for toggling the daily summary email.</summary>
+internal record DailySummaryToggleRequest(bool Enabled);

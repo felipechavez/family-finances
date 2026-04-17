@@ -3,4 +3,4 @@ using MediatR;
 
 public record GetUserProfileQuery(Guid UserId) : IRequest<UserProfileResult>;
 
-public record UserProfileResult(bool TwoFactorEnabled);
+public record UserProfileResult(bool TwoFactorEnabled, bool DailySummaryEnabled);

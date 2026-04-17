@@ -17,6 +17,6 @@ public class GetUserProfileHandler(Client supabase)
         var user = resp.Model
             ?? throw new AppException(LocalizationKeys.Auth_UserNotFound, 404);
 
-        return new UserProfileResult(user.TwoFactorEnabled);
+        return new UserProfileResult(user.TwoFactorEnabled, user.DailySummaryEnabled);
     }
 }

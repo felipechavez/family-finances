@@ -2,6 +2,7 @@ namespace FinanceApp.Infrastructure;
 using System.Text;
 using FinanceApp.Application.Common;
 using FinanceApp.Application.Common.Interfaces;
+using FinanceApp.Infrastructure.BackgroundServices;
 using FinanceApp.Infrastructure.Services;
 using FinanceApp.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,6 +52,8 @@ public static class DependencyInjection
             .ValidateOnStart();
 
         services.AddTransient<IEmailService, SmtpEmailService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddHostedService<DailySummaryWorker>();
 
         // JWT Authentication
         var jwtSettings = config.GetSection("Jwt").Get<JwtSettings>()

@@ -66,6 +66,12 @@ function isActive(path: string): boolean {
 
     <!-- ── CONTENT AREA ── -->
     <div class="content-area">
+      <!-- Topbar visible in all screen sizes — contains notification bell -->
+      <div class="content-topbar">
+        <ClientOnly>
+          <UiNotificationBell />
+        </ClientOnly>
+      </div>
       <slot />
     </div>
 
@@ -97,6 +103,16 @@ function isActive(path: string): boolean {
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* Topbar — always visible, contains the notification bell */
+.content-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  min-height: 44px;
 }
 
 /* ── SIDEBAR ── */

@@ -111,6 +111,7 @@ app.MapAccountsEndpoints();
 app.MapTransactionsEndpoints();
 app.MapBudgetsEndpoints();
 app.MapReportsEndpoints();
+app.MapNotificationsEndpoints();
 
 app.Run();
 
