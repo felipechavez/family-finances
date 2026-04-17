@@ -267,10 +267,10 @@ function cancelTwoFa() {
             <p class="row-label">{{ auth.userName }}</p>
             <p class="row-desc">{{ $t('configuracion.cuenta.sesionActiva') }}</p>
           </div>
-          <button class="btn-small btn-small--danger" @click="auth.logout()">
-            {{ $t('nav.cerrarSesion') }}
-          </button>
         </div>
+        <button class="btn-logout-full" @click="auth.logout()">
+          🚪 {{ $t('nav.cerrarSesion') }}
+        </button>
       </section>
 
     </main>
@@ -396,6 +396,22 @@ function cancelTwoFa() {
   flex: 1; background: transparent; border: 1.5px solid var(--border); color: var(--text-label);
   border-radius: 12px; padding: 13px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
 }
+
+.btn-logout-full {
+  width: 100%;
+  margin-top: 10px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.25);
+  color: var(--danger);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  letter-spacing: 0.2px;
+}
+.btn-logout-full:hover { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); }
 
 @media (min-width: 768px) {
   .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }

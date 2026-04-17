@@ -70,7 +70,7 @@ function isActive(path: string): boolean {
       <slot />
     </div>
 
-    <!-- ── BOTTOM NAV (mobile < 768px) ── -->
+    <!-- ── BOTTOM NAV (mobile < 768px) — icons only, no labels ── -->
     <nav class="bottomnav">
       <NuxtLink
         v-for="item in NAV_ITEMS"
@@ -78,14 +78,11 @@ function isActive(path: string): boolean {
         :to="item.to"
         class="bottomnav-item"
         :class="{ 'bottomnav-item--active': isActive(item.to) }"
+        :title="t(item.labelKey)"
       >
         <span class="bottomnav-emoji">{{ item.emoji }}</span>
-        <span class="bottomnav-label">{{ t(item.labelKey) }}</span>
+        <span class="bottomnav-dot" />
       </NuxtLink>
-      <button class="bottomnav-item bottomnav-logout" @click="auth.logout()">
-        <span class="bottomnav-emoji">🚪</span>
-        <span class="bottomnav-label">{{ t('nav.cerrarSesion') }}</span>
-      </button>
     </nav>
   </div>
 </template>
@@ -115,7 +112,8 @@ function isActive(path: string): boolean {
   background: var(--bg-elevated);
   border-top: 1px solid var(--border);
   display: flex;
-  padding: 6px 8px;
+  align-items: center;
+  padding: 6px 4px env(safe-area-inset-bottom, 6px);
   z-index: 100;
 }
 
@@ -124,25 +122,32 @@ function isActive(path: string): boolean {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 4px;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 2px 6px;
+  min-width: 0;
   cursor: pointer;
   text-decoration: none;
   color: var(--text-muted);
   -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s;
+  transition: color 0.15s;
+  border-radius: 12px;
+  position: relative;
 }
 .bottomnav-item--active { color: var(--accent-soft); }
 
-.bottomnav-emoji { font-size: 18px; line-height: 1; }
-.bottomnav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-.bottomnav-logout {
-  background: none;
-  border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+.bottomnav-emoji { font-size: 22px; line-height: 1; }
+
+/* Active indicator dot */
+.bottomnav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.15s;
+  flex-shrink: 0;
 }
-.bottomnav-logout:active { color: var(--danger); }
+.bottomnav-item--active .bottomnav-dot { background: var(--accent-soft); }
 
 /* ── DESKTOP ── */
 @media (min-width: 768px) {
