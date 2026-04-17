@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const props = defineProps<{ initialCode?: string }>()
 const emit = defineEmits<{
   success: [token: string, familyId: string]
 }>()
@@ -6,7 +7,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const { $api } = useNuxtApp()
 
-const code = shallowRef('')
+const code = shallowRef(props.initialCode ?? '')
 const loading = shallowRef(false)
 const errorMsg = shallowRef<string | null>(null)
 

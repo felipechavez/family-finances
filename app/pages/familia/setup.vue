@@ -9,7 +9,14 @@ const { t } = useI18n()
 const auth = useAuthStore()
 const { ok: toastOk } = useToast()
 
-const tab = shallowRef<'create' | 'join'>('create')
+// If user already belongs to a family, this page is not for them
+onMounted(() => {
+  if (auth.hasFamiliy) navigateTo('/')
+})
+
+const route = useRoute()
+const initialCode = computed(() => (route.query.code as string | undefined) ?? '')
+const tab = shallowRef<'create' | 'join'>(initialCode.value ? 'join' : 'create')
 
 async function handleSuccess(token: string, familyId: string) {
   auth.updateToken(token, familyId)
@@ -45,7 +52,7 @@ async function handleSuccess(token: string, familyId: string) {
 
       <!-- Form panels -->
       <FamiliaSetupCreate v-if="tab === 'create'" @success="handleSuccess" />
-      <FamiliaSetupJoin v-else @success="handleSuccess" />
+      <FamiliaSetupJoin v-else :initial-code="initialCode" @success="handleSuccess" />
     </div>
 
     <UiToast />

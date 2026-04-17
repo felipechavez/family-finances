@@ -82,10 +82,12 @@ async function regenerateCode() {
 // ── Share ──────────────────────────────────────────────────────────────────
 async function shareCode() {
   if (!inviteCode.value) return
-  const text = t('familia.gestion.shareText', { code: inviteCode.value, url: joinUrl.value })
+  // qrData already contains the full URL with ?code= pre-filled
+  const shareUrl = qrData.value
+  const text = t('familia.gestion.shareText', { code: inviteCode.value, url: shareUrl })
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'DomusPay — Unirse a la familia', text, url: joinUrl.value })
+      await navigator.share({ title: 'DomusPay — Unirse a la familia', text, url: shareUrl })
     } catch { /* user cancelled */ }
   } else {
     // fallback: copy the full share text
