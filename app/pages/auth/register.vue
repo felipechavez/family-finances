@@ -49,7 +49,7 @@ async function handleRegister() {
 <template>
   <div class="auth-card">
     <div class="auth-header">
-      <span class="auth-icon">💜</span>
+      <img src="/logo.png" alt="DomusPay" class="auth-logo" />
       <h1 class="auth-title">{{ $t('auth.register.title') }}</h1>
       <p class="auth-subtitle">{{ $t('auth.register.subtitle') }}</p>
     </div>
@@ -134,6 +134,7 @@ async function handleRegister() {
 }
 
 .auth-header { text-align: center; margin-bottom: 28px; }
+.auth-logo { height: 56px; width: auto; display: block; margin: 0 auto 12px; }
 .auth-icon { font-size: 40px; display: block; margin-bottom: 8px; }
 .auth-title { font-size: 24px; font-weight: 700; color: var(--accent-light); margin: 0 0 4px; }
 .auth-subtitle { font-size: 14px; color: var(--text-muted); margin: 0; }

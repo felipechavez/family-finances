@@ -39,8 +39,7 @@ function isActive(path: string): boolean {
     <!-- ── SIDEBAR (desktop >= 768px) ── -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-icon">💜</span>
-        <span class="logo-text">DomusPay</span>
+        <img src="/logo.png" alt="DomusPay" class="sidebar-logo-img" />
       </div>
 
       <nav class="sidebar-nav">
@@ -167,13 +166,12 @@ function isActive(path: string): boolean {
   .sidebar-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
     padding: 0 8px 32px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 24px;
   }
-  .logo-icon { font-size: 24px; }
-  .logo-text { font-size: 16px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+  .sidebar-logo-img { height: 36px; width: auto; display: block; }
 
   .sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 
