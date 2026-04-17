@@ -54,11 +54,13 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 
 <style scoped>
 .balance-card {
+  container-type: inline-size;
   border-radius: 22px;
   padding: 20px;
   background: var(--hero-bg);
   border: 1px solid var(--hero-border);
   margin-bottom: 14px;
+  overflow: hidden;
 }
 .balance-card--negativo {
   background: linear-gradient(135deg, #2d0a0a 0%, #1a0a1a 100%);
@@ -67,13 +69,13 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 
 .label { font-size: 12px; color: var(--accent-soft); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px; }
 
-.monto { font-size: 38px; font-weight: 700; letter-spacing: -1.5px; margin: 0 0 16px; }
+.monto { font-size: clamp(22px, 6cqw, 38px); font-weight: 700; letter-spacing: -1.5px; margin: 0 0 16px; word-break: break-word; }
 .monto--morado { color: var(--accent-light); }
 .monto--rojo { color: var(--danger); }
 
 .fila-resumen { display: flex; gap: 12px; margin-bottom: 16px; }
 
-.resumen-chip { flex: 1; border-radius: 12px; padding: 10px 14px; }
+.resumen-chip { flex: 1; min-width: 0; border-radius: 12px; padding: 10px 14px; }
 .resumen-chip--ingreso { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
 .resumen-chip--gasto { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
 
@@ -81,7 +83,7 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 .resumen-chip--ingreso .chip-label { color: #4ade80; }
 .resumen-chip--gasto .chip-label { color: #f87171; }
 
-.chip-monto { font-size: 17px; font-weight: 700; }
+.chip-monto { font-size: clamp(12px, 3cqw, 17px); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 .resumen-chip--ingreso .chip-monto { color: #4ade80; }
 .resumen-chip--gasto .chip-monto { color: #f87171; }
 

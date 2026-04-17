@@ -171,7 +171,7 @@ function isActive(path: string): boolean {
     border-bottom: 1px solid var(--border);
     margin-bottom: 24px;
   }
-  .sidebar-logo-img { height: 36px; width: auto; display: block; }
+  .sidebar-logo-img { height: 97px; width: auto; display: block; }
 
   .sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
 

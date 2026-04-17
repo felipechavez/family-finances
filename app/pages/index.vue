@@ -127,6 +127,8 @@ const mesesDisponibles = computed(() => {
 @media (min-width: 768px) {
   .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
   .main { padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin-inline: auto; }
+}
+@media (min-width: 1024px) {
   .resumen-grid { flex-direction: row; gap: 24px; align-items: flex-start; }
   .resumen-col-izq { flex: 1; min-width: 0; }
   .resumen-col-der { width: 360px; flex-shrink: 0; }
