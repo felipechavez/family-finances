@@ -68,6 +68,34 @@
     <value>Only the family owner can perform this action.</value>
   </data>
 
+  <!-- Password complexity -->
+  <data name="Password_RequiresUppercase" xml:space="preserve">
+    <value>Password must contain at least one uppercase letter.</value>
+  </data>
+  <data name="Password_RequiresLowercase" xml:space="preserve">
+    <value>Password must contain at least one lowercase letter.</value>
+  </data>
+  <data name="Password_RequiresDigit" xml:space="preserve">
+    <value>Password must contain at least one digit.</value>
+  </data>
+  <data name="Password_RequiresSpecial" xml:space="preserve">
+    <value>Password must contain at least one special character.</value>
+  </data>
+
+  <!-- Auth — credential management -->
+  <data name="Auth_PasswordSameAsCurrent" xml:space="preserve">
+    <value>New password must be different from the current password.</value>
+  </data>
+  <data name="Auth_InvalidCurrentPassword" xml:space="preserve">
+    <value>Current password is incorrect.</value>
+  </data>
+  <data name="Auth_EmailAlreadyInUse" xml:space="preserve">
+    <value>That email address is already in use.</value>
+  </data>
+  <data name="Auth_PasswordMismatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+
   <!-- General -->
   <data name="ErrorUnexpected" xml:space="preserve">
     <value>An unexpected error occurred.</value>

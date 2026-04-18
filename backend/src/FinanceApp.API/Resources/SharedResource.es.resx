@@ -68,6 +68,34 @@
     <value>Solo el propietario de la familia puede realizar esta acción.</value>
   </data>
 
+  <!-- Password complexity -->
+  <data name="Password_RequiresUppercase" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra mayúscula.</value>
+  </data>
+  <data name="Password_RequiresLowercase" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra minúscula.</value>
+  </data>
+  <data name="Password_RequiresDigit" xml:space="preserve">
+    <value>La contraseña debe contener al menos un dígito.</value>
+  </data>
+  <data name="Password_RequiresSpecial" xml:space="preserve">
+    <value>La contraseña debe contener al menos un carácter especial.</value>
+  </data>
+
+  <!-- Auth — gestión de credenciales -->
+  <data name="Auth_PasswordSameAsCurrent" xml:space="preserve">
+    <value>La nueva contraseña debe ser diferente a la actual.</value>
+  </data>
+  <data name="Auth_InvalidCurrentPassword" xml:space="preserve">
+    <value>La contraseña actual es incorrecta.</value>
+  </data>
+  <data name="Auth_EmailAlreadyInUse" xml:space="preserve">
+    <value>Ese correo electrónico ya está en uso.</value>
+  </data>
+  <data name="Auth_PasswordMismatch" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+
   <!-- General -->
   <data name="ErrorUnexpected" xml:space="preserve">
     <value>Ocurrió un error inesperado.</value>

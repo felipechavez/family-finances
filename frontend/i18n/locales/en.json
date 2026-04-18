@@ -42,11 +42,16 @@
       "confirmPassword": "CONFIRM PASSWORD",
       "namePlaceholder": "Your name",
       "emailPlaceholder": "you{'@'}email.com",
-      "passwordPlaceholder": "At least 6 characters",
+      "passwordPlaceholder": "At least 8 characters",
       "confirmPasswordPlaceholder": "Repeat your password",
       "fillFields": "Please fill in all fields",
       "passwordMismatch": "Passwords do not match",
-      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordStrength": {
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong"
+      },
       "submitting": "Creating account...",
       "submit": "Sign up",
       "hasAccount": "Already have an account?",

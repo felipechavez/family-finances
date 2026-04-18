@@ -1,5 +1,6 @@
 namespace FinanceApp.Application.Features.Auth.Register;
 using FluentValidation;
+using FinanceApp.Application.Common.Validation;
 
 public class RegisterValidator : AbstractValidator<RegisterCommand>
 {
@@ -7,6 +8,6 @@ public class RegisterValidator : AbstractValidator<RegisterCommand>
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(120);
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(254);
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(6).MaximumLength(100);
+        PasswordRules.Apply(RuleFor(x => x.Password).NotEmpty());
     }
 }

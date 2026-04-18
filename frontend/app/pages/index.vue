@@ -113,7 +113,7 @@ const mesesDisponibles = computed(() => {
   -webkit-appearance: none; cursor: pointer;
 }
 
-.main { padding: 16px 16px 100px; flex: 1; }
+.main { padding: 16px 16px 100px; flex: 1; overflow-x: hidden; }
 
 .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -122,7 +122,7 @@ const mesesDisponibles = computed(() => {
 
 .error-state { text-align: center; color: var(--danger); padding: 40px 20px; }
 
-.resumen-grid { display: flex; flex-direction: column; }
+.resumen-grid { display: flex; flex-direction: column; width: 100%; }
 
 @media (min-width: 768px) {
   .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }

@@ -96,13 +96,18 @@ function isActive(path: string): boolean {
 .layout {
   display: flex;
   min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .content-area {
   flex: 1;
   min-width: 0;
+  width: 0; /* forces flex child not to overflow past parent */
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 /* Topbar — always visible, contains the notification bell */

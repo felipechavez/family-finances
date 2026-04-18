@@ -24,4 +24,16 @@ public static class LocalizationKeys
     public const string Family_NotFound              = nameof(Family_NotFound);
     public const string Family_InvalidInviteCode     = nameof(Family_InvalidInviteCode);
     public const string Family_NotOwner              = nameof(Family_NotOwner);
+
+    // Password complexity
+    public const string Password_RequiresUppercase   = nameof(Password_RequiresUppercase);
+    public const string Password_RequiresLowercase   = nameof(Password_RequiresLowercase);
+    public const string Password_RequiresDigit       = nameof(Password_RequiresDigit);
+    public const string Password_RequiresSpecial     = nameof(Password_RequiresSpecial);
+
+    // Auth — credential management
+    public const string Auth_PasswordSameAsCurrent   = nameof(Auth_PasswordSameAsCurrent);
+    public const string Auth_InvalidCurrentPassword  = nameof(Auth_InvalidCurrentPassword);
+    public const string Auth_EmailAlreadyInUse       = nameof(Auth_EmailAlreadyInUse);
+    public const string Auth_PasswordMismatch        = nameof(Auth_PasswordMismatch);
 }
