@@ -115,7 +115,10 @@ function isActive(path: string): boolean {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 8px 16px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: 8px;
+  padding-left: max(16px, env(safe-area-inset-left));
   border-bottom: 1px solid var(--border);
   min-height: 44px;
 }
@@ -133,7 +136,10 @@ function isActive(path: string): boolean {
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 6px 4px env(safe-area-inset-bottom, 6px);
+  padding-top: 6px;
+  padding-left: max(4px, env(safe-area-inset-left));
+  padding-right: max(4px, env(safe-area-inset-right));
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
   z-index: 100;
 }
 

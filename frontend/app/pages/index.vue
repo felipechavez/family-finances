@@ -113,7 +113,7 @@ const mesesDisponibles = computed(() => {
   -webkit-appearance: none; cursor: pointer;
 }
 
-.main { padding: 16px 16px 100px; flex: 1; overflow-x: hidden; }
+.main { padding: 16px 16px calc(84px + env(safe-area-inset-bottom, 0px)); flex: 1; overflow-x: hidden; }
 
 .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
