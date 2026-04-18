@@ -87,7 +87,7 @@ public sealed class SmtpEmailService(
         try
         {
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_cfg.Host, _cfg.Port, SecureSocketOptions.SslOnConnect, ct);
+            await smtp.ConnectAsync(_cfg.Host, _cfg.Port, SecureSocketOptions.Auto, ct);
             await smtp.AuthenticateAsync(_cfg.User, _cfg.Password, ct);
             await smtp.SendAsync(message, ct);
             await smtp.DisconnectAsync(true, ct);
