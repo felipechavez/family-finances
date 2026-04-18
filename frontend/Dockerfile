@@ -2,7 +2,7 @@
 # Stage 1: Install dependencies
 # ──────────────────────────────────────────────
 FROM node:22-alpine AS deps
-WORKDIR /app
+WORKDIR /app/frontend
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
     npm ci
@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # Stage 2: Development (hot-reload vía compose)
 # ──────────────────────────────────────────────
 FROM node:22-alpine AS development
-WORKDIR /app
+WORKDIR /app/frontend
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
     npm ci
@@ -25,8 +25,8 @@ CMD ["npm", "run", "dev"]
 # Stage 3: Build production
 # ──────────────────────────────────────────────
 FROM node:22-alpine AS build
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+WORKDIR /app/frontend
+COPY --from=deps /app/frontend/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
@@ -35,9 +35,9 @@ RUN npm run build
 # ──────────────────────────────────────────────
 FROM node:22-alpine AS runtime
 RUN addgroup -g 1001 -S nodejs && adduser -S nuxtjs -u 1001 -G nodejs
-WORKDIR /app
+WORKDIR /app/frontend
 # .output contiene server/ (Nitro) y public/ (assets estáticos)
-COPY --from=build --chown=nuxtjs:nodejs /app/.output ./.output
+COPY --from=build --chown=nuxtjs:nodejs /app/frontend/.output ./.output
 USER nuxtjs
 EXPOSE 3000
 ENV NODE_ENV=production \

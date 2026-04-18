@@ -4,12 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Family finances app (FinanzasApp Familiar) with a **Nuxt 3 frontend** (`app/`) and an **ASP.NET Core 10 backend** (`backend/`). Shared TypeScript types live in `shared/types/`. PostgreSQL is managed via Supabase; SQL migrations are in `db/`.
+Family finances app (FinanzasApp Familiar) with a **Nuxt 3 frontend** (`frontend/`) and an **ASP.NET Core 10 backend** (`backend/`). Shared TypeScript types live in `frontend/shared/types/`. PostgreSQL is managed via Supabase; SQL migrations are in `db/`.
 
 ## Development Commands
 
-### Frontend (`app/`)
+### Frontend (`frontend/`)
 ```bash
+cd frontend
 npm install
 npm run dev        # Dev server (default port 3000)
 npm run build
@@ -31,17 +32,17 @@ dotnet test tests/FinanceApp.IntegrationTests/FinanceApp.IntegrationTests.csproj
 - JWT settings in `appsettings.json`: `Issuer`, `Audience`, `Secret`, `ExpirationDays`
 - Redis connection string for caching
 
-Frontend API base URL defaults to `http://localhost:58196/`; override with `API_BASE_URL`.
+Frontend API base URL defaults to `http://localhost:58196/`; override with `API_BASE_URL` in `frontend/.env`.
 
 ## Architecture
 
 ### Frontend (Nuxt 3)
-- **State**: Pinia stores in `app/stores/` — `auth`, `transacciones`, `presupuestos`, `cuentas`
+- **State**: Pinia stores in `frontend/app/stores/` — `auth`, `transacciones`, `presupuestos`, `cuentas`
 - **API calls**: All fetching uses `useFetch` with reactive keys for cache invalidation; mutations use the `$api` plugin. Never use raw `fetch`.
-- **Auth**: JWT stored in `localStorage`, injected via `app/plugins/api.ts` as `Authorization: Bearer` header. On 401, token is cleared and user redirected to login.
-- **Components**: Auto-imported with path prefixes — `app/components/transacciones/Row.vue` becomes `<TransaccionesRow />`. Never duplicate the prefix (e.g., not `TransaccionesTransaccionRow`).
-- **Composables**: Barrel export only at `app/composables/index.ts` (not in subdirectories). Composables import each other with direct paths (`~/composables/use-toast`), never through the barrel.
-- **Types**: Shared domain types in `shared/types/finanzas.ts`, frontend-only UI types in `app/types/ui.ts`. No inline types in components or composables. No `any`.
+- **Auth**: JWT stored in `localStorage`, injected via `frontend/app/plugins/api.ts` as `Authorization: Bearer` header. On 401, token is cleared and user redirected to login.
+- **Components**: Auto-imported with path prefixes — `frontend/app/components/transacciones/Row.vue` becomes `<TransaccionesRow />`. Never duplicate the prefix (e.g., not `TransaccionesTransaccionRow`).
+- **Composables**: Barrel export only at `frontend/app/composables/index.ts` (not in subdirectories). Composables import each other with direct paths (`~/composables/use-toast`), never through the barrel.
+- **Types**: Shared domain types in `frontend/shared/types/finanzas.ts`, frontend-only UI types in `frontend/app/types/ui.ts`. No inline types in components or composables. No `any`.
 
 ### Backend (Clean Architecture)
 ```

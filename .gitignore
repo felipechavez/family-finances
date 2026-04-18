@@ -1,46 +1,13 @@
-# gitignore template for Vue.js projects
-#
-# Recommended template: Node.gitignore
+# Frontend (Nuxt)
+frontend/node_modules
+frontend/.nuxt
+frontend/.output
+frontend/dist
 
-# TODO: where does this rule come from?
-docs/_book
-
-# TODO: where does this rule come from?
-test/
-
-# gitignore template for Nuxt.js projects
-#
-# Recommended template: Node.gitignore
-
-# Nuxt build
-.nuxt
-
-# Nuxt generate
-dist
-
-# Recommended template: Node.gitignore
-
-node_modules/
-dist/
+# Logs
 npm-debug.log
 yarn-error.log
 
-# dependencies
-node_modules
-
-# logs
-npm-debug.log
-
-# Nuxt build
-.nuxt
-
-# Nuxt generate
-dist
-
-
-
-# End of https://mrkandreev.name/snippets/gitignore-generator/#Vue,Nuxt,Vuejs,Nuxtjs,ts,js
-/.output
 /backend/.vs
 /backend/.env
 /.env
