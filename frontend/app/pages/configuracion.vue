@@ -27,6 +27,54 @@ const totpCode      = shallowRef('')
 const twoFaLoading  = shallowRef(false)
 const twoFaError    = shallowRef('')
 
+// ── Change password ───────────────────────────────────────────────────────────
+const pwOpen    = shallowRef(false)
+const pwForm    = reactive({ current: '', new: '', confirm: '' })
+const pwLoading = shallowRef(false)
+const pwSuccess = shallowRef(false)
+const pwError   = shallowRef('')
+
+function openPwSection() {
+  pwOpen.value = true
+  pwSuccess.value = false
+  pwError.value = ''
+  pwForm.current = ''
+  pwForm.new = ''
+  pwForm.confirm = ''
+}
+
+function cancelPw() {
+  pwOpen.value = false
+  pwError.value = ''
+}
+
+async function handleChangePassword() {
+  pwError.value = ''
+  pwLoading.value = true
+  try {
+    await auth.changePassword({
+      currentPassword: pwForm.current,
+      newPassword: pwForm.new,
+      confirmNewPassword: pwForm.confirm,
+    })
+    pwSuccess.value = true
+    pwOpen.value = false
+    toastOk(t('configuracion.contrasena.exito'))
+    pwForm.current = ''
+    pwForm.new = ''
+    pwForm.confirm = ''
+  } catch (e: any) {
+    const key = e?.data?.detail ?? e?.data?.title ?? ''
+    if (key.includes('InvalidCurrentPassword') || e?.status === 400) {
+      pwError.value = t('configuracion.contrasena.errorActual')
+    } else {
+      pwError.value = t('configuracion.contrasena.error')
+    }
+  } finally {
+    pwLoading.value = false
+  }
+}
+
 // ── Daily summary toggle ──────────────────────────────────────────────────────
 const dailySummary        = shallowRef<boolean | null>(null)
 const dailySummaryLoading = shallowRef(false)
@@ -300,6 +348,70 @@ function cancelTwoFa() {
             <span class="toggle-thumb" />
           </button>
         </div>
+      </section>
+
+      <!-- ── Contraseña ────────────────────────────────────────────────────── -->
+      <section class="seccion">
+        <h2 class="seccion-titulo">{{ $t('configuracion.contrasena.title') }}</h2>
+
+        <template v-if="!pwOpen">
+          <div class="card row-card">
+            <div class="row-info">
+              <p class="row-label">{{ $t('configuracion.contrasena.title') }}</p>
+              <p class="row-desc">••••••••</p>
+            </div>
+            <div class="row-actions">
+              <button class="btn-small btn-small--accent" @click="openPwSection">
+                {{ $t('configuracion.seguridad.activar') }}
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
+          <div class="card">
+            <label class="field-label">{{ $t('configuracion.contrasena.actual') }}</label>
+            <input
+              v-model="pwForm.current"
+              class="input"
+              type="password"
+              :placeholder="$t('configuracion.contrasena.actualPlaceholder')"
+            />
+
+            <label class="field-label" style="margin-top: 14px;">{{ $t('configuracion.contrasena.nueva') }}</label>
+            <input
+              v-model="pwForm.new"
+              class="input"
+              type="password"
+              :placeholder="$t('configuracion.contrasena.nuevaPlaceholder')"
+            />
+            <UiPasswordStrengthBar :password="pwForm.new" />
+
+            <label class="field-label" style="margin-top: 14px;">{{ $t('configuracion.contrasena.confirmar') }}</label>
+            <input
+              v-model="pwForm.confirm"
+              class="input"
+              type="password"
+              :placeholder="$t('configuracion.contrasena.confirmarPlaceholder')"
+              @keydown.enter="handleChangePassword"
+            />
+
+            <p v-if="pwError" class="error-msg">{{ pwError }}</p>
+
+            <div class="form-acciones">
+              <button
+                class="btn-primary"
+                :disabled="pwLoading || !pwForm.current || !pwForm.new || !pwForm.confirm"
+                @click="handleChangePassword"
+              >
+                {{ pwLoading ? $t('configuracion.contrasena.guardando') : $t('configuracion.contrasena.guardar') }}
+              </button>
+              <button class="btn-cancelar" @click="cancelPw">
+                {{ $t('configuracion.cancelar') }}
+              </button>
+            </div>
+          </div>
+        </template>
       </section>
 
       <!-- ── Cuenta ──────────────────────────────────────────────────────── -->

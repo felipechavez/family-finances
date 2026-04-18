@@ -100,6 +100,14 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  async function changePassword(payload: { currentPassword: string; newPassword: string; confirmNewPassword: string }): Promise<void> {
+    const $api = useNuxtApp().$api as typeof $fetch
+    await $api('/auth/change-password', {
+      method: 'PATCH',
+      body: payload,
+    })
+  }
+
   function logout() {
     clearAuth()
     navigateTo('/auth/login')
@@ -136,6 +144,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     verify2Fa,
     register,
+    changePassword,
     logout,
     updateToken,
     initFromStorage,

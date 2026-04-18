@@ -257,6 +257,21 @@
       "desactivado": "Daily summary disabled",
       "error": "Could not update preference"
     },
+    "contrasena": {
+      "title": "Password",
+      "actual": "CURRENT PASSWORD",
+      "nueva": "NEW PASSWORD",
+      "confirmar": "CONFIRM NEW PASSWORD",
+      "actualPlaceholder": "Your current password",
+      "nuevaPlaceholder": "At least 8 characters",
+      "confirmarPlaceholder": "Repeat the new password",
+      "guardar": "Save password",
+      "guardando": "Saving...",
+      "cancelar": "Cancel",
+      "exito": "Password updated successfully",
+      "errorActual": "Current password is incorrect",
+      "error": "Could not change password"
+    },
     "cuenta": {
       "title": "Account",
       "sesionActiva": "Active session"

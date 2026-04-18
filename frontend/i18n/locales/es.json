@@ -257,6 +257,21 @@
       "desactivado": "Resumen diario desactivado",
       "error": "No se pudo actualizar la preferencia"
     },
+    "contrasena": {
+      "title": "Contraseña",
+      "actual": "CONTRASEÑA ACTUAL",
+      "nueva": "NUEVA CONTRASEÑA",
+      "confirmar": "CONFIRMAR NUEVA CONTRASEÑA",
+      "actualPlaceholder": "Tu contraseña actual",
+      "nuevaPlaceholder": "Mínimo 8 caracteres",
+      "confirmarPlaceholder": "Repite la nueva contraseña",
+      "guardar": "Guardar contraseña",
+      "guardando": "Guardando...",
+      "cancelar": "Cancelar",
+      "exito": "Contraseña actualizada correctamente",
+      "errorActual": "La contraseña actual es incorrecta",
+      "error": "No se pudo cambiar la contraseña"
+    },
     "cuenta": {
       "title": "Cuenta",
       "sesionActiva": "Sesión activa"

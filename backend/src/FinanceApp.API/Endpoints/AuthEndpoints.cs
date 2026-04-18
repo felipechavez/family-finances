@@ -1,5 +1,6 @@
 namespace FinanceApp.API.Endpoints;
 using Microsoft.AspNetCore.Mvc;
+using FinanceApp.Application.Features.Auth.ChangePassword;
 using FinanceApp.Application.Features.Auth.Confirm2Fa;
 using FinanceApp.Application.Features.Auth.Disable2Fa;
 using FinanceApp.Application.Features.Auth.GetUserProfile;
@@ -119,6 +120,18 @@ internal static class AuthEndpoints
         .Produces<LoginResult>()
         .ProducesProblem(401);
 
+        // ── Change password ────────────────────────────────────────────────────
+
+        secured.MapPatch("/change-password", async (ChangePasswordRequest req, ClaimsPrincipal user, IMediator mediator) =>
+        {
+            var userId = user.GetUserId();
+            await mediator.Send(new ChangePasswordCommand(userId, req.CurrentPassword, req.NewPassword, req.ConfirmNewPassword));
+            return Results.NoContent();
+        })
+        .WithName("ChangePassword")
+        .ProducesProblem(400)
+        .ProducesProblem(404);
+
         // ── Daily summary toggle ────────────────────────────────────────────────
 
         secured.MapPatch("/daily-summary", async (DailySummaryToggleRequest req, ClaimsPrincipal user, Supabase.Client supabase) =>
@@ -147,6 +160,9 @@ internal record Confirm2FaRequest(string Code);
 
 /// <summary>Request body for disabling 2FA.</summary>
 internal record Disable2FaRequest(string Code);
+
+/// <summary>Request body for changing the user's password.</summary>
+internal record ChangePasswordRequest(string CurrentPassword, string NewPassword, string ConfirmNewPassword);
 
 /// <summary>Request body for toggling the daily summary email.</summary>
 internal record DailySummaryToggleRequest(bool Enabled);
