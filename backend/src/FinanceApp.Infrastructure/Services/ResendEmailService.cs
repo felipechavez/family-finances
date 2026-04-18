@@ -3,20 +3,20 @@ using System.Text;
 using FinanceApp.Application.Common.Email;
 using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Infrastructure.Settings;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit;
+using Resend;
 
 /// <summary>
-/// Sends transactional emails via the configured SMTP relay using SSL on port 465.
+/// Sends transactional emails via the Resend API.
+/// Failures are caught and logged — they never propagate to the caller.
 /// </summary>
-public sealed class SmtpEmailService(
-    IOptions<SmtpSettings> settings,
-    ILogger<SmtpEmailService> logger) : IEmailService
+public sealed class ResendEmailService(
+    IResend resend,
+    IOptions<ResendSettings> settings,
+    ILogger<ResendEmailService> logger) : IEmailService
 {
-    private readonly SmtpSettings _cfg = settings.Value;
+    private readonly ResendSettings _cfg = settings.Value;
 
     /// <inheritdoc />
     public async Task SendVerificationEmailAsync(
@@ -26,14 +26,12 @@ public sealed class SmtpEmailService(
         CancellationToken ct = default)
     {
         var link = $"{_cfg.AppBaseUrl}/auth/verify-email?token={Uri.EscapeDataString(verificationToken)}";
-
-        var message = BuildMessage(
+        await SendAsync(
             toEmail,
-            toName,
             "Verifica tu email — DomusPay",
-            BuildVerificationHtml(toName, link));
-
-        await SendAsync(message, nameof(SendVerificationEmailAsync), toEmail, ct);
+            BuildVerificationHtml(toName, link),
+            nameof(SendVerificationEmailAsync),
+            ct);
     }
 
     /// <inheritdoc />
@@ -43,13 +41,12 @@ public sealed class SmtpEmailService(
         DailySummaryData data,
         CancellationToken ct = default)
     {
-        var message = BuildMessage(
+        await SendAsync(
             toEmail,
-            toName,
             $"Resumen del día {data.Date:dd/MM/yyyy} — {data.FamilyName}",
-            BuildDailySummaryHtml(toName, data));
-
-        await SendAsync(message, nameof(SendDailySummaryAsync), toEmail, ct);
+            BuildDailySummaryHtml(toName, data),
+            nameof(SendDailySummaryAsync),
+            ct);
     }
 
     /// <inheritdoc />
@@ -61,36 +58,29 @@ public sealed class SmtpEmailService(
         decimal limit,
         CancellationToken ct = default)
     {
-        var message = BuildMessage(
+        await SendAsync(
             toEmail,
-            toName,
             $"⚠ Límite de gasto superado: {categoryName}",
-            BuildBudgetAlertHtml(toName, categoryName, spent, limit));
-
-        await SendAsync(message, nameof(SendBudgetAlertAsync), toEmail, ct);
+            BuildBudgetAlertHtml(toName, categoryName, spent, limit),
+            nameof(SendBudgetAlertAsync),
+            ct);
     }
 
     // ── private helpers ────────────────────────────────────────────────────────
 
-    private MimeMessage BuildMessage(string toEmail, string toName, string subject, string htmlBody)
-    {
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("DomusPay", _cfg.User));
-        message.To.Add(new MailboxAddress(toName, toEmail));
-        message.Subject = subject;
-        message.Body = new TextPart("html") { Text = htmlBody };
-        return message;
-    }
-
-    private async Task SendAsync(MimeMessage message, string operation, string toEmail, CancellationToken ct)
+    private async Task SendAsync(string toEmail, string subject, string htmlBody, string operation, CancellationToken ct)
     {
         try
         {
-            using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_cfg.Host, _cfg.Port, SecureSocketOptions.Auto, ct);
-            await smtp.AuthenticateAsync(_cfg.User, _cfg.Password, ct);
-            await smtp.SendAsync(message, ct);
-            await smtp.DisconnectAsync(true, ct);
+            var message = new EmailMessage
+            {
+                From = _cfg.FromAddress,
+                Subject = subject,
+                HtmlBody = htmlBody,
+            };
+            message.To.Add(toEmail);
+
+            await resend.EmailSendAsync(message, ct);
             logger.LogInformation("{Operation} sent to {Email}", operation, toEmail);
         }
         catch (Exception ex)
@@ -188,7 +178,6 @@ public sealed class SmtpEmailService(
                 <p style="color:#6b6b8a;font-size:13px;margin:0 0 24px">Resumen del {data.Date:dd/MM/yyyy} · {data.FamilyName}</p>
                 <p style="margin:0 0 20px;color:#c4b5fd">Hola {name}, aquí tienes el resumen de hoy:</p>
 
-                <!-- Summary cards -->
                 <div style="display:flex;gap:12px;margin-bottom:24px">
                   <div style="flex:1;background:#18182a;border-radius:12px;padding:16px;text-align:center">
                     <p style="font-size:11px;color:#6b6b8a;margin:0 0 4px;text-transform:uppercase;letter-spacing:1px">Ingresos</p>
@@ -204,7 +193,6 @@ public sealed class SmtpEmailService(
                   </div>
                 </div>
 
-                <!-- Category breakdown -->
                 {(data.Categories.Count > 0 ? $"""
                 <table style="width:100%;border-collapse:collapse">
                   <thead>

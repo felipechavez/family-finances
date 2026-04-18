@@ -5,6 +5,7 @@ using FinanceApp.Application.Common.Interfaces;
 using FinanceApp.Infrastructure.BackgroundServices;
 using FinanceApp.Infrastructure.Services;
 using FinanceApp.Infrastructure.Settings;
+using Resend;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,13 +46,19 @@ public static class DependencyInjection
         services.AddSingleton<IJwtService, JwtService>();
         services.AddSingleton<ITotpService, TotpService>();
 
-        // Email (SMTP)
-        services.AddOptions<SmtpSettings>()
-            .Bind(config.GetSection("Smtp"))
+        // Email (Resend)
+        services.AddOptions<ResendSettings>()
+            .Bind(config.GetSection("Resend"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddTransient<IEmailService, SmtpEmailService>();
+        services.AddOptions();
+        services.AddHttpClient<ResendClient>();
+        services.Configure<ResendClientOptions>(o =>
+            o.ApiToken = config["Resend:ApiKey"] ?? string.Empty);
+        services.AddTransient<IResend, ResendClient>();
+
+        services.AddTransient<IEmailService, ResendEmailService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddHostedService<DailySummaryWorker>();
 

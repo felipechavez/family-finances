@@ -35,10 +35,8 @@ services:
       - Jwt__Issuer=FinanceApp
       - Jwt__Audience=FinanceApp
       - Jwt__ExpirationDays=${JWT_EXPIRATION_DAYS:-7}
-      - Smtp__Password=${SMTP_PASSWORD}
-      - Smtp__Host=${SMTP_HOST}
-      - Smtp__Port=${SMTP_PORT}
-      - Smtp__User=${SMTP_USER}   
+      # Resend (requerido — definir en .env)
+      - Resend__ApiKey=${RESEND_API_KEY}  
 
   redis:
     container_name: redis
