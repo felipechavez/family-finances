@@ -37,6 +37,7 @@ services:
       - Jwt__ExpirationDays=${JWT_EXPIRATION_DAYS:-7}
       # Resend (requerido — definir en .env)
       - Resend__ApiKey=${RESEND_API_KEY}  
+      - Resend__AppBaseUrl=${APP_BASE_URL:-http://localhost:3000/}
 
   redis:
     container_name: redis
