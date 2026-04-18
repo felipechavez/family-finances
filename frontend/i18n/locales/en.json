@@ -73,7 +73,12 @@
     "title": "Dashboard",
     "recentMovements": "Recent movements",
     "seeAll": "See all",
-    "loadError": "Error loading transactions"
+    "loadError": "Error loading transactions",
+    "balanceMes": "Monthly balance",
+    "ingresos": "Income",
+    "gastos": "Expenses",
+    "usoPresupuesto": "Budget usage",
+    "disponible": "available"
   },
   "transacciones": {
     "title": "Transactions",

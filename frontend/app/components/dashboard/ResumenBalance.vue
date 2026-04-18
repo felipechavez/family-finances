@@ -4,6 +4,8 @@
 // Direct imports between composables
 import { useFormato } from '~/composables/use-formato'
 
+const { t } = useI18n()
+
 const props = defineProps<{
   totalIngresos: number
   totalGastos: number
@@ -19,25 +21,25 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
 
 <template>
   <div class="balance-card" :class="{ 'balance-card--negativo': enRojo }">
-    <p class="label">Balance del mes</p>
+    <p class="label">{{ t('dashboard.balanceMes') }}</p>
     <p class="monto" :class="enRojo ? 'monto--rojo' : 'monto--morado'">
       {{ formatCLP(balance) }}
     </p>
 
     <div class="fila-resumen">
       <div class="resumen-chip resumen-chip--ingreso">
-        <span class="chip-label">▲ INGRESOS</span>
+        <span class="chip-label">▲ {{ t('dashboard.ingresos') }}</span>
         <span class="chip-monto">{{ formatCLP(totalIngresos) }}</span>
       </div>
       <div class="resumen-chip resumen-chip--gasto">
-        <span class="chip-label">▼ GASTOS</span>
+        <span class="chip-label">▼ {{ t('dashboard.gastos') }}</span>
         <span class="chip-monto">{{ formatCLP(totalGastos) }}</span>
       </div>
     </div>
 
     <template v-if="totalIngresos > 0">
       <div class="barra-info">
-        <span class="barra-texto">Uso del presupuesto</span>
+        <span class="barra-texto">{{ t('dashboard.usoPresupuesto') }}</span>
         <span class="barra-pct" :class="{ 'barra-pct--rojo': barraRoja }">{{ porcentajeUso }}%</span>
       </div>
       <div class="barra-track">
@@ -47,7 +49,7 @@ const barraRoja = computed(() => porcentajeUso.value > 90)
           :style="{ width: `${porcentajeUso}%` }"
         />
       </div>
-      <p class="disponible">{{ formatCLP(totalIngresos - totalGastos) }} disponible</p>
+      <p class="disponible">{{ formatCLP(totalIngresos - totalGastos) }} {{ t('dashboard.disponible') }}</p>
     </template>
   </div>
 </template>

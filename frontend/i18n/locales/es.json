@@ -73,7 +73,12 @@
     "title": "Dashboard",
     "recentMovements": "Últimos movimientos",
     "seeAll": "Ver todos",
-    "loadError": "Error al cargar transacciones"
+    "loadError": "Error al cargar transacciones",
+    "balanceMes": "Balance del mes",
+    "ingresos": "Ingresos",
+    "gastos": "Gastos",
+    "usoPresupuesto": "Uso del presupuesto",
+    "disponible": "disponible"
   },
   "transacciones": {
     "title": "Transacciones",
