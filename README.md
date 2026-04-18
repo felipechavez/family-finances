@@ -1,111 +1,141 @@
-# 💜 FinanzasApp Familiar — Nuxt 3
+# DomusPay — Gestión de Finanzas Familiares
 
-App de gestión de finanzas familiares construida con Nuxt 3, TypeScript estricto y las mejores prácticas del proyecto.
+App de finanzas familiares con Nuxt 3 (frontend) y ASP.NET Core 10 (backend), PostgreSQL vía Supabase y Redis para caché.
+
+## Requisitos
+
+- Node.js 20+
+- .NET 10 SDK
+- Redis (local o Docker)
+- Cuenta Supabase con esquema `finances`
 
 ## Inicio rápido
 
+### Frontend
+
 ```bash
+cd frontend
 npm install
-npm run dev
+npm run dev        # http://localhost:3000
 ```
 
-## Estructura del proyecto
+### Backend
 
-```
-finanzas-familia/
-├── shared/
-│   └── types/
-│       ├── finanzas.ts          # Tipos compartidos cliente + servidor
-│       └── index.ts             # Barrel (✅ OK aquí)
-│
-├── app/
-│   ├── types/
-│   │   └── ui.ts                # Tipos solo de frontend (FormTransaccion, etc.)
-│   │
-│   ├── composables/
-│   │   ├── index.ts             # ✅ Barrel ROOT para auto-import de composables anidados
-│   │   ├── use-toast.ts
-│   │   ├── use-categorias.ts
-│   │   ├── use-formato.ts
-│   │   ├── transacciones/
-│   │   │   └── use-transacciones.ts
-│   │   └── presupuestos/
-│   │       └── use-presupuestos.ts
-│   │
-│   ├── components/
-│   │   ├── layout/
-│   │   │   └── Navbar.vue       # → <LayoutNavbar /> (sin duplicar "Layout")
-│   │   ├── dashboard/
-│   │   │   ├── ResumenBalance.vue   # → <DashboardResumenBalance />
-│   │   │   └── GastosCategorias.vue # → <DashboardGastosCategorias />
-│   │   ├── transacciones/
-│   │   │   └── Row.vue          # → <TransaccionesRow />
-│   │   ├── presupuestos/
-│   │   │   └── Card.vue         # → <PresupuestosCard />
-│   │   └── ui/
-│   │       ├── Toast.vue        # → <UiToast />
-│   │       └── Spinner.vue      # → <UiSpinner />
-│   │
-│   └── pages/
-│       └── index.vue
-│
-├── server/
-│   ├── api/
-│   │   ├── transacciones/
-│   │   │   ├── index.get.ts     # GET  /api/transacciones
-│   │   │   ├── index.post.ts    # POST /api/transacciones
-│   │   │   └── [id].delete.ts   # DELETE /api/transacciones/:id
-│   │   └── presupuestos/
-│   │       ├── index.get.ts     # GET /api/presupuestos
-│   │       └── index.put.ts     # PUT /api/presupuestos
-│   ├── types/
-│   │   └── internal.ts          # Tipos solo del servidor
-│   └── utils/
-│       ├── errors.ts            # notFound(), badRequest(), internalError()
-│       ├── schemas.ts           # Schemas Zod para validación
-│       └── storage.ts           # Almacenamiento (reemplazable con DB)
-│
-├── nuxt.config.ts
-├── tsconfig.json
-└── package.json
+```bash
+cd backend
+dotnet run --project src/FinanceApp.API/   # http://localhost:58196
 ```
 
-## Reglas de AGENTS.md aplicadas
+### Con Docker Compose
 
-### Data Fetching (CRITICAL)
-- ✅ `data-use-fetch` — Todos los componentes usan `useFetch`, nunca `fetch` crudo
-- ✅ `data-key-unique` — Claves únicas reactivas: `key: () => \`transacciones-${mes.value}\``
-- ✅ `data-transform` — Datos transformados en `transform:`, no en plantillas
-- ✅ `data-error-handling` — Estados `pending`, `error`, `success` siempre manejados
+```bash
+docker compose up
+```
 
-### Auto-Imports & Organization (CRITICAL)
-- ✅ `imports-no-barrel-autoimport` — Barrel solo en `composables/index.ts` root, no en subcarpetas
-- ✅ `imports-component-naming` — Sin duplicar prefijo: `Row.vue` → `<TransaccionesRow />` (no `TransaccionesTransaccionRow`)
-- ✅ `imports-type-locations` — Tipos en `shared/types/`, `app/types/`, `server/types/`
-- ✅ `imports-composable-exports` — Composables exportan solo funciones, jamás tipos
-- ✅ `imports-direct-composable-imports` — Composables entre sí usan imports directos: `import { useToast } from '~/composables/use-toast'`
+## Variables de entorno
 
-### Server & API Routes (HIGH)
-- ✅ `server-validated-input` — `getValidatedQuery` + `readValidatedBody` con Zod en todos los endpoints
-- ✅ `server-error-handling` — `createError` con `notFound()`, `badRequest()` helpers
-- ✅ Rutas nombradas por método: `index.get.ts`, `index.post.ts`, `[id].delete.ts`
+### Frontend (`frontend/.env`)
 
-### Rendering Modes (HIGH)
-- ✅ `rendering-route-rules` — `routeRules` en `nuxt.config.ts` por ruta
+```env
+API_BASE_URL=http://localhost:58196/
+```
 
-### State Management (MEDIUM-HIGH)
-- ✅ `state-use-state` — `useState()` para estado SSR-safe compartido (`tabActiva`, `filtroMes`)
-- ✅ `state-computed-over-watch` — `computed()` para estado derivado, nunca `watch` innecesario
+### Backend (`backend/src/FinanceApp.API/appsettings.Development.json`)
 
-### Type Safety (MEDIUM)
-- ✅ `types-no-inline` — Cero tipos inline en componentes o composables
-- ✅ `types-import-paths` — Rutas correctas: `#shared/types`, `~/types/ui`, `~~/server/types`
-- ✅ `types-no-any` — TypeScript strict, sin `any` en todo el proyecto
-- ✅ `types-zod-schemas` — Schemas Zod en `server/utils/schemas.ts` con `z.infer<>`
+```json
+{
+  "ConnectionStrings": {
+    "Postgres": "Host=...;Database=postgres;Username=postgres;Password=...;SslMode=Require;Search Path=finances",
+    "Redis": "localhost:6379"
+  },
+  "Jwt": {
+    "Secret": "tu_secreto_jwt",
+    "Issuer": "FinanceApp",
+    "Audience": "FinanceApp"
+  },
+  "Resend": {
+    "ApiKey": "re_...",
+    "FromAddress": "noreply@domuspay.cl",
+    "AppBaseUrl": "http://localhost:3000"
+  },
+  "EmailVerification": {
+    "Enabled": true
+  }
+}
+```
 
-### Modules & Plugins (LOW-MEDIUM)
-- ✅ `modules-order` — Módulos ordenados correctamente en `nuxt.config.ts`
+## Estructura del repositorio
 
-## Para producción
+```
+family-finances/
+├── frontend/                  # Nuxt 3 — interfaz de usuario
+│   ├── app/
+│   │   ├── components/        # Componentes Vue (auto-imported con prefijo)
+│   │   ├── composables/       # Lógica reutilizable (barrel en index.ts)
+│   │   ├── pages/             # Rutas de la app
+│   │   ├── stores/            # Estado global con Pinia
+│   │   ├── plugins/           # Plugin $api con JWT
+│   │   ├── middleware/        # Guards de autenticación
+│   │   └── types/             # Tipos solo de frontend (ui.ts)
+│   ├── i18n/
+│   │   └── locales/           # Traducciones ES / EN
+│   ├── shared/
+│   │   └── types/finanzas.ts  # Tipos de dominio compartidos
+│   ├── public/                # Assets estáticos
+│   ├── nuxt.config.ts
+│   ├── tsconfig.json
+│   └── package.json
+│
+├── backend/                   # ASP.NET Core 10 — Clean Architecture
+│   ├── src/
+│   │   ├── FinanceApp.Domain/         # Entidades + atributos Supabase
+│   │   ├── FinanceApp.Application/    # MediatR handlers, FluentValidation
+│   │   ├── FinanceApp.Infrastructure/ # Supabase SDK, JWT, Redis, Resend
+│   │   └── FinanceApp.API/            # Minimal APIs, endpoints por recurso
+│   ├── tests/
+│   │   ├── FinanceApp.UnitTests/
+│   │   └── FinanceApp.IntegrationTests/
+│   └── FinanceApp.sln
+│
+├── db/                        # Migraciones SQL (aplicar manualmente en Supabase)
+└── docker-compose.yml
+```
 
-Reemplaza `server/utils/storage.ts` con Drizzle ORM o Prisma apuntando a tu base de datos.
+## Comandos útiles
+
+```bash
+# Typecheck frontend
+cd frontend && npm run typecheck
+
+# Build frontend
+cd frontend && npm run build
+
+# Tests backend
+cd backend && dotnet test
+
+# Build backend
+cd backend && dotnet build
+```
+
+## Claude Code Skills
+
+Este proyecto usa [Claude Code](https://claude.ai/code) con los siguientes skills configurados en `.claude/skills/`:
+
+| Skill | Propósito |
+|---|---|
+| `dotnet-10-csharp-14` | Patrones modernos de .NET 10 y C# 14: minimal APIs, Options, TypedResults, resilience |
+| `vue-best-practices` | Composición API, Composition API con `<script setup>`, composables, data flow |
+| `dotnet-localization` | Localización con `.resx`, `IStringLocalizer` y source generators |
+| `csharp-tunit` | Tests unitarios con TUnit, incluyendo tests parametrizados |
+| `docker-expert` | Optimización de contenedores, multi-stage builds, hardening de seguridad |
+| `bms-git-log-summary` | Resúmenes de actividad del repositorio vía git log |
+
+---
+
+## Arquitectura
+
+- **Multi-tenant**: todos los datos están acotados a `family_id` extraído del JWT.
+- **Auth**: JWT custom con verificación de correo (Resend) y soporte 2FA (TOTP).
+- **Estado frontend**: Pinia stores (`auth`, `transacciones`, `presupuestos`, `cuentas`).
+- **API calls**: `useFetch` con claves reactivas; mutaciones vía plugin `$api`.
+- **Base de datos**: Supabase Postgres (sin ORM), esquema `finances`.
