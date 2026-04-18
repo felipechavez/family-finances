@@ -55,8 +55,8 @@ public static class DependencyInjection
         services.AddOptions();
         services.AddHttpClient<ResendClient>();
         services.Configure<ResendClientOptions>(o =>
-            o.ApiToken = config["Resend:ApiKey"] 
-                ?? Environment.GetEnvironmentVariable("RESEND_API_KEY") 
+            o.ApiToken = Environment.GetEnvironmentVariable("RESEND_API_KEY") 
+                ?? config["Resend:ApiKey"] 
                 ?? string.Empty);
         services.AddTransient<IResend, ResendClient>();
 
