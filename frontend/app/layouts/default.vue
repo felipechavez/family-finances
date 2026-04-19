@@ -6,6 +6,7 @@ import { useAuthStore } from '~/stores/auth'
 const auth = useAuthStore()
 const route = useRoute()
 const { t } = useI18n()
+const { isDark, toggle } = useTheme()
 
 interface NavItem {
   to: string
@@ -69,6 +70,9 @@ function isActive(path: string): boolean {
       <!-- Topbar visible in all screen sizes — contains notification bell -->
       <div class="content-topbar">
         <ClientOnly>
+          <button class="theme-toggle" :title="isDark ? 'Activar modo claro' : 'Activar modo oscuro'" @click="toggle">
+            {{ isDark ? '☀️' : '🌙' }}
+          </button>
           <UiNotificationBell />
         </ClientOnly>
       </div>
@@ -115,6 +119,7 @@ function isActive(path: string): boolean {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 4px;
   padding-top: max(8px, env(safe-area-inset-top));
   padding-right: max(16px, env(safe-area-inset-right));
   padding-bottom: 8px;
@@ -122,6 +127,22 @@ function isActive(path: string): boolean {
   border-bottom: 1px solid var(--border);
   min-height: 44px;
 }
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle:hover { background: var(--accent-hover); }
 
 /* ── SIDEBAR ── */
 .sidebar { display: none; }
