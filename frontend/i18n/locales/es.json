@@ -265,6 +265,7 @@
       "actualPlaceholder": "Tu contraseña actual",
       "nuevaPlaceholder": "Mínimo 8 caracteres",
       "confirmarPlaceholder": "Repite la nueva contraseña",
+      "cambiar": "Cambiar contraseña",
       "guardar": "Guardar contraseña",
       "guardando": "Guardando...",
       "cancelar": "Cancelar",

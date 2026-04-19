@@ -265,6 +265,7 @@
       "actualPlaceholder": "Your current password",
       "nuevaPlaceholder": "At least 8 characters",
       "confirmarPlaceholder": "Repeat the new password",
+      "cambiar": "Change password",
       "guardar": "Save password",
       "guardando": "Saving...",
       "cancelar": "Cancel",

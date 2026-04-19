@@ -13,15 +13,60 @@ const { isDark, toggle: toggleTheme } = useTheme()
 const { ok: toastOk, error: toastError } = useToast()
 const { $api } = useNuxtApp()
 
+// ── On this page ──────────────────────────────────────────────────────────────
+const sections = computed(() => [
+  { id: 'apariencia', label: t('configuracion.apariencia.title') },
+  { id: 'idioma',     label: t('configuracion.idioma.title') },
+  { id: 'seguridad',  label: t('configuracion.seguridad.title') },
+  { id: 'correo',     label: t('configuracion.correo.title') },
+  { id: 'contrasena', label: t('configuracion.contrasena.title') },
+  { id: 'cuenta',     label: t('configuracion.cuenta.title') },
+])
+const activeSection = ref('apariencia')
+let clicking = false
+
+function scrollTo(id: string) {
+  clicking = true
+  activeSection.value = id
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  setTimeout(() => { clicking = false }, 800)
+}
+
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    entries => {
+      if (clicking) return
+      for (const e of entries) {
+        if (e.isIntersecting) activeSection.value = e.target.id
+      }
+    },
+    { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+  )
+  sections.value.forEach(s => {
+    const el = document.getElementById(s.id)
+    if (el) observer.observe(el)
+  })
+
+  function onScroll() {
+    if (clicking) return
+    const el = document.scrollingElement ?? document.documentElement
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 8) {
+      activeSection.value = sections.value[sections.value.length - 1].id
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+
+  onUnmounted(() => {
+    observer.disconnect()
+    window.removeEventListener('scroll', onScroll)
+  })
+})
+
 // ── 2FA state machine ─────────────────────────────────────────────────────────
-// 'idle'     : initial state; user can attempt setup or disable
-// 'qr'       : setup started; showing QR + confirm form
-// 'confirm'  : confirming TOTP code after scanning QR
-// 'disable'  : user wants to disable 2FA; showing TOTP input
 type TwoFaState = 'idle' | 'qr' | 'disable'
 
 const twoFaState    = shallowRef<TwoFaState>('idle')
-const twoFaEnabled  = shallowRef<boolean | null>(null)  // null = loading
+const twoFaEnabled  = shallowRef<boolean | null>(null)
 const qrUri         = shallowRef('')
 const totpCode      = shallowRef('')
 const twoFaLoading  = shallowRef(false)
@@ -97,12 +142,11 @@ async function toggleDailySummary() {
   }
 }
 
-// Load current 2FA status + daily summary preference from the server on mount
 onMounted(async () => {
   try {
     const res = await ($api as typeof $fetch)('/auth/me') as { twoFactorEnabled: boolean; dailySummaryEnabled: boolean }
-    twoFaEnabled.value   = res.twoFactorEnabled
-    dailySummary.value   = res.dailySummaryEnabled
+    twoFaEnabled.value = res.twoFactorEnabled
+    dailySummary.value = res.dailySummaryEnabled
   } catch {
     twoFaEnabled.value = false
     dailySummary.value = true
@@ -120,7 +164,6 @@ async function handleSetup2Fa() {
     qrUri.value = res.provisioningUri
     twoFaState.value = 'qr'
   } catch (e: any) {
-    // 409 → already enabled
     if (e?.status === 409 || e?.statusCode === 409) {
       twoFaEnabled.value = true
       toastError(t('configuracion.seguridad.yaActivo'))
@@ -183,14 +226,26 @@ function cancelTwoFa() {
 
 <template>
   <div>
-    <header class="header">
-      <h1 class="header-titulo">{{ $t('configuracion.title') }}</h1>
-    </header>
 
+    <!-- ── On this page (desktop) ─────────────────────────────────────────── -->
+    <aside class="otp">
+      <p class="otp-heading">{{ $t('configuracion.title') }}</p>
+      <nav>
+        <button
+          v-for="s in sections"
+          :key="s.id"
+          class="otp-item"
+          :class="{ 'otp-item--active': activeSection === s.id }"
+          @click="scrollTo(s.id)"
+        >
+          {{ s.label }}
+        </button>
+      </nav>
+    </aside>
     <main class="main">
 
       <!-- ── Apariencia ──────────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="apariencia" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.apariencia.title') }}</h2>
         <div class="card row-card">
           <div class="row-info">
@@ -204,7 +259,7 @@ function cancelTwoFa() {
       </section>
 
       <!-- ── Idioma ──────────────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="idioma" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.idioma.title') }}</h2>
         <div class="card">
           <div class="lang-grid">
@@ -222,10 +277,9 @@ function cancelTwoFa() {
       </section>
 
       <!-- ── Seguridad (2FA) ─────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="seguridad" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.seguridad.title') }}</h2>
 
-        <!-- Idle: show activate / deactivate buttons -->
         <template v-if="twoFaState === 'idle'">
           <div class="card row-card">
             <div class="row-info">
@@ -260,12 +314,10 @@ function cancelTwoFa() {
           <p v-if="twoFaError" class="error-msg">{{ twoFaError }}</p>
         </template>
 
-        <!-- QR: setup started, show QR code and confirm form -->
         <template v-else-if="twoFaState === 'qr'">
           <div class="card">
             <p class="qr-instruccion">{{ $t('configuracion.seguridad.escanea') }}</p>
             <div class="qr-wrapper">
-              <!-- Uses a free QR code API via img src — data is the provisioning URI, not sensitive -->
               <img
                 :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUri)}`"
                 alt="QR Code 2FA"
@@ -300,7 +352,6 @@ function cancelTwoFa() {
           </div>
         </template>
 
-        <!-- Disable: TOTP code required to disable -->
         <template v-else>
           <div class="card">
             <p class="qr-instruccion">{{ $t('configuracion.seguridad.ingresaCodigoDesactivar') }}</p>
@@ -332,7 +383,7 @@ function cancelTwoFa() {
       </section>
 
       <!-- ── Correo diario ─────────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="correo" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.correo.title') }}</h2>
         <div class="card row-card">
           <div class="row-info">
@@ -351,7 +402,7 @@ function cancelTwoFa() {
       </section>
 
       <!-- ── Contraseña ────────────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="contrasena" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.contrasena.title') }}</h2>
 
         <template v-if="!pwOpen">
@@ -362,7 +413,7 @@ function cancelTwoFa() {
             </div>
             <div class="row-actions">
               <button class="btn-small btn-small--accent" @click="openPwSection">
-                {{ $t('configuracion.seguridad.activar') }}
+                {{ $t('configuracion.contrasena.cambiar') }}
               </button>
             </div>
           </div>
@@ -415,7 +466,7 @@ function cancelTwoFa() {
       </section>
 
       <!-- ── Cuenta ──────────────────────────────────────────────────────── -->
-      <section class="seccion">
+      <section id="cuenta" class="seccion">
         <h2 class="seccion-titulo">{{ $t('configuracion.cuenta.title') }}</h2>
         <div class="card row-card">
           <div class="row-info">
@@ -435,14 +486,6 @@ function cancelTwoFa() {
 </template>
 
 <style scoped>
-.header {
-  padding: 20px 20px 0;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 16px;
-  margin-bottom: 4px;
-}
-.header-titulo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin: 0; }
-
 .main { padding: 16px 16px 100px; flex: 1; }
 
 .seccion { margin-bottom: 28px; }
@@ -464,58 +507,33 @@ function cancelTwoFa() {
 
 /* Theme toggle switch */
 .toggle-btn {
-  width: 52px;
-  height: 28px;
-  border-radius: 100px;
-  background: var(--border);
-  border: none;
-  cursor: pointer;
-  padding: 3px;
-  transition: background 0.2s;
-  flex-shrink: 0;
-  position: relative;
+  width: 52px; height: 28px; border-radius: 100px;
+  background: var(--border); border: none; cursor: pointer;
+  padding: 3px; transition: background 0.2s; flex-shrink: 0; position: relative;
 }
 .toggle-btn--on { background: var(--accent); }
 .toggle-thumb {
-  display: block;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.2s;
+  display: block; width: 22px; height: 22px;
+  border-radius: 50%; background: #fff; transition: transform 0.2s;
 }
 .toggle-btn--on .toggle-thumb { transform: translateX(24px); }
 
 /* Language grid */
 .lang-grid { display: flex; gap: 10px; flex-wrap: wrap; }
 .lang-btn {
-  flex: 1;
-  min-width: 120px;
-  padding: 12px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
+  flex: 1; min-width: 120px; padding: 12px 16px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  background: transparent; color: var(--text-muted);
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
 }
 .lang-btn--active {
-  border-color: var(--accent);
-  background: var(--accent-bg);
-  color: var(--accent-soft);
+  border-color: var(--accent); background: var(--accent-bg); color: var(--accent-soft);
 }
 
 /* Small action buttons */
 .btn-small {
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.15s;
+  padding: 8px 14px; border-radius: 10px; font-size: 13px;
+  font-weight: 600; border: none; cursor: pointer; transition: opacity 0.15s;
 }
 .btn-small:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-small--accent { background: var(--accent-bg); color: var(--accent-soft); }
@@ -553,23 +571,62 @@ function cancelTwoFa() {
 }
 
 .btn-logout-full {
-  width: 100%;
-  margin-top: 10px;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1.5px solid rgba(239, 68, 68, 0.25);
-  color: var(--danger);
-  border-radius: 14px;
-  padding: 14px 16px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  letter-spacing: 0.2px;
+  width: 100%; margin-top: 10px;
+  background: rgba(239, 68, 68, 0.08); border: 1.5px solid rgba(239, 68, 68, 0.25);
+  color: var(--danger); border-radius: 14px; padding: 14px 16px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s; letter-spacing: 0.2px;
 }
 .btn-logout-full:hover { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); }
 
 @media (min-width: 768px) {
-  .header { max-width: 1100px; margin-inline: auto; padding-inline: 32px; width: 100%; }
   .main { padding: 24px 32px 40px; max-width: 700px; width: 100%; margin-inline: auto; }
+}
+
+/* ── On this page ────────────────────────────────────────────────────────────── */
+.otp { display: none; }
+
+@media (min-width: 1280px) {
+  .otp {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 80px;
+    right: 32px;
+    width: 160px;
+  }
+
+  .otp-heading {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 12px 10px;
+  }
+
+  .otp-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    line-height: 1.5;
+  }
+
+  .otp-item:hover { color: var(--text-primary); }
+
+  .otp-item--active {
+    color: var(--text-primary);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
 }
 </style>

@@ -181,13 +181,19 @@ function isActive(path: string): boolean {
     display: flex;
     flex-direction: column;
     width: 220px;
-    min-height: 100dvh;
+    height: 100dvh;
     background: var(--bg-card);
     border-right: 1px solid var(--border);
     padding: 28px 16px;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
     flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .content-area {
+    margin-left: 220px;
   }
 
   .sidebar-logo {
