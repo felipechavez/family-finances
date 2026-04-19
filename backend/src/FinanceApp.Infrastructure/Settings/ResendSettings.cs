@@ -10,7 +10,7 @@ public class ResendSettings
 
     /// <summary>Verified sender address configured in the Resend dashboard.</summary>
     [Required]
-    public string FromAddress { get; set; } = "noreply@domuspay.cl";
+    public string FromAddress { get; set; } = "verificacion@mail.domuspay.cl";
 
     /// <summary>Frontend base URL used to build links in emails (e.g. verification link).</summary>
     [Required]

@@ -55,7 +55,7 @@ API_BASE_URL=http://localhost:58196/
   },
   "Resend": {
     "ApiKey": "re_...",
-    "FromAddress": "noreply@domuspay.cl",
+    "FromAddress": "verificacion@mail.domuspay.cl",
     "AppBaseUrl": "http://localhost:3000"
   },
   "EmailVerification": {
