@@ -36,4 +36,8 @@ public static class LocalizationKeys
     public const string Auth_InvalidCurrentPassword  = nameof(Auth_InvalidCurrentPassword);
     public const string Auth_EmailAlreadyInUse       = nameof(Auth_EmailAlreadyInUse);
     public const string Auth_PasswordMismatch        = nameof(Auth_PasswordMismatch);
+
+    // Auth — email change
+    public const string Auth_InvalidEmailChangeToken = nameof(Auth_InvalidEmailChangeToken);
+    public const string Auth_EmailChangeTokenExpired = nameof(Auth_EmailChangeTokenExpired);
 }

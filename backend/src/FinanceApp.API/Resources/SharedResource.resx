@@ -96,6 +96,14 @@
     <value>Passwords do not match.</value>
   </data>
 
+  <!-- Auth — email change -->
+  <data name="Auth_InvalidEmailChangeToken" xml:space="preserve">
+    <value>Invalid or already used email change link.</value>
+  </data>
+  <data name="Auth_EmailChangeTokenExpired" xml:space="preserve">
+    <value>The email change link has expired. Please request a new one.</value>
+  </data>
+
   <!-- General -->
   <data name="ErrorUnexpected" xml:space="preserve">
     <value>An unexpected error occurred.</value>

@@ -108,6 +108,14 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  async function initiateEmailChange(newEmail: string): Promise<void> {
+    const $api = useNuxtApp().$api as typeof $fetch
+    await $api('/auth/initiate-email-change', {
+      method: 'POST',
+      body: { newEmail },
+    })
+  }
+
   function logout() {
     clearAuth()
     navigateTo('/auth/login')
@@ -145,6 +153,7 @@ export const useAuthStore = defineStore('auth', () => {
     verify2Fa,
     register,
     changePassword,
+    initiateEmailChange,
     logout,
     updateToken,
     initFromStorage,

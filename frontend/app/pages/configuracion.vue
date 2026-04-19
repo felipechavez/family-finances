@@ -15,12 +15,13 @@ const { $api } = useNuxtApp()
 
 // ── On this page ──────────────────────────────────────────────────────────────
 const sections = computed(() => [
-  { id: 'apariencia', label: t('configuracion.apariencia.title') },
-  { id: 'idioma',     label: t('configuracion.idioma.title') },
-  { id: 'seguridad',  label: t('configuracion.seguridad.title') },
-  { id: 'correo',     label: t('configuracion.correo.title') },
-  { id: 'contrasena', label: t('configuracion.contrasena.title') },
-  { id: 'cuenta',     label: t('configuracion.cuenta.title') },
+  { id: 'apariencia',    label: t('configuracion.apariencia.title') },
+  { id: 'idioma',        label: t('configuracion.idioma.title') },
+  { id: 'seguridad',     label: t('configuracion.seguridad.title') },
+  { id: 'correo',        label: t('configuracion.correo.title') },
+  { id: 'correoChange',  label: t('configuracion.correoChange.title') },
+  { id: 'contrasena',    label: t('configuracion.contrasena.title') },
+  { id: 'cuenta',        label: t('configuracion.cuenta.title') },
 ])
 const activeSection = ref('apariencia')
 let clicking = false
@@ -117,6 +118,43 @@ async function handleChangePassword() {
     }
   } finally {
     pwLoading.value = false
+  }
+}
+
+// ── Change email ──────────────────────────────────────────────────────────────
+type EmailChangeState = 'idle' | 'form' | 'sent'
+const emailState   = shallowRef<EmailChangeState>('idle')
+const newEmail     = shallowRef('')
+const emailLoading = shallowRef(false)
+const emailError   = shallowRef('')
+
+function openEmailSection() {
+  emailState.value = 'form'
+  newEmail.value = ''
+  emailError.value = ''
+}
+
+function cancelEmailChange() {
+  emailState.value = 'idle'
+  newEmail.value = ''
+  emailError.value = ''
+}
+
+async function handleInitiateEmailChange() {
+  emailError.value = ''
+  emailLoading.value = true
+  try {
+    await auth.initiateEmailChange(newEmail.value)
+    emailState.value = 'sent'
+  } catch (e: any) {
+    const detail: string = e?.data?.detail ?? e?.data?.title ?? ''
+    if (detail.includes('AlreadyInUse') || e?.status === 409) {
+      emailError.value = t('configuracion.correoChange.yaEnUso')
+    } else {
+      emailError.value = t('configuracion.correoChange.error')
+    }
+  } finally {
+    emailLoading.value = false
   }
 }
 
@@ -399,6 +437,60 @@ function cancelTwoFa() {
             <span class="toggle-thumb" />
           </button>
         </div>
+      </section>
+
+      <!-- ── Cambio de correo ───────────────────────────────────────────────── -->
+      <section id="correoChange" class="seccion">
+        <h2 class="seccion-titulo">{{ $t('configuracion.correoChange.title') }}</h2>
+
+        <template v-if="emailState === 'idle'">
+          <div class="card row-card">
+            <div class="row-info">
+              <p class="row-label">{{ $t('configuracion.correoChange.correoActual') }}</p>
+              <p class="row-desc">{{ auth.user?.email }}</p>
+            </div>
+            <div class="row-actions">
+              <button class="btn-small btn-small--accent" @click="openEmailSection">
+                {{ $t('configuracion.correoChange.cambiar') }}
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <template v-else-if="emailState === 'form'">
+          <div class="card">
+            <label class="field-label">{{ $t('configuracion.correoChange.nuevo') }}</label>
+            <input
+              v-model="newEmail"
+              class="input"
+              type="email"
+              :placeholder="$t('configuracion.correoChange.nuevoPlaceholder')"
+              @keydown.enter="handleInitiateEmailChange"
+            />
+            <p v-if="emailError" class="error-msg">{{ emailError }}</p>
+            <div class="form-acciones">
+              <button
+                class="btn-primary"
+                :disabled="emailLoading || !newEmail"
+                @click="handleInitiateEmailChange"
+              >
+                {{ emailLoading ? $t('configuracion.correoChange.enviando') : $t('configuracion.correoChange.enviar') }}
+              </button>
+              <button class="btn-cancelar" @click="cancelEmailChange">
+                {{ $t('configuracion.cancelar') }}
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
+          <div class="card">
+            <p class="qr-instruccion">{{ $t('configuracion.correoChange.enviado', { email: newEmail }) }}</p>
+            <button class="btn-cancelar" style="margin-top:8px" @click="cancelEmailChange">
+              {{ $t('configuracion.correoChange.cerrar') }}
+            </button>
+          </div>
+        </template>
       </section>
 
       <!-- ── Contraseña ────────────────────────────────────────────────────── -->

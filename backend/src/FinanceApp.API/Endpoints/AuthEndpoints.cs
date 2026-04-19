@@ -1,5 +1,7 @@
 namespace FinanceApp.API.Endpoints;
 using Microsoft.AspNetCore.Mvc;
+using FinanceApp.Application.Features.Auth.ChangeEmail.ConfirmEmailChange;
+using FinanceApp.Application.Features.Auth.ChangeEmail.InitiateEmailChange;
 using FinanceApp.Application.Features.Auth.ChangePassword;
 using FinanceApp.Application.Features.Auth.Confirm2Fa;
 using FinanceApp.Application.Features.Auth.Disable2Fa;
@@ -132,6 +134,27 @@ internal static class AuthEndpoints
         .ProducesProblem(400)
         .ProducesProblem(404);
 
+        // ── Email change ───────────────────────────────────────────────────────
+
+        secured.MapPost("/initiate-email-change", async (InitiateEmailChangeRequest req, ClaimsPrincipal user, IMediator mediator) =>
+        {
+            var userId = user.GetUserId();
+            await mediator.Send(new InitiateEmailChangeCommand(userId, req.NewEmail));
+            return Results.Ok();
+        })
+        .WithName("InitiateEmailChange")
+        .ProducesProblem(400)
+        .ProducesProblem(404)
+        .ProducesProblem(409);
+
+        group.MapGet("/confirm-email-change", async ([FromQuery] string token, IMediator mediator) =>
+        {
+            await mediator.Send(new ConfirmEmailChangeCommand(token));
+            return Results.Ok();
+        })
+        .WithName("ConfirmEmailChange")
+        .ProducesProblem(400);
+
         // ── Daily summary toggle ────────────────────────────────────────────────
 
         secured.MapPatch("/daily-summary", async (DailySummaryToggleRequest req, ClaimsPrincipal user, Supabase.Client supabase) =>
@@ -163,6 +186,9 @@ internal record Disable2FaRequest(string Code);
 
 /// <summary>Request body for changing the user's password.</summary>
 internal record ChangePasswordRequest(string CurrentPassword, string NewPassword, string ConfirmNewPassword);
+
+/// <summary>Request body for initiating an email address change.</summary>
+internal record InitiateEmailChangeRequest(string NewEmail);
 
 /// <summary>Request body for toggling the daily summary email.</summary>
 internal record DailySummaryToggleRequest(bool Enabled);

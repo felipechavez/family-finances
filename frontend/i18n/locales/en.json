@@ -59,6 +59,14 @@
       "error": "Could not create account. Please try again.",
       "checkEmail": "Account created! Check your email to verify your account."
     },
+    "verifyEmailChange": {
+      "title": "Verify new email",
+      "verifying": "Verifying...",
+      "success": "Email updated! Your new address is now active.",
+      "expired": "The link has expired. Request a new change from Settings.",
+      "invalid": "Invalid or already used link.",
+      "goToSettings": "Go to Settings"
+    },
     "verifyEmail": {
       "title": "Verify email",
       "verifying": "Verifying...",
@@ -256,6 +264,19 @@
       "activado": "Daily summary enabled",
       "desactivado": "Daily summary disabled",
       "error": "Could not update preference"
+    },
+    "correoChange": {
+      "title": "Email address",
+      "correoActual": "Current email",
+      "cambiar": "Change email",
+      "nuevo": "NEW EMAIL",
+      "nuevoPlaceholder": "your-new{'@'}email.com",
+      "enviar": "Send confirmation link",
+      "enviando": "Sending...",
+      "enviado": "Check {email} — we sent a confirmation link. A security notice was also sent to your current address.",
+      "cerrar": "Got it",
+      "yaEnUso": "That email is already in use",
+      "error": "Could not initiate email change"
     },
     "contrasena": {
       "title": "Password",

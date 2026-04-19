@@ -18,4 +18,11 @@
   <ItemGroup>
     <ProjectReference Include="..\FinanceApp.Application\FinanceApp.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\verification.html" />
+    <EmbeddedResource Include="Templates\daily-summary.html" />
+    <EmbeddedResource Include="Templates\budget-alert.html" />
+    <EmbeddedResource Include="Templates\email-change-confirmation.html" />
+    <EmbeddedResource Include="Templates\email-change-notification.html" />
+  </ItemGroup>
 </Project>

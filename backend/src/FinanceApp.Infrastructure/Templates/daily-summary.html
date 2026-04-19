@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f8f7ff;font-family:'Segoe UI',Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:40px 16px">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e5ff">
+        <!-- Header -->
+        <tr>
+          <td style="background:#ffffff;border-bottom:4px solid #7c3aed;padding:28px 32px;text-align:center">
+            <img src="{{LOGO_URL}}" alt="DomusPay" height="100" style="display:block;margin:0 auto">
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 32px">
+            <h2 style="margin:0 0 4px;font-size:20px;font-weight:700;color:#1a1a2e">Resumen del día</h2>
+            <p style="margin:0 0 20px;color:#9999bb;font-size:13px">{{FECHA}} &middot; {{FAMILIA}}</p>
+            <p style="margin:0 0 24px;color:#555577;font-size:15px">
+              Hola <strong>{{NOMBRE}}</strong>, aquí tienes el resumen de hoy:
+            </p>
+            <!-- Stats row -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">
+              <tr>
+                <td width="32%" style="padding-right:6px">
+                  <div style="background:#f8f7ff;border:1px solid #e8e5ff;border-radius:12px;padding:16px;text-align:center">
+                    <p style="margin:0 0 4px;font-size:11px;color:#9999bb;text-transform:uppercase;letter-spacing:1px">Ingresos</p>
+                    <p style="margin:0;font-size:20px;font-weight:700;color:#059669">{{INGRESOS}}</p>
+                  </div>
+                </td>
+                <td width="32%" style="padding:0 3px">
+                  <div style="background:#f8f7ff;border:1px solid #e8e5ff;border-radius:12px;padding:16px;text-align:center">
+                    <p style="margin:0 0 4px;font-size:11px;color:#9999bb;text-transform:uppercase;letter-spacing:1px">Gastos</p>
+                    <p style="margin:0;font-size:20px;font-weight:700;color:#dc2626">{{GASTOS}}</p>
+                  </div>
+                </td>
+                <td width="32%" style="padding-left:6px">
+                  <div style="background:#f8f7ff;border:1px solid #e8e5ff;border-radius:12px;padding:16px;text-align:center">
+                    <p style="margin:0 0 4px;font-size:11px;color:#9999bb;text-transform:uppercase;letter-spacing:1px">Balance</p>
+                    <p style="margin:0;font-size:20px;font-weight:700;color:{{BALANCE_COLOR}}">{{BALANCE}}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <!-- Category table -->
+            {{CATEGORY_ROWS}}
+            <p style="margin:24px 0 0;color:#9999bb;font-size:12px">
+              Para desactivar este resumen diario, ve a Configuración en la app.
+            </p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8f7ff;border-top:1px solid #e8e5ff;padding:16px 32px;text-align:center">
+            <p style="margin:0;color:#9999bb;font-size:12px">&copy; DomusPay Familiar</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

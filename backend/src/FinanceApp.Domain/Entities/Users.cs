@@ -66,6 +66,24 @@ public class Users : Entity
     [JsonPropertyName("daily_summary_enabled")]
     public bool DailySummaryEnabled { get; set; } = true;
 
+    /// <summary>New email address awaiting confirmation during an email-change flow.</summary>
+    [Column("pending_email")]
+    [JsonInclude]
+    [JsonPropertyName("pending_email")]
+    public string? PendingEmail { get; set; }
+
+    /// <summary>One-time token sent to the new address to confirm the email change.</summary>
+    [Column("email_change_token")]
+    [JsonInclude]
+    [JsonPropertyName("email_change_token")]
+    public string? EmailChangeToken { get; set; }
+
+    /// <summary>UTC expiration time for the email-change token.</summary>
+    [Column("email_change_token_exp")]
+    [JsonInclude]
+    [JsonPropertyName("email_change_token_exp")]
+    public DateTime? EmailChangeTokenExp { get; set; }
+
     /// <summary>
     /// Creates a new <see cref="Users"/> with the provided credentials.
     /// </summary>

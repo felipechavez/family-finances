@@ -59,6 +59,14 @@
       "error": "No se pudo crear la cuenta. Intenta de nuevo.",
       "checkEmail": "¡Cuenta creada! Revisa tu correo para verificar tu cuenta."
     },
+    "verifyEmailChange": {
+      "title": "Verificar nuevo correo",
+      "verifying": "Verificando...",
+      "success": "¡Correo actualizado! Tu nueva dirección ya está activa.",
+      "expired": "El enlace ha expirado. Solicita un nuevo cambio desde Configuración.",
+      "invalid": "Enlace inválido o ya utilizado.",
+      "goToSettings": "Ir a Configuración"
+    },
     "verifyEmail": {
       "title": "Verificar correo",
       "verifying": "Verificando...",
@@ -256,6 +264,19 @@
       "activado": "Resumen diario activado",
       "desactivado": "Resumen diario desactivado",
       "error": "No se pudo actualizar la preferencia"
+    },
+    "correoChange": {
+      "title": "Correo electrónico",
+      "correoActual": "Correo actual",
+      "cambiar": "Cambiar correo",
+      "nuevo": "NUEVO CORREO",
+      "nuevoPlaceholder": "tu-nuevo{'@'}email.com",
+      "enviar": "Enviar enlace de confirmación",
+      "enviando": "Enviando...",
+      "enviado": "Revisa {email} — te enviamos un enlace de confirmación. También llegará un aviso a tu correo actual.",
+      "cerrar": "Entendido",
+      "yaEnUso": "Ese correo ya está en uso",
+      "error": "No se pudo iniciar el cambio de correo"
     },
     "contrasena": {
       "title": "Contraseña",

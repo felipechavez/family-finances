@@ -96,6 +96,14 @@
     <value>Las contraseñas no coinciden.</value>
   </data>
 
+  <!-- Auth — cambio de correo -->
+  <data name="Auth_InvalidEmailChangeToken" xml:space="preserve">
+    <value>El enlace de cambio de correo es inválido o ya fue utilizado.</value>
+  </data>
+  <data name="Auth_EmailChangeTokenExpired" xml:space="preserve">
+    <value>El enlace de cambio de correo ha expirado. Solicita uno nuevo.</value>
+  </data>
+
   <!-- General -->
   <data name="ErrorUnexpected" xml:space="preserve">
     <value>Ocurrió un error inesperado.</value>

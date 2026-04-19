@@ -35,4 +35,21 @@ public interface IEmailService
         decimal spent,
         decimal limit,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Sends a confirmation link to the new address so the user can complete the email change.
+    /// </summary>
+    Task SendEmailChangeConfirmationAsync(
+        string toEmail,
+        string toName,
+        string changeToken,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Notifies the current address that an email-change was initiated.
+    /// </summary>
+    Task SendEmailChangeNotificationAsync(
+        string toEmail,
+        string toName,
+        CancellationToken ct = default);
 }

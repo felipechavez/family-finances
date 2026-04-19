@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f8f7ff;font-family:'Segoe UI',Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7ff;padding:40px 16px">
+    <tr><td align="center">
+      <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e5ff">
+        <!-- Header -->
+        <tr>
+          <td style="background:#ffffff;border-bottom:4px solid #7c3aed;padding:28px 32px;text-align:center">
+            <img src="{{LOGO_URL}}" alt="DomusPay" height="100" style="display:block;margin:0 auto">
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 32px">
+            <h2 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#dc2626">&#9888; Límite de gasto superado</h2>
+            <p style="margin:0 0 20px;color:#555577;font-size:15px;line-height:1.6">
+              Hola <strong>{{NOMBRE}}</strong>, la categoría <strong>{{CATEGORIA}}</strong> ha superado su límite mensual.
+            </p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e5ff;border-radius:12px;overflow:hidden;margin-bottom:24px">
+              <tr style="background:#f8f7ff">
+                <td style="padding:12px 16px;color:#555577;font-size:14px">Gastado</td>
+                <td style="padding:12px 16px;text-align:right;color:#dc2626;font-weight:700;font-size:15px">{{GASTADO}}</td>
+              </tr>
+              <tr style="border-top:1px solid #e8e5ff">
+                <td style="padding:12px 16px;color:#555577;font-size:14px">Límite</td>
+                <td style="padding:12px 16px;text-align:right;color:#7c3aed;font-weight:700;font-size:15px">{{LIMITE}}</td>
+              </tr>
+              <tr style="border-top:1px solid #e8e5ff;background:#f8f7ff">
+                <td style="padding:12px 16px;color:#555577;font-size:14px">Uso</td>
+                <td style="padding:12px 16px;text-align:right;color:#dc2626;font-weight:700;font-size:15px">{{PORCENTAJE}}%</td>
+              </tr>
+            </table>
+            <p style="margin:0;color:#9999bb;font-size:12px">Revisa tu presupuesto en DomusPay.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8f7ff;border-top:1px solid #e8e5ff;padding:16px 32px;text-align:center">
+            <p style="margin:0;color:#9999bb;font-size:12px">&copy; DomusPay Familiar</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
