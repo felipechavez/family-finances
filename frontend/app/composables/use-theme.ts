@@ -12,9 +12,10 @@ function applyTheme(dark: boolean) {
   }
 }
 
-export function useTheme() {
-  const isDark = ref(true)
+// Singleton compartido entre todos los componentes
+const isDark = ref(true)
 
+export function useTheme() {
   onMounted(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     isDark.value = stored !== 'light'

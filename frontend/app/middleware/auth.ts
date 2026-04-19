@@ -9,10 +9,12 @@ export default defineNuxtRouteMiddleware((to) => {
   const token = localStorage.getItem('auth_token')
 
   if (!token) {
+    // La ruta raíz muestra la landing — no redirigir al login
+    if (to.path === '/') return
     return navigateTo('/auth/login')
   }
 
-  if (!to.path.startsWith('/familia')) {
+  if (!to.path.startsWith('/familia') && to.path !== '/') {
     const storedFamilyId = localStorage.getItem('auth_family_id')
     if (!storedFamilyId) {
       return navigateTo('/familia/setup')

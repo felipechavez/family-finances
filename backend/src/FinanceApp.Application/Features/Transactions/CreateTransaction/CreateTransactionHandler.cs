@@ -34,7 +34,7 @@ public class CreateTransactionHandler(
             new Dictionary<string, object> { ["p_account_id"] = tx.AccountId, ["p_delta"] = delta });
 
         var categoryResponse = await supabase.From<Category>()
-            .Where(c => c.Id == tx.CategoryId)
+            .Filter("id", Supabase.Postgrest.Constants.Operator.Equals, tx.CategoryId.ToString())
             .Get();
 
         var categoryName = categoryResponse.Model?.Name

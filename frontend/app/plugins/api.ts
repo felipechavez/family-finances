@@ -19,7 +19,7 @@ export default defineNuxtPlugin(() => {
       options.headers = headers
     },
     onResponseError({ response }) {
-      if (response.status === 401) {
+      if (response.status === 401 && auth.isAuthenticated) {
         auth.logout()
       }
     },

@@ -1,4 +1,57 @@
 {
+  "landing": {
+    "nav": {
+      "inicio": "Inicio",
+      "funcionalidades": "Funcionalidades",
+      "comoFunciona": "¿Cómo funciona?",
+      "empezar": "Empezar"
+    },
+    "hero": {
+      "tagline": "Las finanzas de tu familia, bajo control",
+      "subtitle": "Registra gastos, crea presupuestos y gestiona las cuentas familiares juntos — simple, rápido y sin complicaciones.",
+      "ctaPrimary": "Crear cuenta gratis",
+      "ctaSecondary": "Iniciar sesión"
+    },
+    "features": {
+      "title": "Todo lo que necesitas",
+      "gastos": {
+        "title": "Control de gastos",
+        "desc": "Registra cada movimiento y visualiza en qué se va el dinero de tu familia."
+      },
+      "presupuestos": {
+        "title": "Presupuestos por categoría",
+        "desc": "Define límites de gasto por categoría y recibe alertas antes de excederlos."
+      },
+      "familia": {
+        "title": "Familia compartida",
+        "desc": "Todos los miembros ven el mismo panorama financiero en tiempo real."
+      },
+      "reportes": {
+        "title": "Reportes claros",
+        "desc": "Resúmenes mensuales por correo y gráficas que hacen fácil entender tus finanzas."
+      }
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "crear": {
+        "title": "Crea tu cuenta",
+        "desc": "Regístrate en segundos. Solo necesitas un correo y una contraseña."
+      },
+      "invitar": {
+        "title": "Invita a tu familia",
+        "desc": "Comparte el código de familia para que todos accedan al mismo espacio."
+      },
+      "controlar": {
+        "title": "Controlen juntos",
+        "desc": "Registren gastos, consulten presupuestos y tomen mejores decisiones financieras."
+      }
+    },
+    "cta": {
+      "title": "Empieza hoy, es gratis",
+      "subtitle": "Sin tarjeta de crédito. Sin complicaciones. Comienza a tomar el control de tus finanzas familiares ahora mismo.",
+      "button": "Comenzar ahora"
+    }
+  },
   "nav": {
     "inicio": "Inicio",
     "historial": "Historial",

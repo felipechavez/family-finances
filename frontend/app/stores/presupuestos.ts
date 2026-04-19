@@ -50,7 +50,7 @@ export const usePresupuestosStore = defineStore('presupuestos', () => {
     const $api = getApi()
     await $api('/budgets', {
       method: 'POST',
-      body: { categoria, limite },
+      body: { category: categoria, limit: limite },
     })
     await refresh()
   }

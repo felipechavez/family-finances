@@ -11,14 +11,16 @@ public class GetBudgetsHandler(Client supabase) : IRequestHandler<GetBudgetsQuer
     public async Task<IReadOnlyList<BudgetDto>> Handle(GetBudgetsQuery request, CancellationToken cancellationToken)
     {
         var budgetsResponse = await supabase.From<Budget>()
-            .Where(b => b.FamilyId == request.FamilyId)
+            .Filter("family_id", Supabase.Postgrest.Constants.Operator.Equals, request.FamilyId.ToString())
             .Get();
 
         var budgets = budgetsResponse.Models ?? new List<Budget>();
         var categoryIds = budgets.Select(b => b.CategoryId).Distinct().ToList();
 
         var categoriesResponse = categoryIds.Any()
-            ? await supabase.From<Category>().Where(c => categoryIds.Contains(c.Id)).Get()
+            ? await supabase.From<Category>()
+                .Filter("id", Supabase.Postgrest.Constants.Operator.In, categoryIds.Select(id => id.ToString()).ToList())
+                .Get()
             : null;
 
         var categories = categoriesResponse?.Models?.ToDictionary(c => c.Id, c => c.Name)

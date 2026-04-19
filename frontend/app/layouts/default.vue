@@ -31,12 +31,12 @@ function isActive(path: string): boolean {
 </script>
 
 <template>
-  <!-- No family: show setup screen, skip nav entirely -->
+  <!-- Autenticado pero sin familia: mostrar setup, skip nav -->
   <ClientOnly>
-    <UiSinFamilia v-if="!auth.hasFamiliy" />
+    <UiSinFamilia v-if="auth.isAuthenticated && !auth.hasFamiliy" />
   </ClientOnly>
 
-  <div v-if="auth.hasFamiliy" class="layout">
+  <div v-if="!auth.isAuthenticated || auth.hasFamiliy" class="layout">
     <!-- ── SIDEBAR (desktop >= 768px) ── -->
     <aside class="sidebar">
       <div class="sidebar-logo">

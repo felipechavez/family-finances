@@ -2,6 +2,7 @@
 <!-- In-app notification bell with badge, dropdown, and polling every 60s -->
 <script setup lang="ts">
 import { useIntervalFn } from '@vueuse/core'
+import { useAuthStore } from '~/stores/auth'
 
 const { $api } = useNuxtApp()
 const { t } = useI18n()
@@ -21,7 +22,10 @@ const loading       = ref(false)
 
 const unreadCount = computed(() => notifications.value.filter(n => !n.isRead).length)
 
+const auth = useAuthStore()
+
 async function fetchNotifications() {
+  if (!auth.isAuthenticated) return
   try {
     const data = await ($api as typeof $fetch)<NotificationItem[]>('/notifications')
     notifications.value = data ?? []

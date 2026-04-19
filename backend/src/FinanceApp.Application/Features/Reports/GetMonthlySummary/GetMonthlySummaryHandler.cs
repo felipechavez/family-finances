@@ -46,7 +46,9 @@ public class GetMonthlySummaryHandler(Client supabase, IDistributedCache cache, 
         var categoryIds = categoryGroups.Select(g => g.CategoryId).ToList();
 
         var categoriesResponse = categoryIds.Any()
-            ? await supabase.From<Category>().Where(c => categoryIds.Contains(c.Id)).Get()
+            ? await supabase.From<Category>()
+                .Filter("id", Supabase.Postgrest.Constants.Operator.In, categoryIds.Select(id => id.ToString()).ToList())
+                .Get()
             : null;
 
         var categories = categoriesResponse?.Models?.ToDictionary(c => c.Id, c => c.Name)

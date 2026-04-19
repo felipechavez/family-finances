@@ -1,4 +1,57 @@
 {
+  "landing": {
+    "nav": {
+      "inicio": "Home",
+      "funcionalidades": "Features",
+      "comoFunciona": "How it works",
+      "empezar": "Get started"
+    },
+    "hero": {
+      "tagline": "Your family finances, under control",
+      "subtitle": "Track expenses, set budgets and manage your family accounts together — simple, fast and hassle-free.",
+      "ctaPrimary": "Create free account",
+      "ctaSecondary": "Sign in"
+    },
+    "features": {
+      "title": "Everything you need",
+      "gastos": {
+        "title": "Expense tracking",
+        "desc": "Log every transaction and see exactly where your family's money goes."
+      },
+      "presupuestos": {
+        "title": "Category budgets",
+        "desc": "Set spending limits per category and get alerts before you exceed them."
+      },
+      "familia": {
+        "title": "Shared family space",
+        "desc": "Every family member sees the same financial picture in real time."
+      },
+      "reportes": {
+        "title": "Clear reports",
+        "desc": "Monthly email summaries and charts that make your finances easy to understand."
+      }
+    },
+    "howItWorks": {
+      "title": "How does it work?",
+      "crear": {
+        "title": "Create your account",
+        "desc": "Sign up in seconds. All you need is an email and a password."
+      },
+      "invitar": {
+        "title": "Invite your family",
+        "desc": "Share the family code so everyone can access the same shared space."
+      },
+      "controlar": {
+        "title": "Control it together",
+        "desc": "Log expenses, review budgets and make smarter financial decisions as a family."
+      }
+    },
+    "cta": {
+      "title": "Start today, it's free",
+      "subtitle": "No credit card required. No hassle. Start taking control of your family finances right now.",
+      "button": "Get started"
+    }
+  },
   "nav": {
     "inicio": "Home",
     "historial": "History",

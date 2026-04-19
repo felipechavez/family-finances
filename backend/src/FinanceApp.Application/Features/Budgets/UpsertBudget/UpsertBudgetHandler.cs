@@ -13,7 +13,8 @@ public class UpsertBudgetHandler(Client supabase, ILogger<UpsertBudgetHandler> l
     public async Task<Guid> Handle(UpsertBudgetCommand request, CancellationToken cancellationToken)
     {
         var existingResponse = await supabase.From<Budget>()
-            .Where(b => b.FamilyId == request.FamilyId && b.CategoryId == request.CategoryId)
+            .Filter("family_id", Supabase.Postgrest.Constants.Operator.Equals, request.FamilyId.ToString())
+            .Filter("category_id", Supabase.Postgrest.Constants.Operator.Equals, request.CategoryId.ToString())
             .Get();
 
         var existing = existingResponse.Model;
@@ -22,7 +23,7 @@ public class UpsertBudgetHandler(Client supabase, ILogger<UpsertBudgetHandler> l
         {
             existing.UpdateLimit(request.MonthlyLimit);
             await supabase.From<Budget>()
-                .Where(b => b.Id == existing.Id)
+                .Filter("id", Supabase.Postgrest.Constants.Operator.Equals, existing.Id.ToString())
                 .Update(existing);
 
             logger.LogInformation("Budget {BudgetId} updated for family {FamilyId}, category {CategoryId}",
